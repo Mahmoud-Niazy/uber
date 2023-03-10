@@ -135,3 +135,9 @@ navigateAndFinish({
     (route) => false,
   );
 }
+
+navigatePop({
+  required BuildContext context,
+}){
+  Navigator.pop(context);
+}

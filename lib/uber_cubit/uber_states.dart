@@ -12,3 +12,11 @@ class GetDriverDataErrorState extends UberStates{}
 class GetClientLocationLoadingState extends UberStates{}
 class GetClientLocationSuccessfullyState extends UberStates{}
 class GetClientLocationErrorState extends UberStates{}
+
+class AddMarkState extends UberStates{}
+
+class ConfirmState extends UberStates{}
+
+class MakeOrderLoadingState extends UberStates{}
+class MakeOrderSuccessfullyState extends UberStates{}
+class MakeOrderErrorState extends UberStates{}

@@ -1,9 +1,13 @@
+import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_final/data_models/client_data_model.dart';
 import 'package:uber_final/data_models/driver_data_model.dart';
+import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/screens/clients/client_orders_screen.dart';
 import 'package:uber_final/screens/clients/client_setting_screen.dart';
 import 'package:uber_final/screens/clients/make_order_screen.dart';
@@ -15,9 +19,10 @@ class UberCubit extends Cubit<UberStates> {
 
   static UberCubit get(context) => BlocProvider.of(context);
 
-  int currentIndex = 0 ;
-  BottomNavigation(int index){
-    currentIndex = index ;
+  int currentIndex = 0;
+
+  BottomNavigation(int index) {
+    currentIndex = index;
     emit(BottomNavigationState());
   }
 
@@ -27,8 +32,10 @@ class UberCubit extends Cubit<UberStates> {
     ClientSettingScreen(),
   ];
 
-  DriverDataModel? driver ;
-  ClientDataModel? client ;
+  DriverDataModel? driver;
+
+  ClientDataModel? client;
+
   GetUserData({
     String? userId,
   }) {
@@ -39,15 +46,15 @@ class UberCubit extends Cubit<UberStates> {
           .doc(userId)
           .get()
           .then((value) {
-            driver = DriverDataModel.fromJson(value.data()!);
-            emit(GetDriverDataSuccessfullyState());
+        driver = DriverDataModel.fromJson(value.data()!);
+        emit(GetDriverDataSuccessfullyState());
       })
           .catchError((error) {
-            emit(GetDriverDataErrorState());
+        emit(GetDriverDataErrorState());
       });
     }
 
-    else{
+    else {
       FirebaseFirestore.instance
           .collection('clients')
           .doc(userId)
@@ -57,15 +64,18 @@ class UberCubit extends Cubit<UberStates> {
         emit(GetClientDataSuccessfullyState());
       })
           .catchError((error) {
-            emit(GetClientDataErrorState());
-            print(error);
+        emit(GetClientDataErrorState());
+        print(error);
       });
     }
-    }
+  }
 
-    double latitude = 0 ;
-    double longitude = 0 ;
-    var clientLocation ;
+  double latitude = 0;
+
+  double longitude = 0;
+
+  var clientLocation;
+
   Future<Position> GetClientLocation() async {
     emit(GetClientLocationErrorState());
     bool serviceEnabled;
@@ -88,11 +98,80 @@ class UberCubit extends Cubit<UberStates> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-     clientLocation =  await  Geolocator.getCurrentPosition();
+    clientLocation = await Geolocator.getCurrentPosition();
     latitude = clientLocation.latitude;
-    longitude = clientLocation.longitude ;
+    longitude = clientLocation.longitude;
     print(latitude);
     return clientLocation;
   }
+
+  var marker = HashSet<Marker>();
+  int i = 0;
+  bool isFrom = true;
+
+  LatLng? positionFrom;
+
+  LatLng? from;
+  TextEditingController fromController = TextEditingController();
+
+  LatLng? positionTo;
+
+  LatLng? to;
+  TextEditingController toController = TextEditingController();
+
+  confirmFrom() async {
+    if (isFrom) {
+      from = positionFrom;
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          from!.latitude, from!.longitude);
+      fromController.text = placemarks[0].locality!;
+      isFrom = false;
+      emit(ConfirmState());
+    }
+    else {
+      to = positionTo;
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          to!.latitude, to!.longitude);
+      toController.text = placemarks[0].locality!;
+      emit(ConfirmState());
+    }
+    marker.clear();
   }
+
+
+  AddMark(LatLng position) {
+    marker.clear();
+    marker.add(Marker(
+      position: position,
+      markerId: MarkerId('${i}'),
+    ));
+    i++;
+    emit(AddMarkState());
+  }
+
+  MakeOrder({
+    required String time ,
+    required String date ,
+     required String from ,
+    required String to ,
+}) {
+    emit(MakeOrderLoadingState());
+    OrderDataModel order = OrderDataModel(
+      date: date,
+      time: time,
+      from: from,
+      to: to,
+    );
+    FirebaseFirestore.instance
+        .collection('clients')
+        .doc(CasheHelper.GetData(key: 'uId'))
+      ..collection('orders')
+          .add(order.toMap()).then((value){
+            emit(MakeOrderSuccessfullyState());
+      })
+    .catchError((error){
+      emit(MakeOrderErrorState());
+      });
+  }
+}
 
