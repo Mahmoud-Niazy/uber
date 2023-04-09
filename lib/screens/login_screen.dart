@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_final/cashe_helper/cashe_helper.dart';
+import 'package:uber_final/layout/layout_for_drivers.dart';
 import 'package:uber_final/login_cubit/login_cubit.dart';
 import 'package:uber_final/screens/register_screen.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
 import '../components/components.dart';
-import '../layout_for_client/layout_for_client.dart';
+import '../layout/layout_for_client.dart';
 import '../login_cubit/login_states.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -19,12 +20,18 @@ class LoginScreen extends StatelessWidget {
       create: (context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
-          if(state is UserLoginSuccessfullyState){
-            CasheHelper.SaveData(key: 'isDriver', value: LoginCubit.get(context).isDriver).then((value){
+          if (state is UserLoginSuccessfullyState) {
+            CasheHelper.SaveData(
+                    key: 'isDriver', value: LoginCubit.get(context).isDriver)
+                .then((value) {
               UberCubit.get(context).GetUserData(
                 userId: state.userId,
               );
-              navigateAndFinish(screen: LayoutForClient(), context: context);
+              CasheHelper.GetData(key: 'isDriver')
+                  ? navigateAndFinish(
+                      screen: LayoutForDrivers(), context: context)
+                  : navigateAndFinish(
+                      screen: LayoutForClient(), context: context);
             });
           }
           print(state);
@@ -150,20 +157,19 @@ class LoginScreen extends StatelessWidget {
                           SizedBox(
                             height: MediaQuery.of(context).size.height * .04,
                           ),
-                          state is UserLoginLoadingState ?
-                          Center(child: CircularProgressIndicator())
-                          :
-                          BuildButton(
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                cubit.userLogin(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                );
-                              }
-                            },
-                            label: 'Login',
-                          ),
+                          state is UserLoginLoadingState
+                              ? Center(child: CircularProgressIndicator())
+                              : BuildButton(
+                                  onPressed: () {
+                                    if (formKey.currentState!.validate()) {
+                                      cubit.userLogin(
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                      );
+                                    }
+                                  },
+                                  label: 'Login',
+                                ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * .02,
                           ),

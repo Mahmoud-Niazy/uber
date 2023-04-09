@@ -17,11 +17,11 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<RegisterCubit, RegisterStates>(
       listener: (context, state) {
-        if(state is PhoneCorrectState ){
+        if (state is PhoneCorrectState) {
           name = nameController.text;
           email = emailController.text;
           phone = phoneController.text;
-          password=passwordController.text;
+          password = passwordController.text;
           navigateAndFinish(screen: CheckCodeScreen(), context: context);
         }
         print(state);
@@ -114,7 +114,37 @@ class RegisterScreen extends StatelessWidget {
                         type: TextInputType.phone,
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.photo,
+                            color: Colors.blue,
+                          ),
+                          BuildTextButton(
+                            label: 'pick your photo',
+                            onPressed: () {
+                              cubit.getProfileImage();
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      if(cubit.profileImage != null)
+                      Container(
+                        height: 100,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: FileImage(cubit.profileImage!),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -123,7 +153,7 @@ class RegisterScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             InkWell(
-                              onTap: (){
+                              onTap: () {
                                 cubit.changeTypeOfUser();
                               },
                               child: Container(
@@ -139,17 +169,18 @@ class RegisterScreen extends StatelessWidget {
                                   ),
                                 ),
                                 decoration: BoxDecoration(
-                                  color: cubit.isDriver ?Colors.green : Colors.grey,
-                                  borderRadius: BorderRadius.circular(15),
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  )
-                                ),
+                                    color: cubit.isDriver
+                                        ? Colors.green
+                                        : Colors.grey,
+                                    borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(
+                                      color: Colors.black,
+                                    )),
                               ),
                             ),
                             Spacer(),
                             InkWell(
-                              onTap: (){
+                              onTap: () {
                                 cubit.changeTypeOfUser();
                               },
                               child: Container(
@@ -165,12 +196,13 @@ class RegisterScreen extends StatelessWidget {
                                   ),
                                 ),
                                 decoration: BoxDecoration(
-                                    color: cubit.isDriver? Colors.grey : Colors.green,
+                                    color: cubit.isDriver
+                                        ? Colors.grey
+                                        : Colors.green,
                                     borderRadius: BorderRadius.circular(15),
                                     border: Border.all(
                                       color: Colors.black,
-                                    )
-                                ),
+                                    )),
                               ),
                             ),
                           ],
@@ -179,19 +211,18 @@ class RegisterScreen extends StatelessWidget {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * .04,
                       ),
-                      state is PhoneAuthLoadingState ?
-                      Center(child: CircularProgressIndicator())
-                      :
-                      BuildButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            cubit.PhoneAuth(
-                              phoneNumber: phoneController.text,
-                            );
-                          }
-                        },
-                        label: 'Register now',
-                      ),
+                      state is PhoneAuthLoadingState
+                          ? Center(child: CircularProgressIndicator())
+                          : BuildButton(
+                              onPressed: () {
+                                if (formKey.currentState!.validate() && cubit.profileImage != null) {
+                                  cubit.PhoneAuth(
+                                    phoneNumber: phoneController.text,
+                                  );
+                                }
+                              },
+                              label: 'Register now',
+                            ),
                     ],
                   ),
                 ),

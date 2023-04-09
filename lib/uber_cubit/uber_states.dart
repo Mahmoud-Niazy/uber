@@ -1,4 +1,5 @@
 abstract class UberStates {}
+
 class UberInitialState extends UberStates{}
 
 class BottomNavigationState extends UberStates{}
@@ -20,3 +21,15 @@ class ConfirmState extends UberStates{}
 class MakeOrderLoadingState extends UberStates{}
 class MakeOrderSuccessfullyState extends UberStates{}
 class MakeOrderErrorState extends UberStates{}
+
+class GetClientOrdersLoadingState extends UberStates{}
+class GetClientOrdersSuccessfullyState extends UberStates{}
+
+class SendNotificationToAllDriversLoadingState extends UberStates{}
+class SendNotificationToAllDriversSuccessfullyState extends UberStates{}
+class SendNotificationToAllDriversErrorState extends UberStates{}
+
+class GetAllOrdersLoadingState extends UberStates{}
+class GelAllOrdersSuccessfullyState extends UberStates{}
+
+

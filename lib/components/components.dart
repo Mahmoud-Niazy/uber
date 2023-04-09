@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uber_final/data_models/order_data_model.dart';
 
 class BuildTextFormField extends StatelessWidget {
   String label;
@@ -141,3 +142,172 @@ navigatePop({
 }){
   Navigator.pop(context);
 }
+
+class BuildClientOrderItem extends StatelessWidget{
+  OrderDataModel order ;
+  BuildClientOrderItem({
+    required this.order,
+});
+  @override
+  Widget build(BuildContext context) {
+    return  Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+          )
+      ),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color: Colors.black,
+                    width: 2
+                )
+            ),
+            child: CircleAvatar(
+              radius: 40,
+              child: Text(
+                '${order.time}',
+              ),
+              backgroundColor: Colors.white,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 20
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                    ),
+                    Text(" From : ${order.from}"),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                    ),
+                    Text(" To : ${order.to}"),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.date_range_outlined,
+                    ),
+                    Text(" Date : ${order.date}"),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BuildDriverOrderItem extends StatelessWidget{
+  OrderDataModel order ;
+  BuildDriverOrderItem({
+    required this.order,
+});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          border: Border.all(
+            color: Colors.black12,
+          ),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(
+                order.clientImage!,
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  order.clientName!,
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                    ),
+                    Text(" From : ${order.from} "),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                    ),
+                    Text(" To : ${order.to} "),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.date_range_outlined,
+                    ),
+                    Text(" Date : ${order.date} "),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.watch_later_outlined,
+                    ),
+                    Text(" Time : ${order.time} "),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

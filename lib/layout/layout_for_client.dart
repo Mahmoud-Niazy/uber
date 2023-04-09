@@ -16,8 +16,8 @@ class LayoutForClient extends StatelessWidget{
         return SafeArea(
           child: Scaffold(
             bottomNavigationBar: SalomonBottomBar(
-              currentIndex:cubit.currentIndex,
-              onTap: (i) => cubit.BottomNavigation(i),
+              currentIndex:cubit.currentIndexInClientsLayout,
+              onTap: (i) => cubit.BottomNavigationInClientsLayout(i),
 
               items: [
                 SalomonBottomBarItem(
@@ -41,7 +41,7 @@ class LayoutForClient extends StatelessWidget{
               ],
             ),
 
-            body: cubit.screens[cubit.currentIndex],
+            body: cubit.screensInClientsLayout[cubit.currentIndexInClientsLayout],
           ),
         );
       },

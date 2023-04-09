@@ -18,6 +18,16 @@ class MakeOrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<UberCubit, UberStates>(
       listener: (context, state) {
+        if (state is MakeOrderSuccessfullyState) {
+          UberCubit.get(context).SendNotificationToAlldrivers(
+            clientName: UberCubit.get(context).client!.name,
+          );
+          UberCubit.get(context).currentIndexInClientsLayout = 0;
+          timeController.text = '';
+          dateController.text = '';
+          UberCubit.get(context).fromController.text = '';
+          UberCubit.get(context).toController.text = '';
+        }
         print(state);
       },
       builder: (context, state) {
@@ -125,22 +135,21 @@ class MakeOrderScreen extends StatelessWidget {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .1,
                     ),
-                    state is MakeOrderLoadingState ?
-                    Center(child: CircularProgressIndicator())
-                    :
-                    BuildButton(
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          cubit.MakeOrder(
-                            time: timeController.text,
-                            date: dateController.text,
-                            from: cubit.fromController.text,
-                            to: cubit.toController.text,
-                          );
-                        }
-                      },
-                      label: 'Order',
-                    ),
+                    state is MakeOrderLoadingState
+                        ? Center(child: CircularProgressIndicator())
+                        : BuildButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                cubit.MakeOrder(
+                                  time: timeController.text,
+                                  date: dateController.text,
+                                  fromPlace: cubit.fromController.text,
+                                  toPlace: cubit.toController.text,
+                                );
+                              }
+                            },
+                            label: 'Order',
+                          ),
                   ],
                 ),
               ),
