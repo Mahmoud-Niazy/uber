@@ -32,4 +32,26 @@ class SendNotificationToAllDriversErrorState extends UberStates{}
 class GetAllOrdersLoadingState extends UberStates{}
 class GelAllOrdersSuccessfullyState extends UberStates{}
 
+class SendNotificationToClientLoadingState extends UberStates{}
+class SendNotificationToClientSuccessfullyState extends UberStates{}
+class SendNotificationToClientErrorState extends UberStates{}
+
+class MakeOfferLoadingState extends UberStates{}
+class MakeOfferSuccessfullyState extends UberStates{}
+class MakeOfferErrorState extends UberStates{}
+
+class GetAllOffersLoadingState extends UberStates{}
+class GetAllOffersSuccessfullyState extends UberStates{}
+
+class AcceptedOfferLoadingState extends UberStates{}
+class AcceptedOfferSuccessfullyState extends UberStates{}
+class AcceptedOfferErrorState extends UberStates{}
+
+class GetAcceptedOrdersLoadingState extends UberStates{}
+class GetAcceptedOrdersSuccessfullyState extends UberStates{}
+
+
+
+
+
 

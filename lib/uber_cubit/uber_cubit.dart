@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
@@ -7,10 +8,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_final/data_models/client_data_model.dart';
 import 'package:uber_final/data_models/driver_data_model.dart';
+import 'package:uber_final/data_models/offer_data_model.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/screens/clients/client_orders_screen.dart';
 import 'package:uber_final/screens/clients/client_setting_screen.dart';
 import 'package:uber_final/screens/clients/make_order_screen.dart';
+import 'package:uber_final/screens/drivers/accepted_orders_screen.dart';
 import 'package:uber_final/screens/drivers/driver_orders_screen.dart';
 import 'package:uber_final/screens/drivers/driver_setting_screen.dart';
 import 'package:uber_final/uber_cubit/uber_states.dart';
@@ -49,9 +52,24 @@ class UberCubit extends Cubit<UberStates> {
           .get()
           .then((value) {
         driver = DriverDataModel.fromJson(value.data()!);
+        FirebaseMessaging.instance.getToken().then((fcmToken) {
+          driver = DriverDataModel(
+            phone: driver!.phone,
+            email: driver!.email,
+            name: driver!.name,
+            image: driver!.image,
+            userId: driver!.userId,
+            fcmToken: fcmToken,
+          );
+          FirebaseFirestore.instance
+              .collection('drivers')
+              .doc(userId)
+              .update(driver!.toMap());
+        });
         emit(GetDriverDataSuccessfullyState());
       }).catchError((error) {
         emit(GetDriverDataErrorState());
+        print(error);
       });
     } else {
       FirebaseFirestore.instance
@@ -60,6 +78,20 @@ class UberCubit extends Cubit<UberStates> {
           .get()
           .then((value) {
         client = ClientDataModel.fromJson(value.data()!);
+        FirebaseMessaging.instance.getToken().then((fcmToken) {
+          client = ClientDataModel(
+            phone: client!.phone,
+            email: client!.email,
+            name: client!.name,
+            image: client!.image,
+            userId: client!.userId,
+            fcmToken: fcmToken,
+          );
+          FirebaseFirestore.instance
+              .collection('clients')
+              .doc(userId)
+              .update(client!.toMap());
+        });
         emit(GetClientDataSuccessfullyState());
       }).catchError((error) {
         emit(GetClientDataErrorState());
@@ -163,15 +195,64 @@ class UberCubit extends Cubit<UberStates> {
       lngFrom: from!.longitude,
       latTo: to!.latitude,
       lngTo: to!.longitude,
+      fcmToken: client!.fcmToken,
+      agreement: false,
+
     );
     FirebaseFirestore.instance
         .collection('clients')
         .doc(CasheHelper.GetData(key: 'uId'))
-      ..collection('orders').add(order.toMap()).then((value) {
+      ..collection('orders').add(order.toMap()).then((value1) {
+        order = OrderDataModel(
+          date: date,
+          time: time,
+          from: fromPlace,
+          to: toPlace,
+          clientName: client!.name,
+          clientImage: client!.image,
+          latFrom: from!.latitude,
+          lngFrom: from!.longitude,
+          latTo: to!.latitude,
+          lngTo: to!.longitude,
+          fcmToken: client!.fcmToken,
+          orderId: value1.id,
+          agreement: false,
+
+        );
+        FirebaseFirestore.instance
+            .collection('clients')
+            .doc(CasheHelper.GetData(key: 'uId'))
+          ..collection('orders')
+              .doc(value1.id)
+              .update(order.toMap())
+              .then((value) {});
+
         FirebaseFirestore.instance
             .collection('orders')
-            .add(order.toMap())
-            .then((value) {
+            .doc(value1.id)
+            .set(order.toMap())
+            .then((valueWithId) {
+          order = OrderDataModel(
+            date: date,
+            time: time,
+            from: fromPlace,
+            to: toPlace,
+            clientName: client!.name,
+            clientImage: client!.image,
+            latFrom: from!.latitude,
+            lngFrom: from!.longitude,
+            latTo: to!.latitude,
+            lngTo: to!.longitude,
+            fcmToken: client!.fcmToken,
+            orderId: value1.id,
+            agreement: false,
+          );
+
+          FirebaseFirestore.instance
+              .collection('orders')
+              .doc(value1.id)
+              .update(order.toMap());
+
           emit(MakeOrderSuccessfullyState());
           isFrom = true;
         });
@@ -209,25 +290,23 @@ class UberCubit extends Cubit<UberStates> {
 
   List<Widget> screensInDriversLayout = [
     DriverOrderScreen(),
+    AcceptedOrdersScreen(),
     DriverSettingScreen(),
   ];
 
   SendNotificationToAlldrivers({
     required String clientName,
-}) {
+  }) {
     emit(SendNotificationToAllDriversLoadingState());
-    DioHelper.PostData(
-      url: 'send',
-      data: {
-        "to": "/topics/drivers",
-        "priority": "high",
-        "notification": {
-          "body": "$clientName make an order",
-          "title": "New order for you",
-          "subtitle": "Firebase Cloud Message Subtitle"
-        }
+    DioHelper.PostData(url: 'send', data: {
+      "to": "/topics/drivers",
+      "priority": "high",
+      "notification": {
+        "body": "$clientName make an order",
+        "title": "New order for you",
+        "subtitle": "Firebase Cloud Message Subtitle"
       }
-    ).then((value) {
+    }).then((value) {
       emit(SendNotificationToAllDriversSuccessfullyState());
     }).catchError((error) {
       emit(SendNotificationToAllDriversErrorState());
@@ -235,11 +314,14 @@ class UberCubit extends Cubit<UberStates> {
   }
 
   List<OrderDataModel> allOrders = [];
-  GetAllOrders(){
-    if(CasheHelper.GetData(key: 'isDriver')){
+
+  GetAllOrders() {
+    if (CasheHelper.GetData(key: 'isDriver')) {
       emit(GetAllOrdersLoadingState());
-      FirebaseFirestore.instance.collection('orders')
-          .orderBy('date').snapshots()
+      FirebaseFirestore.instance
+          .collection('orders')
+          .orderBy('date')
+          .snapshots()
           .listen((event) {
         allOrders = [];
         event.docs.forEach((element) {
@@ -249,4 +331,210 @@ class UberCubit extends Cubit<UberStates> {
       });
     }
   }
+
+  MakeOffer({
+    required String orderId,
+    required dynamic price,
+    required String clientFcmToken,
+  }) {
+    emit(MakeOfferLoadingState());
+
+    DioHelper.PostData(
+      url: 'send',
+      data: {
+        "to": clientFcmToken,
+        "priority": "high",
+        "notification": {
+          "body": "${driver!.name} send an offer ",
+          "title": "$price \$ ",
+          "subtitle": ""
+        }
+      },
+    ).then((value) {
+      emit(SendNotificationToClientSuccessfullyState());
+      OfferDataModel offer = OfferDataModel(
+        driverEmail: driver!.email,
+        driverFcmToken: driver!.fcmToken,
+        driverName: driver!.name,
+        driverPhone: driver!.phone,
+        price: price,
+        driverImage: driver!.image,
+        driverId: driver!.userId,
+      );
+
+      FirebaseFirestore.instance
+          .collection('orders')
+          .doc(orderId)
+          .collection('offers')
+          .add(offer.toMap())
+          .then((value) {
+        emit(MakeOfferSuccessfullyState());
+      }).catchError((error) {
+        emit(MakeOfferErrorState());
+      });
+    }).catchError((error) {
+      emit(SendNotificationToClientErrorState());
+    });
+  }
+
+  List<OfferDataModel> offers = [];
+
+  GetAllOffers({
+    required String orderId,
+  }) {
+    offers = [];
+    emit(GetAllOffersLoadingState());
+    FirebaseFirestore.instance
+        .collection('orders')
+        .doc(orderId)
+        .collection('offers')
+        .snapshots()
+        .listen((value) {
+      offers = [];
+      value.docs.forEach((element) {
+        offers.add(OfferDataModel.fromJson(element.data()));
+        emit(GetAllOffersSuccessfullyState());
+      });
+    });
+  }
+
+  AcceptOffer({
+    required OrderDataModel order,
+    OfferDataModel? offer,
+}){
+    emit(AcceptedOfferLoadingState());
+    OrderDataModel newOrder = OrderDataModel(
+      date: order.date,
+      time: order.time,
+      from: order.from,
+      to: order.to,
+      clientName: order.clientName,
+      clientImage: order.clientImage,
+      latFrom: order.latFrom,
+      latTo: order.latTo,
+      lngFrom: order.lngFrom,
+      lngTo: order.lngTo,
+      fcmToken: order.fcmToken,
+      orderId: order.orderId,
+      agreement: true,
+      driverImage: offer!.driverImage,
+      driverEmail: offer.driverEmail,
+      driverFcmToken: offer.driverFcmToken,
+      driverName: offer.driverName,
+      driverPhone: offer.driverPhone,
+      price: offer.price,
+
+    );
+    FirebaseFirestore.instance
+        .collection('clients')
+        .doc(CasheHelper.GetData(key: 'uId'))
+        .collection('orders')
+        .doc(order.orderId)
+        .update(newOrder.toMap()).then((value){
+          // GetClientOrders();
+          DioHelper.PostData(
+            url: 'send',
+            data: {
+              "to": order.driverFcmToken,
+              "priority": "high",
+              "notification": {
+                "body": "${order.clientName} accept your offer ",
+                "title": "${order.clientName}  ",
+                "subtitle": ""
+              }
+            },
+          );
+          FirebaseFirestore.instance.collection('orders')
+              .doc(order.orderId).delete();
+          FirebaseFirestore.instance.collection('drivers')
+          .doc(offer.driverId).collection('acceptedOrders').add(newOrder.toMap());
+    }).catchError((error){
+      emit(AcceptedOfferErrorState());
+    });
+
+  }
+
+
+  List<OrderDataModel> acceptedOrders = [];
+  GetAcceptedOrders() {
+    if (CasheHelper.GetData(key: 'isDriver'))
+    {
+      emit(GetAcceptedOrdersLoadingState());
+      FirebaseFirestore.instance.collection('drivers')
+          .doc(CasheHelper.GetData(key: 'uId')).collection('acceptedOrders')
+          .snapshots().listen((event) {
+        acceptedOrders=[];
+        event.docs.forEach((element) {
+          acceptedOrders.add(OrderDataModel.fromJson(element.data()));
+        });
+        emit(GetAcceptedOrdersSuccessfullyState());
+      });
+    }
+  }
+
+//   List<OrderDataModel> acceptedOffers = [];
+//
+//   AcceptOffer({
+//     required String driverId,
+//     required String date,
+//     required String time,
+//     required String from,
+//     required String to,
+//     required String clientName,
+//     required String clientImage,
+//     required double latFrom,
+//     required double latTo,
+//     required double lngFrom,
+//     required double lngTo,
+//     required String fcmToken,
+//     required String orderId,
+//
+//
+//
+//   }) {
+//     emit(AcceptedOfferLoadingState());
+//     OrderDataModel acceptedOffer = OrderDataModel(
+//       date: date,
+//       time: time,
+//       from: from,
+//       to: to,
+//       clientName: clientName,
+//       clientImage: clientImage,
+//       latFrom: latFrom,
+//       latTo: latTo,
+//       lngFrom: lngFrom,
+//       lngTo: lngTo,
+//       fcmToken: fcmToken,
+//       orderId: orderId,
+//     );
+//     FirebaseFirestore.instance.collection('drivers').doc(driverId)
+//       ..collection('acceptedOffers').add(acceptedOffer.toMap())
+//     .then((value) {
+//       FirebaseFirestore.instance.collection('orders')
+//       .doc(orderId)
+//       .delete().then((value) {
+//         emit(AcceptedOfferSuccessfullyState());
+//       });
+//       })
+//     .catchError((error){
+//       emit(AcceptedOfferErrorState());
+//       });
+//   }
+//
+//   GetAcceptedOffers({
+//     required String driverId,
+// }){
+//     FirebaseFirestore.instance
+//         .collection('drivers')
+//         .doc(driverId)
+//         .collection('acceptedOffers')
+//         .snapshots()
+//         .listen((event) {
+//           acceptedOffers =[];
+//           event.docs.forEach((element) {
+//             acceptedOffers.add(OrderDataModel.fromJson(element.data()));
+//           });
+//     });
+//   }
+
 }

@@ -116,6 +116,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
               email: email,
               name: name,
               image: value,
+              userId: value1.user!.uid,
             );
             FirebaseFirestore.instance.collection('drivers')
                 .doc(value1.user!.uid).set(driver.toMap())
@@ -149,6 +150,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
               email: email,
               name: name,
               image: value,
+              userId: value1.user!.uid,
             );
             FirebaseFirestore.instance.collection('clients')
                 .doc(value1.user!.uid).set(client.toMap())

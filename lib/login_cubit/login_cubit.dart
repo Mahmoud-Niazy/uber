@@ -18,25 +18,29 @@ class LoginCubit extends Cubit<LoginStates> {
 
   bool isDriver = false;
 
-  changeTypeOfUser()async {
+  changeTypeOfUser() async {
     isDriver = !isDriver;
     await CasheHelper.SaveData(key: 'isDriver', value: isDriver);
     emit(ChangeTypeOfUserState());
   }
 
   userLogin({
-    required String email ,
+    required String email,
     required String password,
-}) {
+  }) {
     emit(UserLoginLoadingState());
     FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
+      email: email.toString().trim(),
       password: password,
-    ).then((value) async {
-     await CasheHelper.SaveData(key: 'uId', value: value.user!.uid);
-      emit(UserLoginSuccessfullyState(value.user!.uid));
+    ).then((user) async {
+      CasheHelper.SaveData(key: 'uId', value: user.user!.uid).then((value) =>
+      {
+
+      });
+      emit(UserLoginSuccessfullyState(user.user!.uid));
     })
-    .catchError((error){
+        .catchError((error) {
+          print(error);
       emit(UserLoginErrorState());
     });
   }

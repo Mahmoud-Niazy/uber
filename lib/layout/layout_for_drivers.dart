@@ -25,7 +25,11 @@ class LayoutForDrivers extends StatelessWidget {
                 title: Text("Orders"),
                 // selectedColor: Colors.purple,
               ),
-
+              SalomonBottomBarItem(
+                icon: Icon(Icons.menu),
+                title: Text("Accepted Orders"),
+                // selectedColor: Colors.purple,
+              ),
               SalomonBottomBarItem(
                 icon: Icon(Icons.settings_outlined),
                 title: Text("Settings"),

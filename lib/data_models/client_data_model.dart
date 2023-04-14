@@ -3,12 +3,16 @@ class ClientDataModel{
   late String email ;
   late String phone;
   late String image ;
+  late String userId ;
+  String? fcmToken ;
 
   ClientDataModel({
     required this.phone,
     required this.email,
     required this.name,
     required this.image,
+    required this.userId,
+    this.fcmToken,
 });
 
   ClientDataModel.fromJson(Map<String,dynamic>json){
@@ -16,6 +20,10 @@ class ClientDataModel{
     email=json['email'];
     name=json['name'];
     image=json['image'];
+    userId=json['userId'];
+    fcmToken=json['fcmToken'];
+
+
 
   }
 
@@ -25,6 +33,9 @@ class ClientDataModel{
       'name': name,
       'phone' : phone,
       'image' : image,
+      'userId' : userId,
+      'fcmToken' : fcmToken,
+
     };
 
     

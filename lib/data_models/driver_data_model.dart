@@ -3,6 +3,8 @@ class DriverDataModel{
   late String email ;
   late String phone;
   late String image;
+  late String userId;
+  String? fcmToken ;
 
 
   DriverDataModel({
@@ -10,6 +12,8 @@ class DriverDataModel{
     required this.email,
     required this.name,
     required this.image,
+    required this.userId,
+    this.fcmToken,
 
   });
 
@@ -18,6 +22,10 @@ class DriverDataModel{
     email=json['email'];
     name=json['name'];
     image=json['image'];
+    userId=json['userId'];
+    fcmToken=json['fcmToken'];
+
+
 
   }
 
@@ -27,6 +35,8 @@ class DriverDataModel{
       'name': name,
       'phone' : phone,
       'image' : image,
+      'userId' : userId,
+      'fcmToken' : fcmToken,
 
     };
 

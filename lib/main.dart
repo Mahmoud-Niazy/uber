@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => UberCubit()..GetUserData(
             userId:CasheHelper.GetData(key: 'uId')  ,
-          )..GetClientLocation()..GetClientOrders()..GetAllOrders() ,
+          )..GetClientLocation()..GetClientOrders()..GetAllOrders()..GetAcceptedOrders(),
         ),
       ],
       child: MaterialApp(

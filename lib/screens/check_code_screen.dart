@@ -18,7 +18,7 @@ class CheckCodeScreen extends StatelessWidget {
         print(state);
         if (state is PhoneAuthSuccessfullyState) {
           RegisterCubit.get(context).createUser(
-            email: email,
+            email: email.toString().trim(),
             password: password,
             name: name,
             phone: phone,
