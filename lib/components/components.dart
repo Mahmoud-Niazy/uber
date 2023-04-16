@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uber_final/data_models/offer_data_model.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/screens/clients/all_offers_screen.dart';
+import 'package:uber_final/screens/drivers/location_of_order_screen.dart';
 import 'package:uber_final/screens/drivers/make_offer_screen.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
 
@@ -337,6 +338,7 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        navigate(screen: LocationOfOrderScreen(order: order), context: context);
         // navigate(screen: MakeOfferScreen(this.order), context: context);
         // print(this.order.time);
       },

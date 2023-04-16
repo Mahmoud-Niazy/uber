@@ -50,6 +50,10 @@ class AcceptedOfferErrorState extends UberStates{}
 class GetAcceptedOrdersLoadingState extends UberStates{}
 class GetAcceptedOrdersSuccessfullyState extends UberStates{}
 
+class AddMarkerToDriverLocationState extends UberStates{}
+
+class PolygonState extends UberStates{}
+
 
 
 

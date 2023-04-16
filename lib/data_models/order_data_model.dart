@@ -18,6 +18,8 @@ class OrderDataModel{
   String? driverPhone ;
   String? driverEmail ;
   String? driverImage;
+  String? driverId ;
+  String? clientId ;
 
 
   OrderDataModel({
@@ -40,6 +42,8 @@ class OrderDataModel{
     this.driverPhone,
     this.driverFcmToken,
     this.driverEmail,
+    this.driverId,
+    this.clientId,
 
   });
 
@@ -63,6 +67,8 @@ class OrderDataModel{
     driverPhone = json['driverPhone'];
     driverFcmToken = json['driverFcmToken'];
     driverEmail = json['driverEmail'];
+    driverId = json['driverId'];
+    clientId = json['clientId'];
 
 
 
@@ -90,6 +96,8 @@ class OrderDataModel{
       'driverPhone' : driverPhone ,
       'driverFcmToken' : driverFcmToken ,
       'driverEmail' : driverEmail ,
+      'driverId' : driverId ,
+      'clientId' : clientId ,
 
 
 

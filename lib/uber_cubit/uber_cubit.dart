@@ -104,6 +104,8 @@ class UberCubit extends Cubit<UberStates> {
 
   double longitude = 0;
 
+  double dLat = 0;
+  double dLng = 0  ;
   var clientLocation;
 
   Future<Position> GetClientLocation() async {
@@ -131,6 +133,11 @@ class UberCubit extends Cubit<UberStates> {
     clientLocation = await Geolocator.getCurrentPosition();
     latitude = clientLocation.latitude;
     longitude = clientLocation.longitude;
+
+    dLat = clientLocation.latitude;
+    dLng = clientLocation.longitude;
+
+    print(longitude);
     print(latitude);
     return clientLocation;
   }
@@ -197,7 +204,6 @@ class UberCubit extends Cubit<UberStates> {
       lngTo: to!.longitude,
       fcmToken: client!.fcmToken,
       agreement: false,
-
     );
     FirebaseFirestore.instance
         .collection('clients')
@@ -217,7 +223,6 @@ class UberCubit extends Cubit<UberStates> {
           fcmToken: client!.fcmToken,
           orderId: value1.id,
           agreement: false,
-
         );
         FirebaseFirestore.instance
             .collection('clients')
@@ -401,7 +406,7 @@ class UberCubit extends Cubit<UberStates> {
   AcceptOffer({
     required OrderDataModel order,
     OfferDataModel? offer,
-}){
+  }) {
     emit(AcceptedOfferLoadingState());
     OrderDataModel newOrder = OrderDataModel(
       date: order.date,
@@ -423,47 +428,55 @@ class UberCubit extends Cubit<UberStates> {
       driverName: offer.driverName,
       driverPhone: offer.driverPhone,
       price: offer.price,
-
+      driverId: offer.driverId,
+      clientId: CasheHelper.GetData(key: 'uId'),
     );
     FirebaseFirestore.instance
         .collection('clients')
         .doc(CasheHelper.GetData(key: 'uId'))
         .collection('orders')
         .doc(order.orderId)
-        .update(newOrder.toMap()).then((value){
-          // GetClientOrders();
-          DioHelper.PostData(
-            url: 'send',
-            data: {
-              "to": order.driverFcmToken,
-              "priority": "high",
-              "notification": {
-                "body": "${order.clientName} accept your offer ",
-                "title": "${order.clientName}  ",
-                "subtitle": ""
-              }
-            },
-          );
-          FirebaseFirestore.instance.collection('orders')
-              .doc(order.orderId).delete();
-          FirebaseFirestore.instance.collection('drivers')
-          .doc(offer.driverId).collection('acceptedOrders').add(newOrder.toMap());
-    }).catchError((error){
+        .update(newOrder.toMap())
+        .then((value) {
+      // GetClientOrders();
+      DioHelper.PostData(
+        url: 'send',
+        data: {
+          "to": order.driverFcmToken,
+          "priority": "high",
+          "notification": {
+            "body": "${order.clientName} accept your offer ",
+            "title": "${order.clientName}  ",
+            "subtitle": ""
+          }
+        },
+      );
+      FirebaseFirestore.instance
+          .collection('orders')
+          .doc(order.orderId)
+          .delete();
+      FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(offer.driverId)
+          .collection('acceptedOrders')
+          .add(newOrder.toMap());
+    }).catchError((error) {
       emit(AcceptedOfferErrorState());
     });
-
   }
 
-
   List<OrderDataModel> acceptedOrders = [];
+
   GetAcceptedOrders() {
-    if (CasheHelper.GetData(key: 'isDriver'))
-    {
+    if (CasheHelper.GetData(key: 'isDriver')) {
       emit(GetAcceptedOrdersLoadingState());
-      FirebaseFirestore.instance.collection('drivers')
-          .doc(CasheHelper.GetData(key: 'uId')).collection('acceptedOrders')
-          .snapshots().listen((event) {
-        acceptedOrders=[];
+      FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(CasheHelper.GetData(key: 'uId'))
+          .collection('acceptedOrders')
+          .snapshots()
+          .listen((event) {
+        acceptedOrders = [];
         event.docs.forEach((element) {
           acceptedOrders.add(OrderDataModel.fromJson(element.data()));
         });
@@ -472,6 +485,114 @@ class UberCubit extends Cubit<UberStates> {
     }
   }
 
+  int x = 2;
+
+  AddMarkeratDriverLocation({
+    double? driverLat,
+    double? driverLng,
+    double? latFrom,
+    double? lngFrom,
+    double? latTo,
+    double? lngTo,
+  }) {
+    orderLocationsMarkers.clear();
+    AddMarkeratClientLocations(
+      lngFrom: lngFrom,
+      latFrom: latFrom,
+      latTo: latTo,
+      lngTo: lngTo,
+    );
+    orderLocationsMarkers.add(Marker(
+      markerId: MarkerId('$x'),
+      position: LatLng(driverLat!, driverLng!),
+      infoWindow: InfoWindow(
+          title: 'Your location'
+      ),
+
+    ));
+    emit(AddMarkerToDriverLocationState());
+  }
+
+  var orderLocationsMarkers = HashSet<Marker>();
+
+  AddMarkeratClientLocations({
+    double? latFrom,
+    double? lngFrom,
+    double? latTo,
+    double? lngTo,
+  }) {
+    orderLocationsMarkers.add(
+      Marker(
+        markerId: MarkerId('0'),
+        position: LatLng(latFrom!, lngFrom!),
+        infoWindow: InfoWindow(
+          title: 'From'
+        ),
+      ),
+    );
+    orderLocationsMarkers.add(
+      Marker(
+        markerId: MarkerId('1'),
+        position: LatLng(latTo!, lngTo!),
+        infoWindow: InfoWindow(
+            title: 'To'
+        ),
+      ),
+    );
+  }
+
+
+
+    Set<Polygon> myPolygon(
+        {
+          double? latFrom,
+          double? lngFrom,
+          double? latTo,
+          double? lngTo,
+          double? driverLat,
+          double? driverLng,
+        }
+        ) {
+      var polygonCoords = <LatLng>[];
+
+      polygonCoords.add(LatLng(latTo!,lngTo!));
+      polygonCoords.add(LatLng(latFrom!, lngFrom!));
+      polygonCoords.add(LatLng(driverLat!, driverLng!));
+
+      var polygonSet =  Set<Polygon>();
+      polygonSet.add(Polygon(
+          polygonId: PolygonId('test'),
+          points: polygonCoords,
+          strokeColor: Colors.red.withOpacity(.2),
+        visible: true,
+        fillColor: Colors.black.withOpacity(.1)
+      ));
+
+      return polygonSet;
+    }
+
+
+
+
+  LocationOfDriverInPloygon(Position? position){
+    dLat = position!.latitude;
+    dLng = position.longitude;
+    emit(PolygonState());
+  }
+
+
+  RateDriver({
+    required String driverId,
+    required String clientId,
+    required double rate ,
+}){
+    FirebaseFirestore.instance
+        .collection('drivers').doc(driverId)
+    .collection('rates')
+    .add({
+      clientId : rate ,
+    });
+  }
 //   List<OrderDataModel> acceptedOffers = [];
 //
 //   AcceptOffer({

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rate/rate.dart';
 import 'package:uber_final/components/components.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
@@ -8,6 +9,7 @@ import '../../uber_cubit/uber_states.dart';
 
 class AllOffersScreen extends StatelessWidget {
   String orderId;
+  double rate =0 ;
 
   AllOffersScreen({required this.orderId});
 
@@ -42,13 +44,132 @@ class AllOffersScreen extends StatelessWidget {
                       )
                     : Center(child: CircularProgressIndicator())
                 : Center(
-                  child: Text(
-                      'There is an agreement with ${order[0].driverName} ${order[0].price}',
-              style: TextStyle(
-                  fontSize: 20,
-              ),
+                    child: Card(
+                      margin: EdgeInsets.all(20),
+                      elevation: 10,
+                      child: Padding(
+                        padding: const EdgeInsets.all(50),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'There is an agreement with : ',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Center(
+                              child: Column(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 60,
+                                    backgroundImage: NetworkImage(
+                                      order[0].driverImage!,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    order[0].driverName!,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Price :   ',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        order[0].price!,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Phone :   ',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        order[0].driverPhone!,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Text(
+                                    'Rate the driver',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Rate(
+                                    iconSize: 40,
+                                    color: Colors.yellow.shade600,
+                                    allowHalf: true,
+                                    allowClear: true,
+                                    initialValue: 3.5,
+                                    readOnly: false,
+                                    onChange: (value) {
+                                      rate = value;
+                                    },
+
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  BuildButton(
+                                    onPressed: () {
+                                      cubit.RateDriver(
+                                        driverId: order[0].driverId!,
+                                        clientId: order[0].clientId!,
+                                        rate: rate,
+                                      );
+                                    },
+                                    label: 'Confirm rate',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                ),
+                  ),
           );
         },
       );
