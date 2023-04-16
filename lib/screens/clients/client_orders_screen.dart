@@ -15,6 +15,7 @@ class ClientOrdersScreen extends StatelessWidget {
         return  Padding(
           padding: const EdgeInsets.all(15.0),
           child: ListView.separated(
+            physics: BouncingScrollPhysics(),
             itemBuilder: (context,index)=> BuildClientOrderItem(
               order:  cubit.orders[index],
             ),

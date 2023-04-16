@@ -10,6 +10,7 @@ import 'package:uber_final/data_models/client_data_model.dart';
 import 'package:uber_final/data_models/driver_data_model.dart';
 import 'package:uber_final/data_models/offer_data_model.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
+import 'package:uber_final/data_models/rate_data_model.dart';
 import 'package:uber_final/screens/clients/client_orders_screen.dart';
 import 'package:uber_final/screens/clients/client_setting_screen.dart';
 import 'package:uber_final/screens/clients/make_order_screen.dart';
@@ -105,7 +106,8 @@ class UberCubit extends Cubit<UberStates> {
   double longitude = 0;
 
   double dLat = 0;
-  double dLng = 0  ;
+  double dLng = 0;
+
   var clientLocation;
 
   Future<Position> GetClientLocation() async {
@@ -505,10 +507,7 @@ class UberCubit extends Cubit<UberStates> {
     orderLocationsMarkers.add(Marker(
       markerId: MarkerId('$x'),
       position: LatLng(driverLat!, driverLng!),
-      infoWindow: InfoWindow(
-          title: 'Your location'
-      ),
-
+      infoWindow: InfoWindow(title: 'Your location'),
     ));
     emit(AddMarkerToDriverLocationState());
   }
@@ -525,72 +524,90 @@ class UberCubit extends Cubit<UberStates> {
       Marker(
         markerId: MarkerId('0'),
         position: LatLng(latFrom!, lngFrom!),
-        infoWindow: InfoWindow(
-          title: 'From'
-        ),
+        infoWindow: InfoWindow(title: 'From'),
       ),
     );
     orderLocationsMarkers.add(
       Marker(
         markerId: MarkerId('1'),
         position: LatLng(latTo!, lngTo!),
-        infoWindow: InfoWindow(
-            title: 'To'
-        ),
+        infoWindow: InfoWindow(title: 'To'),
       ),
     );
   }
 
+  Set<Polygon> myPolygon({
+    double? latFrom,
+    double? lngFrom,
+    double? latTo,
+    double? lngTo,
+    double? driverLat,
+    double? driverLng,
+  }) {
+    var polygonCoords = <LatLng>[];
 
+    polygonCoords.add(LatLng(latTo!, lngTo!));
+    polygonCoords.add(LatLng(latFrom!, lngFrom!));
+    polygonCoords.add(LatLng(driverLat!, driverLng!));
 
-    Set<Polygon> myPolygon(
-        {
-          double? latFrom,
-          double? lngFrom,
-          double? latTo,
-          double? lngTo,
-          double? driverLat,
-          double? driverLng,
-        }
-        ) {
-      var polygonCoords = <LatLng>[];
-
-      polygonCoords.add(LatLng(latTo!,lngTo!));
-      polygonCoords.add(LatLng(latFrom!, lngFrom!));
-      polygonCoords.add(LatLng(driverLat!, driverLng!));
-
-      var polygonSet =  Set<Polygon>();
-      polygonSet.add(Polygon(
-          polygonId: PolygonId('test'),
-          points: polygonCoords,
-          strokeColor: Colors.red.withOpacity(.2),
+    var polygonSet = Set<Polygon>();
+    polygonSet.add(Polygon(
+        polygonId: PolygonId('test'),
+        points: polygonCoords,
+        strokeColor: Colors.red.withOpacity(.2),
         visible: true,
-        fillColor: Colors.black.withOpacity(.1)
-      ));
+        fillColor: Colors.black.withOpacity(.1)));
 
-      return polygonSet;
-    }
+    return polygonSet;
+  }
 
-
-
-
-  LocationOfDriverInPloygon(Position? position){
+  LocationOfDriverInPloygon(Position? position) {
     dLat = position!.latitude;
     dLng = position.longitude;
     emit(PolygonState());
   }
 
-
   RateDriver({
     required String driverId,
     required String clientId,
-    required double rate ,
-}){
+    required double rate,
+    required String clientName,
+    required String clientImage ,
+  }) {
+    emit(RateDriverLoadingState());
+    RateDataModel clientRate = RateDataModel(
+      rate: rate,
+      clientName: clientName,
+      clientImage: clientImage,
+    );
     FirebaseFirestore.instance
-        .collection('drivers').doc(driverId)
-    .collection('rates')
-    .add({
-      clientId : rate ,
+        .collection('drivers')
+        .doc(driverId)
+        .collection('rates')
+        .add(clientRate.toMap()).then((value) {
+      emit(RateDriverSuccessfullyState());
+    }).catchError((error) {
+      emit(RateDriverErrorState());
+    });
+  }
+
+
+  List<RateDataModel> driverRates =[];
+  GetDriverRates({
+    required String driverId,
+}){
+    emit(GetDriverRatesLoadingState());
+    FirebaseFirestore.instance.collection('drivers')
+        .doc(driverId)
+        .collection('rates')
+        .snapshots()
+        .listen((event) {
+          driverRates=[];
+          event.docs.forEach((element) {
+            driverRates.add(RateDataModel.fromJson(element.data()));
+          });
+          emit(GetDriverRatesSuccessfullyState());
+
     });
   }
 //   List<OrderDataModel> acceptedOffers = [];

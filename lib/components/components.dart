@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rate/rate.dart';
 import 'package:uber_final/data_models/offer_data_model.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
+import 'package:uber_final/data_models/rate_data_model.dart';
+import 'package:uber_final/screens/clients/all_driver_rates.dart';
 import 'package:uber_final/screens/clients/all_offers_screen.dart';
 import 'package:uber_final/screens/drivers/location_of_order_screen.dart';
 import 'package:uber_final/screens/drivers/make_offer_screen.dart';
@@ -165,64 +168,67 @@ class BuildClientOrderItem extends StatelessWidget {
             ),
             context: context);
       },
-      child: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-            border: Border.all(
-          color: Colors.black,
-        )),
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.black, width: 2)),
-              child: CircleAvatar(
-                radius: 40,
-                child: Text(
-                  '${order.time}',
+      child: Card(
+        elevation: 15,
+        child: Container(
+          padding: EdgeInsets.all(35),
+          // decoration: BoxDecoration(
+          //     border: Border.all(
+          //   color: Colors.black,
+          // )),
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.black, width: 2)),
+                child: CircleAvatar(
+                  radius: 40,
+                  child: Text(
+                    '${order.time}',
+                  ),
+                  backgroundColor: Colors.white,
                 ),
-                backgroundColor: Colors.white,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      Text(" From : ${order.from}"),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      Text(" To : ${order.to}"),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.date_range_outlined,
-                      ),
-                      Text(" Date : ${order.date}"),
-                    ],
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                        ),
+                        Text(" From : ${order.from}"),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                        ),
+                        Text(" To : ${order.to}"),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.date_range_outlined,
+                        ),
+                        Text(" Date : ${order.date}"),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -244,82 +250,80 @@ class BuildDriverOrderItem extends StatelessWidget {
         print(this.order.time);
       },
       child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Container(
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            border: Border.all(
-              color: Colors.black12,
-            ),
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(
-                  order.clientImage!,
+        padding: const EdgeInsets.all(15),
+        child: Card(
+          elevation: 15,
+          child: Container(
+            padding: EdgeInsets.all(20),
+
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage: NetworkImage(
+                    order.clientImage!,
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    order.clientName!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontSize: 20,
+                SizedBox(
+                  width: 15,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      order.clientName!,
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            fontSize: 20,
+                          ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
                         ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      Text(" From : ${order.from} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      Text(" To : ${order.to} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.date_range_outlined,
-                      ),
-                      Text(" Date : ${order.date} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.watch_later_outlined,
-                      ),
-                      Text(" Time : ${order.time} "),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                        Text(" From : ${order.from} "),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                        ),
+                        Text(" To : ${order.to} "),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.date_range_outlined,
+                        ),
+                        Text(" Date : ${order.date} "),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.watch_later_outlined,
+                        ),
+                        Text(" Time : ${order.time} "),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -343,89 +347,85 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
         // print(this.order.time);
       },
       child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Container(
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            border: Border.all(
-              color: Colors.black12,
-            ),
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(
-                  order.clientImage!,
+        padding: const EdgeInsets.all(15),
+        child: Card(
+          elevation: 15,
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage: NetworkImage(
+                    order.clientImage!,
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    order.clientName!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      fontSize: 20,
+                SizedBox(
+                  width: 15,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      order.clientName!,
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            fontSize: 20,
+                          ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      Text(" From : ${order.from} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      Text(" To : ${order.to} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.date_range_outlined,
-                      ),
-                      Text(" Date : ${order.date} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.watch_later_outlined,
-                      ),
-                      Text(" Time : ${order.time} "),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                        ),
+                        Text(" From : ${order.from} "),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                        ),
+                        Text(" To : ${order.to} "),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.date_range_outlined,
+                        ),
+                        Text(" Date : ${order.date} "),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.watch_later_outlined,
+                        ),
+                        Text(" Time : ${order.time} "),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
 
 class BuildOfferItem extends StatelessWidget {
   OfferDataModel offer;
@@ -440,97 +440,166 @@ class BuildOfferItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: NetworkImage(
-              offer.driverImage!,
-            ),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
+      padding: const EdgeInsets.all(15),
+      child: Card(
+        elevation: 15,
+        child: Container(
+          padding: EdgeInsets.all(30),
+          child: Row(
             children: [
-              Text(
-                offer.driverName!,
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      fontSize: 20,
-                    ),
+              CircleAvatar(
+                radius: 40,
+                backgroundImage: NetworkImage(
+                  offer.driverImage!,
+                ),
               ),
               SizedBox(
-                height: 15,
+                width: 20,
               ),
-              Row(
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${offer.price} \$',
+                    offer.driverName!,
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontSize: 17,
+                          fontSize: 20,
                         ),
                   ),
                   SizedBox(
-                    width: 20,
+                    height: 15,
                   ),
-                  InkWell(
-                    onTap: () {
-                      // OrderDataModel newOrder = OrderDataModel(
-                      //   date: order!.date,
-                      //   time: order!.time,
-                      //   from: order!.from,
-                      //   to: order!.to,
-                      //   clientName: order!.clientName,
-                      //   clientImage: order!.clientImage,
-                      //   latFrom: order!.latFrom,
-                      //   latTo: order!.latTo,
-                      //   lngFrom: order!.lngFrom,
-                      //   lngTo: order!.lngTo,
-                      //   fcmToken: order!.fcmToken,
-                      //   orderId: order!.orderId,
-                      //   agreement: true,
-                      // );
-                      // FirebaseFirestore.instance
-                      // .collection('clients')
-                      // .doc(CasheHelper.GetData(key: 'uId'))
-                      //     .collection('orders')
-                      //     .doc(order!.orderId)
-                      // .update(newOrder.toMap()).then((value){
-                      //
-                      // });
-
-                      UberCubit.get(context).AcceptOffer(
-                        order: order!,
-                        offer: offer,
-                      );
-                    },
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.green,
-                      child: Icon(
-                        Icons.check,
-                        color: Colors.white,
+                  Row(
+                    children: [
+                      Text(
+                        '${offer.price} \$',
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                              fontSize: 17,
+                            ),
                       ),
-                    ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          // OrderDataModel newOrder = OrderDataModel(
+                          //   date: order!.date,
+                          //   time: order!.time,
+                          //   from: order!.from,
+                          //   to: order!.to,
+                          //   clientName: order!.clientName,
+                          //   clientImage: order!.clientImage,
+                          //   latFrom: order!.latFrom,
+                          //   latTo: order!.latTo,
+                          //   lngFrom: order!.lngFrom,
+                          //   lngTo: order!.lngTo,
+                          //   fcmToken: order!.fcmToken,
+                          //   orderId: order!.orderId,
+                          //   agreement: true,
+                          // );
+                          // FirebaseFirestore.instance
+                          // .collection('clients')
+                          // .doc(CasheHelper.GetData(key: 'uId'))
+                          //     .collection('orders')
+                          //     .doc(order!.orderId)
+                          // .update(newOrder.toMap()).then((value){
+                          //
+                          // });
+
+                          UberCubit.get(context).AcceptOffer(
+                            order: order!,
+                            offer: offer,
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.green,
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.red,
+                        child: Icon(
+                          Icons.disabled_by_default_outlined,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
-                    width: 30,
+                    height: 20,
                   ),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.red,
-                    child: Icon(
-                      Icons.disabled_by_default_outlined,
-                      color: Colors.white,
-                    ),
+                  BuildTextButton(
+                    onPressed: () {
+                      navigate(screen: AllDriverRates(
+                        offer.driverId!,
+                      ), context: context);
+                    },
+                    label: 'Show Driver Rates',
                   ),
                 ],
               ),
             ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class BuildClientRateItem extends StatelessWidget {
+  RateDataModel rate ;
+  BuildClientRateItem({
+    required this.rate
+});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Card(
+        elevation: 15,
+        child: Container(
+          padding: EdgeInsets.all(25),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 40,
+                backgroundImage: NetworkImage(
+                  rate.clientImage!,
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    rate.clientName!,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Rate(
+                    initialValue: rate.rate!,
+                    readOnly: true,
+                    iconSize: 25,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

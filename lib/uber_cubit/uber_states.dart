@@ -54,6 +54,18 @@ class AddMarkerToDriverLocationState extends UberStates{}
 
 class PolygonState extends UberStates{}
 
+class RateDriverLoadingState extends UberStates{}
+class RateDriverSuccessfullyState extends UberStates{}
+class RateDriverErrorState extends UberStates{}
+
+class GetDriverRatesLoadingState extends UberStates{}
+class GetDriverRatesSuccessfullyState extends UberStates{}
+class GetDriverRatesErrorState extends UberStates{}
+
+
+
+
+
 
 
 
