@@ -13,6 +13,7 @@ class LayoutForClient extends StatelessWidget{
       },
       builder: (context,state){
         var cubit = UberCubit.get(context);
+
         return SafeArea(
           child: Scaffold(
             bottomNavigationBar: SalomonBottomBar(
@@ -28,7 +29,7 @@ class LayoutForClient extends StatelessWidget{
 
                 SalomonBottomBarItem(
                   icon: Icon(Icons.chat_outlined),
-                  title: Text("Add order"),
+                  title: Text("Make order"),
                   // selectedColor: Colors.pink,
                 ),
 

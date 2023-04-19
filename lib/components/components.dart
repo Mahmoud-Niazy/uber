@@ -250,7 +250,7 @@ class BuildDriverOrderItem extends StatelessWidget {
         print(this.order.time);
       },
       child: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(10),
         child: Card(
           elevation: 15,
           child: Container(
@@ -430,11 +430,11 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
 class BuildOfferItem extends StatelessWidget {
   OfferDataModel offer;
 
-  OrderDataModel? order;
+  OrderDataModel order;
 
   BuildOfferItem({
     required this.offer,
-    this.order,
+    required this.order,
   });
 
   @override
@@ -506,9 +506,10 @@ class BuildOfferItem extends StatelessWidget {
                           // });
 
                           UberCubit.get(context).AcceptOffer(
-                            order: order!,
+                            order: order,
                             offer: offer,
                           );
+
                         },
                         child: CircleAvatar(
                           radius: 20,

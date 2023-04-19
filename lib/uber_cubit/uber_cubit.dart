@@ -110,7 +110,7 @@ class UberCubit extends Cubit<UberStates> {
 
   var clientLocation;
 
-  Future<Position> GetClientLocation() async {
+  Future<Position> GetUserLocation() async {
     emit(GetClientLocationErrorState());
     bool serviceEnabled;
     LocationPermission permission;
@@ -337,6 +337,7 @@ class UberCubit extends Cubit<UberStates> {
         emit(GelAllOrdersSuccessfullyState());
       });
     }
+    return 1;
   }
 
   MakeOffer({
@@ -410,6 +411,7 @@ class UberCubit extends Cubit<UberStates> {
     OfferDataModel? offer,
   }) {
     emit(AcceptedOfferLoadingState());
+
     OrderDataModel newOrder = OrderDataModel(
       date: order.date,
       time: order.time,
@@ -438,39 +440,73 @@ class UberCubit extends Cubit<UberStates> {
         .doc(CasheHelper.GetData(key: 'uId'))
         .collection('orders')
         .doc(order.orderId)
-        .update(newOrder.toMap())
-        .then((value) {
-      // GetClientOrders();
-      DioHelper.PostData(
-        url: 'send',
-        data: {
-          "to": order.driverFcmToken,
-          "priority": "high",
-          "notification": {
-            "body": "${order.clientName} accept your offer ",
-            "title": "${order.clientName}  ",
-            "subtitle": ""
-          }
-        },
-      );
-      FirebaseFirestore.instance
-          .collection('orders')
-          .doc(order.orderId)
-          .delete();
-      FirebaseFirestore.instance
-          .collection('drivers')
-          .doc(offer.driverId)
-          .collection('acceptedOrders')
-          .add(newOrder.toMap());
-    }).catchError((error) {
-      emit(AcceptedOfferErrorState());
+        .update(newOrder.toMap()).then((value) {
+          GetClientOrders();
+          emit(AcceptedOfferSuccessfullyState());
+
     });
+    FirebaseFirestore.instance
+        .collection('orders')
+        .doc(order.orderId)
+        .delete();
+    FirebaseFirestore.instance
+        .collection('drivers')
+        .doc(offer.driverId)
+        .collection('acceptedOrders')
+        .add(newOrder.toMap());
+
+    SendNotification(
+      to: newOrder.driverFcmToken!,
+      title: newOrder.clientName!,
+      body: "${newOrder.clientName!} accept your offer ",
+    );
+
+
+
+    // SendNotification(
+    //   to: order.driverFcmToken!,
+    //   title: "${order.clientName}  ",
+    //   body: "${order.clientName} accept your offer ",
+    // );
+
+
+
+
+
+    // DioHelper.PostData(
+    //   url: 'send',
+    //   data: {
+    //     "to": order.driverFcmToken,
+    //     "priority": "high",
+    //     "notification": {
+    //       "body": "${order.clientName} accept your offer ",
+    //       "title": "${order.clientName}  ",
+    //       "subtitle": ""
+    //     }
+    //   },
+    // );
+  }
+
+  SendNotification({
+    required String to,
+    required String title,
+    required String body,
+  }) {
+     DioHelper.PostData(
+      url: 'send',
+      data: {
+        "to": to,
+        "priority": "high",
+        "notification": {"body": body, "title": title, "subtitle": ""}
+      },
+    );
   }
 
   List<OrderDataModel> acceptedOrders = [];
 
   GetAcceptedOrders() {
     if (CasheHelper.GetData(key: 'isDriver')) {
+      acceptedOrders = [];
       emit(GetAcceptedOrdersLoadingState());
       FirebaseFirestore.instance
           .collection('drivers')
@@ -572,7 +608,7 @@ class UberCubit extends Cubit<UberStates> {
     required String clientId,
     required double rate,
     required String clientName,
-    required String clientImage ,
+    required String clientImage,
   }) {
     emit(RateDriverLoadingState());
     RateDataModel clientRate = RateDataModel(
@@ -584,30 +620,31 @@ class UberCubit extends Cubit<UberStates> {
         .collection('drivers')
         .doc(driverId)
         .collection('rates')
-        .add(clientRate.toMap()).then((value) {
+        .add(clientRate.toMap())
+        .then((value) {
       emit(RateDriverSuccessfullyState());
     }).catchError((error) {
       emit(RateDriverErrorState());
     });
   }
 
+  List<RateDataModel> driverRates = [];
 
-  List<RateDataModel> driverRates =[];
   GetDriverRates({
     required String driverId,
-}){
+  }) {
     emit(GetDriverRatesLoadingState());
-    FirebaseFirestore.instance.collection('drivers')
+    FirebaseFirestore.instance
+        .collection('drivers')
         .doc(driverId)
         .collection('rates')
         .snapshots()
         .listen((event) {
-          driverRates=[];
-          event.docs.forEach((element) {
-            driverRates.add(RateDataModel.fromJson(element.data()));
-          });
-          emit(GetDriverRatesSuccessfullyState());
-
+      driverRates = [];
+      event.docs.forEach((element) {
+        driverRates.add(RateDataModel.fromJson(element.data()));
+      });
+      emit(GetDriverRatesSuccessfullyState());
     });
   }
 //   List<OrderDataModel> acceptedOffers = [];

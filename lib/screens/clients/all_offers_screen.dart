@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rate/rate.dart';
 import 'package:uber_final/components/components.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
@@ -8,7 +9,7 @@ import '../../uber_cubit/uber_states.dart';
 
 class AllOffersScreen extends StatelessWidget {
   String orderId;
-  double rate =3.5 ;
+  double rate = 3.5;
 
   AllOffersScreen({required this.orderId});
 
@@ -19,6 +20,12 @@ class AllOffersScreen extends StatelessWidget {
 
       return BlocConsumer<UberCubit, UberStates>(
         listener: (context, state) {
+          if (state is RateDriverSuccessfullyState) {
+            Fluttertoast.showToast(
+              msg: 'Rated Successfully',
+              backgroundColor: Colors.green,
+            );
+          }
           print(state);
         },
         builder: (context, state) {
@@ -32,7 +39,7 @@ class AllOffersScreen extends StatelessWidget {
             body: order[0].agreement == false
                 ? cubit.offers.length > 0
                     ? ListView.separated(
-              physics: BouncingScrollPhysics(),
+                        physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) => BuildOfferItem(
                           offer: cubit.offers[index],
                           order: order[0],
@@ -147,26 +154,25 @@ class AllOffersScreen extends StatelessWidget {
                                     onChange: (value) {
                                       rate = value;
                                     },
-
                                   ),
                                   SizedBox(
                                     height: 30,
                                   ),
-                                  state is RateDriverLoadingState?
-                                  Center(child: CircularProgressIndicator())
-                                  :
-                                  BuildButton(
-                                    onPressed: () {
-                                      cubit.RateDriver(
-                                        driverId: order[0].driverId!,
-                                        clientId: order[0].clientId!,
-                                        rate: rate,
-                                        clientImage: cubit.client!.image,
-                                        clientName: cubit.client!.name,
-                                      );
-                                    },
-                                    label: 'Confirm rate',
-                                  ),
+                                  state is RateDriverLoadingState
+                                      ? Center(
+                                          child: CircularProgressIndicator())
+                                      : BuildButton(
+                                          onPressed: () {
+                                            cubit.RateDriver(
+                                              driverId: order[0].driverId!,
+                                              clientId: order[0].clientId!,
+                                              rate: rate,
+                                              clientImage: cubit.client!.image,
+                                              clientName: cubit.client!.name,
+                                            );
+                                          },
+                                          label: 'Confirm rate',
+                                        ),
                                 ],
                               ),
                             ),

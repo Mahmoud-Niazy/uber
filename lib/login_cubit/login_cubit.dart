@@ -33,10 +33,7 @@ class LoginCubit extends Cubit<LoginStates> {
       email: email.toString().trim(),
       password: password,
     ).then((user) async {
-      CasheHelper.SaveData(key: 'uId', value: user.user!.uid).then((value) =>
-      {
-
-      });
+      await CasheHelper.SaveData(key: 'uId', value: user.user!.uid);
       emit(UserLoginSuccessfullyState(user.user!.uid));
     })
         .catchError((error) {

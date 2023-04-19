@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uber_final/cashe_helper/cashe_helper.dart';
 import 'package:uber_final/layout/layout_for_drivers.dart';
 import 'package:uber_final/login_cubit/login_cubit.dart';
@@ -22,17 +24,31 @@ class LoginScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is UserLoginSuccessfullyState) {
             CasheHelper.SaveData(
-                    key: 'isDriver', value: LoginCubit.get(context).isDriver)
+                key: 'isDriver', value: LoginCubit.get(context).isDriver)
                 .then((value) {
               UberCubit.get(context).GetUserData(
                 userId: state.userId,
               );
-              CasheHelper.GetData(key: 'isDriver')
-                  ? navigateAndFinish(
-                      screen: LayoutForDrivers(), context: context)
-                  : navigateAndFinish(
-                      screen: LayoutForClient(), context: context);
+              if(CasheHelper.GetData(key: 'isDriver')){
+                FirebaseMessaging.instance.subscribeToTopic('drivers');
+                UberCubit.get(context).GetAcceptedOrders();
+                navigateAndFinish(
+                    screen: LayoutForDrivers(), context: context);
+              }
+              if(!CasheHelper.GetData(key: 'isDriver')){
+                FirebaseMessaging.instance.subscribeToTopic('clients');
+                UberCubit.get(context).GetClientOrders();
+                navigateAndFinish(
+                    screen: LayoutForClient(), context: context);
+              }
+
             });
+          }
+          if (state is UserLoginErrorState) {
+            Fluttertoast.showToast(
+              msg: 'Check your email and password please',
+              backgroundColor: Colors.red,
+            );
           }
           print(state);
         },

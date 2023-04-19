@@ -1,4 +1,6 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_final/cashe_helper/cashe_helper.dart';
@@ -11,10 +13,62 @@ import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AwesomeNotifications().initialize(
+    // 'resource://mipmap-xxxhdpi/ic_launcher.png',
+    null,
+    [
+      NotificationChannel(
+        channelKey: 'Firebase',
+        channelName: 'Firebase',
+        channelDescription: 'Fcm from Firebase',
+        playSound: true,
+        channelShowBadge: true,
+      ),
+    ],
+  );
   await Firebase.initializeApp();
   await CasheHelper.Init();
   DioHelper.Init();
+
+  FirebaseMessaging.onMessage.listen((event) {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 5,
+        channelKey: 'Firebase',
+        title: event.notification!.title,
+        body: event.notification!.body,
+      ),
+    );
+    print('Notification');
+  });
+  // FirebaseMessaging.onBackgroundMessage((message) {
+  //   return AwesomeNotifications().createNotification(
+  //     content: NotificationContent(
+  //       id: 5,
+  //       channelKey: 'Firebase',
+  //       title: 'Notification from Firebase',
+  //       body: 'Notification from Firebase',
+  //       bigPicture: 'assets/images/33088-1-taxi-driver-file.png',
+  //     ),
+  //   );
+  //   print('Notification');
+  //
+  // });
+
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
+
   runApp(MyApp());
+
   print(CasheHelper.GetData(key: 'isDriver'));
 }
 
@@ -27,13 +81,22 @@ class MyApp extends StatelessWidget {
           create: (context) => RegisterCubit(),
         ),
         BlocProvider(
-          create: (context) => UberCubit()..GetUserData(
-            userId:CasheHelper.GetData(key: 'uId')  ,
-          )..GetClientLocation()..GetClientOrders()..GetAllOrders()..GetAcceptedOrders(),
+          create: (context) => UberCubit()
+            ..GetUserData(
+              userId: CasheHelper.GetData(key: 'uId'),
+            )
+            ..GetUserLocation()
+            ..GetClientOrders()
+            ..GetAllOrders()
+            ..GetAcceptedOrders(),
         ),
       ],
       child: MaterialApp(
-        home: CasheHelper.GetData(key: 'uId') != null ? CasheHelper.GetData(key: 'isDriver') ? LayoutForDrivers() :  LayoutForClient() : LoginScreen(),
+        home: CasheHelper.GetData(key: 'uId') != null
+            ? CasheHelper.GetData(key: 'isDriver')
+                ? LayoutForDrivers()
+                : LayoutForClient()
+            : LoginScreen(),
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: AppBarTheme(
@@ -53,12 +116,9 @@ class MyApp extends StatelessWidget {
               fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
-
           ),
         ),
       ),
     );
   }
 }
-
-
