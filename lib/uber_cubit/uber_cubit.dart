@@ -376,6 +376,22 @@ class UberCubit extends Cubit<UberStates> {
           .collection('offers')
           .add(offer.toMap())
           .then((value) {
+        offer = OfferDataModel(
+          driverEmail: driver!.email,
+          driverFcmToken: driver!.fcmToken,
+          driverName: driver!.name,
+          driverPhone: driver!.phone,
+          price: price,
+          driverImage: driver!.image,
+          driverId: driver!.userId,
+          offerId: value.id,
+        );
+        FirebaseFirestore.instance
+            .collection('orders')
+            .doc(orderId)
+            .collection('offers')
+        .doc(value.id)
+        .update(offer.toMap());
         emit(MakeOfferSuccessfullyState());
       }).catchError((error) {
         emit(MakeOfferErrorState());
@@ -645,6 +661,28 @@ class UberCubit extends Cubit<UberStates> {
         driverRates.add(RateDataModel.fromJson(element.data()));
       });
       emit(GetDriverRatesSuccessfullyState());
+    });
+  }
+
+  RejectOffer({
+    required String orderId,
+    required String offerId,
+    required String to ,
+    required String clientName,
+}){
+    emit(RejectOfferLoadingState());
+    FirebaseFirestore.instance
+        .collection('orders')
+        .doc(orderId)
+        .collection('offers')
+        .doc(offerId)
+        .delete().then((value) {
+      SendNotification(
+        to: to,
+        title: '${clientName}',
+        body: "${clientName} reject your offer ",
+      );
+          emit(RejectOfferSuccessfullyState());
     });
   }
 //   List<OrderDataModel> acceptedOffers = [];

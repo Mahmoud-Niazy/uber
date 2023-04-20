@@ -6,6 +6,7 @@ class OfferDataModel {
   String? driverEmail ;
   String? driverImage;
   String? driverId;
+  String? offerId ;
 
   OfferDataModel({
     required this.driverEmail,
@@ -15,6 +16,7 @@ class OfferDataModel {
     required this.price,
     required this.driverImage,
     required this.driverId,
+    this.offerId,
 
 });
 
@@ -26,6 +28,8 @@ class OfferDataModel {
     driverPhone = json['driverPhone'];
     driverImage = json['driverImage'];
     driverId = json['driverId'];
+    offerId = json['offerId'];
+
 
 
 
@@ -40,6 +44,8 @@ class OfferDataModel {
       'driverPhone' : driverPhone,
       'driverImage' : driverImage,
       'driverId' : driverId,
+      'offerId' : offerId,
+
 
 
     };

@@ -255,7 +255,6 @@ class BuildDriverOrderItem extends StatelessWidget {
           elevation: 15,
           child: Container(
             padding: EdgeInsets.all(20),
-
             child: Row(
               children: [
                 CircleAvatar(
@@ -509,7 +508,6 @@ class BuildOfferItem extends StatelessWidget {
                             order: order,
                             offer: offer,
                           );
-
                         },
                         child: CircleAvatar(
                           radius: 20,
@@ -523,12 +521,22 @@ class BuildOfferItem extends StatelessWidget {
                       SizedBox(
                         width: 30,
                       ),
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.red,
-                        child: Icon(
-                          Icons.disabled_by_default_outlined,
-                          color: Colors.white,
+                      InkWell(
+                        onTap: () {
+                          UberCubit.get(context).RejectOffer(
+                            orderId: order.orderId!,
+                            offerId: offer.offerId!,
+                            to: offer.driverFcmToken!,
+                            clientName: order.clientName!,
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.red,
+                          child: Icon(
+                            Icons.disabled_by_default_outlined,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -538,9 +546,11 @@ class BuildOfferItem extends StatelessWidget {
                   ),
                   BuildTextButton(
                     onPressed: () {
-                      navigate(screen: AllDriverRates(
-                        offer.driverId!,
-                      ), context: context);
+                      navigate(
+                          screen: AllDriverRates(
+                            offer.driverId!,
+                          ),
+                          context: context);
                     },
                     label: 'Show Driver Rates',
                   ),
@@ -555,10 +565,10 @@ class BuildOfferItem extends StatelessWidget {
 }
 
 class BuildClientRateItem extends StatelessWidget {
-  RateDataModel rate ;
-  BuildClientRateItem({
-    required this.rate
-});
+  RateDataModel rate;
+
+  BuildClientRateItem({required this.rate});
+
   @override
   Widget build(BuildContext context) {
     return Padding(

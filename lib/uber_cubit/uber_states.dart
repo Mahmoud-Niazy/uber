@@ -47,6 +47,9 @@ class AcceptedOfferLoadingState extends UberStates{}
 class AcceptedOfferSuccessfullyState extends UberStates{}
 class AcceptedOfferErrorState extends UberStates{}
 
+class RejectOfferLoadingState extends UberStates{}
+class RejectOfferSuccessfullyState extends UberStates{}
+
 class GetAcceptedOrdersLoadingState extends UberStates{}
 class GetAcceptedOrdersSuccessfullyState extends UberStates{}
 
