@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_final/cashe_helper/cashe_helper.dart';
 import 'package:uber_final/dio_helper/dio_helper.dart';
-import 'package:uber_final/layout/layout_for_drivers.dart';
 import 'package:uber_final/register_cubit/register_cubit.dart';
+import 'package:uber_final/screens/splash_screen.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
-import 'layout/layout_for_client.dart';
-import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -92,11 +90,12 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        home: CasheHelper.GetData(key: 'uId') != null
-            ? CasheHelper.GetData(key: 'isDriver')
-                ? LayoutForDrivers()
-                : LayoutForClient()
-            : LoginScreen(),
+        home: SplashScreen(),
+        // CasheHelper.GetData(key: 'uId') != null
+        //     ? CasheHelper.GetData(key: 'isDriver')
+        //         ? LayoutForDrivers()
+        //         : LayoutForClient()
+        //     : LoginScreen(),
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: AppBarTheme(

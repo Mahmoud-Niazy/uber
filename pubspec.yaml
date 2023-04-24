@@ -49,6 +49,7 @@ dependencies:
   dio: ^5.1.1
   rate: ^0.0.2
   awesome_notifications: any
+  easy_splash_screen: ^1.0.4
 
 
   # The following adds the Cupertino Icons font to your application.

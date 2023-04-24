@@ -35,8 +35,8 @@ class LayoutForClient extends StatelessWidget{
 
 
                 SalomonBottomBarItem(
-                  icon: Icon(Icons.settings_outlined),
-                  title: Text("Settings"),
+                  icon: Icon(Icons.person),
+                  title: Text("Profile"),
                   // selectedColor: Colors.teal,
                 ),
               ],

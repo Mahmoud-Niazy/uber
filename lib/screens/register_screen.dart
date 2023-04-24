@@ -48,13 +48,13 @@ class RegisterScreen extends StatelessWidget {
                     children: [
                       Center(
                         child: Image.asset(
-                          'assets/images/33088-1-taxi-driver-file.png',
-                          height: 200,
+                          'assets/images/Carpool-rafiki.png',
+                          height: MediaQuery.of(context).size.height * .35,
                           width: double.infinity,
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * .07,
+                        height: MediaQuery.of(context).size.height * .04,
                       ),
                       BuildTextFormField(
                         label: 'Name',
@@ -133,16 +133,16 @@ class RegisterScreen extends StatelessWidget {
                       SizedBox(
                         height: 15,
                       ),
-                      if(cubit.profileImage != null)
-                      Container(
-                        height: 100,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: FileImage(cubit.profileImage!),
+                      if (cubit.profileImage != null)
+                        Container(
+                          height: 100,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: FileImage(cubit.profileImage!),
+                            ),
                           ),
                         ),
-                      ),
                       SizedBox(
                         height: 10,
                       ),
@@ -215,7 +215,8 @@ class RegisterScreen extends StatelessWidget {
                           ? Center(child: CircularProgressIndicator())
                           : BuildButton(
                               onPressed: () {
-                                if (formKey.currentState!.validate() && cubit.profileImage != null) {
+                                if (formKey.currentState!.validate() &&
+                                    cubit.profileImage != null) {
                                   cubit.PhoneAuth(
                                     phoneNumber: phoneController.text,
                                   );

@@ -20,54 +20,63 @@ class DriverSettingScreen extends StatelessWidget{
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(cubit.driver!.image),
+              child: Card(
+                elevation: 20,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 30,
+                    horizontal: 20,
                   ),
-                  SizedBox(
-                    height: 20,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(cubit.driver!.image),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        cubit.driver!.name,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 25,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        cubit.driver!.phone,
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                          fontSize: 15,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        cubit.driver!.email,
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                          fontSize: 15,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      BuildButton(
+                        label: 'Sign out',
+                        onPressed: (){
+                          CasheHelper.RemoveData(key: 'uId').then((value) {
+                            cubit.driver=null;
+                            cubit.client=null;
+                            navigateAndFinish(screen: LoginScreen(), context: context);
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  Text(
-                    cubit.driver!.name,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      fontSize: 25,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    cubit.driver!.phone,
-                    style: Theme.of(context).textTheme.caption!.copyWith(
-                      fontSize: 15,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    cubit.driver!.email,
-                    style: Theme.of(context).textTheme.caption!.copyWith(
-                      fontSize: 15,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  BuildButton(
-                    label: 'Sign out',
-                    onPressed: (){
-                      CasheHelper.RemoveData(key: 'uId').then((value) {
-                        cubit.driver=null;
-                        cubit.client=null;
-                        navigateAndFinish(screen: LoginScreen(), context: context);
-                      });
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
           ),

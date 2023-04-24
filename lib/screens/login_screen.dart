@@ -29,13 +29,13 @@ class LoginScreen extends StatelessWidget {
               UberCubit.get(context).GetUserData(
                 userId: state.userId,
               );
-              if(CasheHelper.GetData(key: 'isDriver')){
+              if(CasheHelper.GetData(key: 'isDriver') ){
                 FirebaseMessaging.instance.subscribeToTopic('drivers');
                 UberCubit.get(context).GetAcceptedOrders();
                 navigateAndFinish(
                     screen: LayoutForDrivers(), context: context);
               }
-              if(!CasheHelper.GetData(key: 'isDriver')){
+              if(!CasheHelper.GetData(key: 'isDriver') ){
                 FirebaseMessaging.instance.subscribeToTopic('clients');
                 UberCubit.get(context).GetClientOrders();
                 navigateAndFinish(
@@ -58,6 +58,7 @@ class LoginScreen extends StatelessWidget {
             child: Scaffold(
               body: Center(
                 child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Form(
@@ -67,13 +68,13 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           Center(
                             child: Image.asset(
-                              'assets/images/33088-1-taxi-driver-file.png',
-                              height: 200,
+                              'assets/images/Carpool-rafiki.png',
+                              height: MediaQuery.of(context).size.height * .35,
                               width: double.infinity,
                             ),
                           ),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * .1,
+                            height: MediaQuery.of(context).size.height * .04,
                           ),
                           BuildTextFormField(
                             label: 'Email',

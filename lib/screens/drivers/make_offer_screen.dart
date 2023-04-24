@@ -22,8 +22,8 @@ class MakeOfferScreen extends StatelessWidget {
           Fluttertoast.showToast(
             msg: 'Your offer sent successfully',
             backgroundColor: Colors.green,
-          ).then((value){
-            priceController.text = '' ;
+          ).then((value) {
+            priceController.text = '';
           });
         }
       },
@@ -37,53 +37,65 @@ class MakeOfferScreen extends StatelessWidget {
           ),
           body: Center(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Enter Your price',
-                        style: TextStyle(
-                          fontSize: 20,
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/Investment data-rafiki.png',
+                    height: MediaQuery.of(context).size.height*.35,
+                  ),
+                  Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Enter Your price',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              BuildTextFormField(
+                                label: 'price',
+                                pIcon: Icons.monetization_on_outlined,
+                                controller: priceController,
+                                type: TextInputType.number,
+                                validation: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Enter your price please ';
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              state is MakeOfferLoadingState
+                                  ? Center(child: CircularProgressIndicator())
+                                  : BuildButton(
+                                      onPressed: () {
+                                        if (formKey.currentState!.validate()) {
+                                          cubit.MakeOffer(
+                                            orderId: order.orderId!,
+                                            price: priceController.text,
+                                            clientFcmToken: order.fcmToken!,
+                                          );
+                                        }
+                                      },
+                                      label: 'Confirm',
+                                    ),
+                            ],
+                          ),
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      BuildTextFormField(
-                        label: 'price',
-                        pIcon: Icons.monetization_on_outlined,
-                        controller: priceController,
-                        type: TextInputType.number,
-                        validation: (value){
-                          if(value!.isEmpty){
-                            return 'Enter your price please ' ;
-                          }
-                        },
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      state is MakeOfferLoadingState
-                          ? Center(child: CircularProgressIndicator())
-                          : BuildButton(
-                              onPressed: () {
-                                if(formKey.currentState!.validate()){
-                                  cubit.MakeOffer(
-                                    orderId: order.orderId!,
-                                    price: priceController.text,
-                                    clientFcmToken: order.fcmToken!,
-                                  );
-                                }
-                              },
-                              label: 'Confirm',
-                            ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),

@@ -72,7 +72,8 @@ class UberCubit extends Cubit<UberStates> {
         emit(GetDriverDataErrorState());
         print(error);
       });
-    } else {
+    }
+    else {
       FirebaseFirestore.instance
           .collection('clients')
           .doc(userId)

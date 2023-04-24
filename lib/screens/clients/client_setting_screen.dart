@@ -15,69 +15,72 @@ class ClientSettingScreen extends StatelessWidget {
         var cubit = UberCubit.get(context);
         return cubit.client != null ||
                 cubit.driver != null
-            ? SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: Card(
-                  elevation: 15,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 15,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(cubit.client!.image),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          cubit.client!.name,
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                fontSize: 25,
-                              ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          cubit.client!.phone,
-                          style: Theme.of(context).textTheme.caption!.copyWith(
-                                fontSize: 15,
-                              ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          cubit.client!.email,
-                          style: Theme.of(context).textTheme.caption!.copyWith(
-                                fontSize: 15,
-                              ),
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        BuildButton(
-                          label: 'Sign out',
-                          onPressed: (){
-                            CasheHelper.RemoveData(key: 'uId').then((value) {
-                              cubit.driver=null;
-                              cubit.client=null;
-                              navigateAndFinish(screen: LoginScreen(), context: context);
-                            });
-                          },
-                        ),
-                      ],
+            ?
+        Center(
+          child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Card(
+                    elevation: 15,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 30,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(cubit.client!.image),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            cubit.client!.name,
+                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                  fontSize: 25,
+                                ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            cubit.client!.phone,
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 15,
+                                ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            cubit.client!.email,
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 15,
+                                ),
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          BuildButton(
+                            label: 'Sign out',
+                            onPressed: (){
+                              CasheHelper.RemoveData(key: 'uId').then((value) {
+                                cubit.driver=null;
+                                cubit.client=null;
+                                navigateAndFinish(screen: LoginScreen(), context: context);
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            )
+        )
             : Center(child: CircularProgressIndicator());
       },
     );
