@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/cashe_helper/cashe_helper.dart';
 import 'package:uber_final/dio_helper/dio_helper.dart';
 import 'package:uber_final/register_cubit/register_cubit.dart';
@@ -90,6 +92,26 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+         supportedLocales: [
+           Locale('en'),
+           Locale('ar'),
+         ],
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        localeResolutionCallback: (deviceLocale , supportedLocales){
+           for(var locale in supportedLocales){
+             if(deviceLocale != null){
+               if(deviceLocale.languageCode == locale.languageCode){
+                 return deviceLocale ;
+               }
+             }
+           }
+           return supportedLocales.first;
+        },
         home: SplashScreen(),
         // CasheHelper.GetData(key: 'uId') != null
         //     ? CasheHelper.GetData(key: 'isDriver')

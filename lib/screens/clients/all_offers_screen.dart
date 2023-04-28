@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rate/rate.dart';
+import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/components/components.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
@@ -22,7 +23,7 @@ class AllOffersScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is RateDriverSuccessfullyState) {
             Fluttertoast.showToast(
-              msg: 'Rated Successfully',
+              msg: AppLocalizations.of(context)!.Translate('Rated Successfully'),
               backgroundColor: Colors.green,
             );
           }
@@ -30,6 +31,7 @@ class AllOffersScreen extends StatelessWidget {
         },
         builder: (context, state) {
           var cubit = UberCubit.get(context);
+          var locale = AppLocalizations.of(context)!;
           List<OrderDataModel> order =
               UberCubit.get(context).orders.where((element) {
             return element.orderId == this.orderId;
@@ -60,7 +62,7 @@ class AllOffersScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'There is an agreement with : ',
+                              '${locale.Translate('There is an agreement with')} : ',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -95,14 +97,14 @@ class AllOffersScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Price :   ',
+                                        '${locale.Translate('Price')} :   ',
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
-                                        order[0].price!,
+                                        order[0].price! + '\$',
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -117,7 +119,7 @@ class AllOffersScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Phone :   ',
+                                        '${locale.Translate('Phone')} :   ',
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -136,7 +138,7 @@ class AllOffersScreen extends StatelessWidget {
                                     height: 50,
                                   ),
                                   Text(
-                                    'Rate the driver',
+                                    locale.Translate('Rate the driver'),
                                     style: TextStyle(
                                       fontSize: 20,
                                     ),
@@ -171,7 +173,7 @@ class AllOffersScreen extends StatelessWidget {
                                               clientName: cubit.client!.name,
                                             );
                                           },
-                                          label: 'Confirm rate',
+                                          label: locale.Translate('Confirm rate'),
                                         ),
                                 ],
                               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/components/components.dart';
 import '../../uber_cubit/uber_cubit.dart';
 import '../../uber_cubit/uber_states.dart';
@@ -12,11 +13,12 @@ class GoogleMapScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = UberCubit.get(context);
+        var locale = AppLocalizations.of(context)!;
         return Scaffold(
           appBar: AppBar(
             actions: [
               BuildTextButton(
-                label: 'Confirm',
+                label: locale.Translate('Confirm'),
                 onPressed: cubit.i != 0 ?
                     () {
                   cubit.confirmFrom();

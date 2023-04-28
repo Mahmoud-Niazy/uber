@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/data_models/client_data_model.dart';
 import 'package:uber_final/data_models/driver_data_model.dart';
 import 'package:uber_final/data_models/offer_data_model.dart';
@@ -304,13 +305,14 @@ class UberCubit extends Cubit<UberStates> {
 
   SendNotificationToAlldrivers({
     required String clientName,
+    required BuildContext context,
   }) {
     emit(SendNotificationToAllDriversLoadingState());
     DioHelper.PostData(url: 'send', data: {
       "to": "/topics/drivers",
       "priority": "high",
       "notification": {
-        "body": "$clientName make an order",
+        "body": "$clientName ${AppLocalizations.of(context)!.Translate('make an order')}",
         "title": "New order for you",
         "subtitle": "Firebase Cloud Message Subtitle"
       }
@@ -345,6 +347,7 @@ class UberCubit extends Cubit<UberStates> {
     required String orderId,
     required dynamic price,
     required String clientFcmToken,
+    required BuildContext context,
   }) {
     emit(MakeOfferLoadingState());
 
@@ -354,7 +357,7 @@ class UberCubit extends Cubit<UberStates> {
         "to": clientFcmToken,
         "priority": "high",
         "notification": {
-          "body": "${driver!.name} send an offer ",
+          "body": "${driver!.name}" + ' ' + "${AppLocalizations.of(context)!.Translate('send an offer')} ",
           "title": "$price \$ ",
           "subtitle": ""
         }
@@ -426,6 +429,7 @@ class UberCubit extends Cubit<UberStates> {
   AcceptOffer({
     required OrderDataModel order,
     OfferDataModel? offer,
+    required BuildContext context ,
   }) {
     emit(AcceptedOfferLoadingState());
 
@@ -475,7 +479,7 @@ class UberCubit extends Cubit<UberStates> {
     SendNotification(
       to: newOrder.driverFcmToken!,
       title: newOrder.clientName!,
-      body: "${newOrder.clientName!} accept your offer ",
+      body: "${newOrder.clientName!}   ${AppLocalizations.of(context)!.Translate('accept your offer')} ",
     );
 
 
@@ -670,6 +674,7 @@ class UberCubit extends Cubit<UberStates> {
     required String offerId,
     required String to ,
     required String clientName,
+    required BuildContext context
 }){
     emit(RejectOfferLoadingState());
     FirebaseFirestore.instance
@@ -681,7 +686,7 @@ class UberCubit extends Cubit<UberStates> {
       SendNotification(
         to: to,
         title: '${clientName}',
-        body: "${clientName} reject your offer ",
+        body: "${clientName} ${AppLocalizations.of(context)!.Translate('reject your offer')} ",
       );
           emit(RejectOfferSuccessfullyState());
     });

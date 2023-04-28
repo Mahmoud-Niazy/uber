@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
 import '../uber_cubit/uber_states.dart';
 
@@ -13,7 +14,7 @@ class LayoutForClient extends StatelessWidget{
       },
       builder: (context,state){
         var cubit = UberCubit.get(context);
-
+        var locale = AppLocalizations.of(context)!;
         return SafeArea(
           child: Scaffold(
             bottomNavigationBar: SalomonBottomBar(
@@ -23,20 +24,26 @@ class LayoutForClient extends StatelessWidget{
               items: [
                 SalomonBottomBarItem(
                   icon: Icon(Icons.home),
-                  title: Text("Orders"),
+                  title: Text(
+                    locale.Translate("Orders"),
+                  ),
                   // selectedColor: Colors.purple,
                 ),
 
                 SalomonBottomBarItem(
                   icon: Icon(Icons.chat_outlined),
-                  title: Text("Make order"),
+                  title: Text(
+                    locale.Translate("Make order")
+                  ),
                   // selectedColor: Colors.pink,
                 ),
 
 
                 SalomonBottomBarItem(
                   icon: Icon(Icons.person),
-                  title: Text("Profile"),
+                  title: Text(
+                    locale.Translate("Profile"),
+                  ),
                   // selectedColor: Colors.teal,
                 ),
               ],

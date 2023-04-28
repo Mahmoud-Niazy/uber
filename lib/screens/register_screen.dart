@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/register_cubit/register_cubit.dart';
 import 'package:uber_final/screens/check_code_screen.dart';
 import '../components/components.dart';
@@ -28,11 +29,12 @@ class RegisterScreen extends StatelessWidget {
       },
       builder: (context, state) {
         var cubit = RegisterCubit.get(context);
+        var locale = AppLocalizations.of(context)!;
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(
               title: Text(
-                'Register',
+                locale.Translate('Register'),
               ),
             ),
             body: SingleChildScrollView(
@@ -57,12 +59,12 @@ class RegisterScreen extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * .04,
                       ),
                       BuildTextFormField(
-                        label: 'Name',
+                        label: locale.Translate('Name'),
                         controller: nameController,
                         pIcon: Icons.person,
                         validation: (value) {
                           if (value!.isEmpty) {
-                            return 'Name can\' be empty';
+                            return locale.Translate('Name can\'t be empty');
                           }
                         },
                       ),
@@ -70,12 +72,12 @@ class RegisterScreen extends StatelessWidget {
                         height: 15,
                       ),
                       BuildTextFormField(
-                        label: 'Email',
+                        label: locale.Translate('Email'),
                         controller: emailController,
                         pIcon: Icons.email_outlined,
                         validation: (value) {
                           if (value!.isEmpty) {
-                            return 'Email can\' be empty';
+                            return locale.Translate('Email can\'t be empty');
                           }
                         },
                       ),
@@ -83,12 +85,12 @@ class RegisterScreen extends StatelessWidget {
                         height: 15,
                       ),
                       BuildTextFormField(
-                        label: 'Password',
+                        label: locale.Translate('Password'),
                         controller: passwordController,
                         pIcon: Icons.lock_outline,
                         validation: (value) {
                           if (value!.isEmpty) {
-                            return 'Password can\' be empty';
+                            return locale.Translate('Password can\'t be empty');
                           }
                         },
                         isPassword: cubit.isPassword,
@@ -103,12 +105,12 @@ class RegisterScreen extends StatelessWidget {
                         height: 15,
                       ),
                       BuildTextFormField(
-                        label: 'Phone',
+                        label: locale.Translate('Phone'),
                         controller: phoneController,
                         pIcon: Icons.phone,
                         validation: (value) {
                           if (value!.isEmpty) {
-                            return 'Phone can\' be empty';
+                            return locale.Translate('Phone can\'t be empty');
                           }
                         },
                         type: TextInputType.phone,
@@ -123,7 +125,7 @@ class RegisterScreen extends StatelessWidget {
                             color: Colors.blue,
                           ),
                           BuildTextButton(
-                            label: 'pick your photo',
+                            label: locale.Translate('Pick your photo'),
                             onPressed: () {
                               cubit.getProfileImage();
                             },
@@ -154,7 +156,8 @@ class RegisterScreen extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                cubit.changeTypeOfUser();
+                                if(!cubit.isDriver)
+                                  cubit.changeTypeOfUser();
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
@@ -162,7 +165,7 @@ class RegisterScreen extends StatelessWidget {
                                   horizontal: 20,
                                 ),
                                 child: Text(
-                                  'Driver',
+                                  locale.Translate('Driver'),
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.white,
@@ -170,7 +173,7 @@ class RegisterScreen extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                     color: cubit.isDriver
-                                        ? Colors.green
+                                        ? Colors.blue
                                         : Colors.grey,
                                     borderRadius: BorderRadius.circular(15),
                                     border: Border.all(
@@ -181,7 +184,8 @@ class RegisterScreen extends StatelessWidget {
                             Spacer(),
                             InkWell(
                               onTap: () {
-                                cubit.changeTypeOfUser();
+                                if(cubit.isDriver)
+                                  cubit.changeTypeOfUser();
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
@@ -189,7 +193,7 @@ class RegisterScreen extends StatelessWidget {
                                   horizontal: 20,
                                 ),
                                 child: Text(
-                                  'Client',
+                                  locale.Translate('Client'),
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.white,
@@ -198,7 +202,7 @@ class RegisterScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: cubit.isDriver
                                         ? Colors.grey
-                                        : Colors.green,
+                                        : Colors.blue,
                                     borderRadius: BorderRadius.circular(15),
                                     border: Border.all(
                                       color: Colors.black,
@@ -222,7 +226,7 @@ class RegisterScreen extends StatelessWidget {
                                   );
                                 }
                               },
-                              label: 'Register now',
+                              label: locale.Translate('Register now'),
                             ),
                     ],
                   ),

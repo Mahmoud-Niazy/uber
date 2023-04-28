@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/screens/login_screen.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
 import '../../cashe_helper/cashe_helper.dart';
@@ -12,6 +13,7 @@ class ClientSettingScreen extends StatelessWidget {
     return BlocConsumer<UberCubit, UberStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        var locale = AppLocalizations.of(context)!;
         var cubit = UberCubit.get(context);
         return cubit.client != null ||
                 cubit.driver != null
@@ -65,7 +67,7 @@ class ClientSettingScreen extends StatelessWidget {
                             height: 50,
                           ),
                           BuildButton(
-                            label: 'Sign out',
+                            label: locale.Translate('Sign out'),
                             onPressed: (){
                               CasheHelper.RemoveData(key: 'uId').then((value) {
                                 cubit.driver=null;

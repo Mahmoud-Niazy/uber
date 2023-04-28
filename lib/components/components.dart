@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:rate/rate.dart';
+import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/data_models/offer_data_model.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/data_models/rate_data_model.dart';
@@ -171,7 +173,7 @@ class BuildClientOrderItem extends StatelessWidget {
       child: Card(
         elevation: 15,
         child: Container(
-          padding: EdgeInsets.all(35),
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width*.05),
           // decoration: BoxDecoration(
           //     border: Border.all(
           //   color: Colors.black,
@@ -199,7 +201,7 @@ class BuildClientOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" From : ${order.from}"),
+                        Text(" ${AppLocalizations.of(context)!.Translate('From')} : ${order.from}"),
                       ],
                     ),
                     SizedBox(
@@ -210,7 +212,7 @@ class BuildClientOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" To : ${order.to}"),
+                        Text(" ${AppLocalizations.of(context)!.Translate('To')} : ${order.to}"),
                       ],
                     ),
                     SizedBox(
@@ -221,7 +223,7 @@ class BuildClientOrderItem extends StatelessWidget {
                         Icon(
                           Icons.date_range_outlined,
                         ),
-                        Text(" Date : ${order.date}"),
+                        Text(" ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date}"),
                       ],
                     ),
                   ],
@@ -283,7 +285,7 @@ class BuildDriverOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" From : ${order.from} "),
+                        Text(" ${AppLocalizations.of(context)!.Translate('From')} : ${order.from} "),
                       ],
                     ),
                     SizedBox(
@@ -294,7 +296,7 @@ class BuildDriverOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" To : ${order.to} "),
+                        Text(" ${AppLocalizations.of(context)!.Translate('To')} : ${order.to} "),
                       ],
                     ),
                     SizedBox(
@@ -305,7 +307,7 @@ class BuildDriverOrderItem extends StatelessWidget {
                         Icon(
                           Icons.date_range_outlined,
                         ),
-                        Text(" Date : ${order.date} "),
+                        Text(" ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date} "),
                       ],
                     ),
                     SizedBox(
@@ -316,7 +318,7 @@ class BuildDriverOrderItem extends StatelessWidget {
                         Icon(
                           Icons.watch_later_outlined,
                         ),
-                        Text(" Time : ${order.time} "),
+                        Text(" ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
                       ],
                     ),
                   ],
@@ -379,7 +381,7 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" From : ${order.from} "),
+                        Text(" ${AppLocalizations.of(context)!.Translate('From')} : ${order.from} "),
                       ],
                     ),
                     SizedBox(
@@ -390,7 +392,7 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" To : ${order.to} "),
+                        Text(" ${AppLocalizations.of(context)!.Translate('To')} : ${order.to} "),
                       ],
                     ),
                     SizedBox(
@@ -401,7 +403,7 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icon(
                           Icons.date_range_outlined,
                         ),
-                        Text(" Date : ${order.date} "),
+                        Text(" ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date} "),
                       ],
                     ),
                     SizedBox(
@@ -412,7 +414,7 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icon(
                           Icons.watch_later_outlined,
                         ),
-                        Text(" Time : ${order.time} "),
+                        Text(" ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
                       ],
                     ),
                   ],
@@ -507,6 +509,7 @@ class BuildOfferItem extends StatelessWidget {
                           UberCubit.get(context).AcceptOffer(
                             order: order,
                             offer: offer,
+                            context: context,
                           );
                         },
                         child: CircleAvatar(
@@ -528,6 +531,7 @@ class BuildOfferItem extends StatelessWidget {
                             offerId: offer.offerId!,
                             to: offer.driverFcmToken!,
                             clientName: order.clientName!,
+                            context: context,
                           );
                         },
                         child: CircleAvatar(
@@ -552,7 +556,7 @@ class BuildOfferItem extends StatelessWidget {
                           ),
                           context: context);
                     },
-                    label: 'Show Driver Rates',
+                    label: AppLocalizations.of(context)!.Translate('Show Driver Rates'),
                   ),
                 ],
               ),

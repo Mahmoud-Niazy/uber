@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uber_final/components/components.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
 
+import '../../app_localization.dart';
 import '../../data_models/order_data_model.dart';
 import '../../uber_cubit/uber_states.dart';
 
@@ -20,7 +21,7 @@ class MakeOfferScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is MakeOfferSuccessfullyState) {
           Fluttertoast.showToast(
-            msg: 'Your offer sent successfully',
+            msg: AppLocalizations.of(context)!.Translate('Your offer sent successfully'),
             backgroundColor: Colors.green,
           ).then((value) {
             priceController.text = '';
@@ -29,10 +30,11 @@ class MakeOfferScreen extends StatelessWidget {
       },
       builder: (context, state) {
         var cubit = UberCubit.get(context);
+        var locale = AppLocalizations.of(context)!;
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              'Apply',
+              locale.Translate('Apply'),
             ),
           ),
           body: Center(
@@ -53,7 +55,7 @@ class MakeOfferScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Enter Your price',
+                                locale.Translate('Enter Your price'),
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -62,13 +64,13 @@ class MakeOfferScreen extends StatelessWidget {
                                 height: 20,
                               ),
                               BuildTextFormField(
-                                label: 'price',
+                                label: locale.Translate('Price'),
                                 pIcon: Icons.monetization_on_outlined,
                                 controller: priceController,
                                 type: TextInputType.number,
                                 validation: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Enter your price please ';
+                                    return locale.Translate('Enter your price please');
                                   }
                                 },
                               ),
@@ -84,10 +86,11 @@ class MakeOfferScreen extends StatelessWidget {
                                             orderId: order.orderId!,
                                             price: priceController.text,
                                             clientFcmToken: order.fcmToken!,
+                                            context: context,
                                           );
                                         }
                                       },
-                                      label: 'Confirm',
+                                      label: locale.Translate('Confirm'),
                                     ),
                             ],
                           ),

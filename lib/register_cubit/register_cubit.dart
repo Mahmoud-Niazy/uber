@@ -2,7 +2,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -121,7 +120,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
             FirebaseFirestore.instance.collection('drivers')
                 .doc(value1.user!.uid).set(driver.toMap())
                 .then((value) {
-              FirebaseMessaging.instance.subscribeToTopic('drivers');
+              // FirebaseMessaging.instance.subscribeToTopic('drivers');
               emit(CreateUserSuccessfullyState());
             })
                 .catchError((error) {
@@ -155,7 +154,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
             FirebaseFirestore.instance.collection('clients')
                 .doc(value1.user!.uid).set(client.toMap())
                 .then((value) {
-              FirebaseMessaging.instance.subscribeToTopic('clients');
+              // FirebaseMessaging.instance.subscribeToTopic('clients');
               emit(CreateUserSuccessfullyState());
             })
                 .catchError((error) {

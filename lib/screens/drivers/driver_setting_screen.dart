@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uber_final/app_localization.dart';
 
 import '../../cashe_helper/cashe_helper.dart';
 import '../../components/components.dart';
@@ -14,6 +15,7 @@ class DriverSettingScreen extends StatelessWidget{
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = UberCubit.get(context);
+        var locale = AppLocalizations.of(context)!;
         return cubit.client != null ||
             cubit.driver != null
             ? Center(
@@ -65,7 +67,7 @@ class DriverSettingScreen extends StatelessWidget{
                         height: 40,
                       ),
                       BuildButton(
-                        label: 'Sign out',
+                        label: locale.Translate('Sign out'),
                         onPressed: (){
                           CasheHelper.RemoveData(key: 'uId').then((value) {
                             cubit.driver=null;

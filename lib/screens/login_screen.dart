@@ -7,6 +7,7 @@ import 'package:uber_final/layout/layout_for_drivers.dart';
 import 'package:uber_final/login_cubit/login_cubit.dart';
 import 'package:uber_final/screens/register_screen.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
+import '../app_localization.dart';
 import '../components/components.dart';
 import '../layout/layout_for_client.dart';
 import '../login_cubit/login_states.dart';
@@ -54,6 +55,7 @@ class LoginScreen extends StatelessWidget {
         },
         builder: (context, state) {
           var cubit = LoginCubit.get(context);
+          var locale = AppLocalizations.of(context)!;
           return SafeArea(
             child: Scaffold(
               body: Center(
@@ -77,12 +79,12 @@ class LoginScreen extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * .04,
                           ),
                           BuildTextFormField(
-                            label: 'Email',
+                            label: locale.Translate('Email'),
                             controller: emailController,
                             pIcon: Icons.email_outlined,
                             validation: (value) {
                               if (value!.isEmpty) {
-                                return 'Email can\'t be empty';
+                                return locale.Translate('Email can\'t be empty');
                               }
                             },
                           ),
@@ -90,7 +92,7 @@ class LoginScreen extends StatelessWidget {
                             height: 15,
                           ),
                           BuildTextFormField(
-                            label: 'Password',
+                            label: locale.Translate('Password'),
                             controller: passwordController,
                             pIcon: Icons.lock_outline,
                             sIcon: cubit.isPassword
@@ -102,7 +104,7 @@ class LoginScreen extends StatelessWidget {
                             },
                             validation: (value) {
                               if (value!.isEmpty) {
-                                return 'Email can\'t be empty';
+                                return locale.Translate('Password can\'t be empty');
                               }
                             },
                           ),
@@ -117,6 +119,7 @@ class LoginScreen extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () {
+                                    if(!cubit.isDriver)
                                     cubit.changeTypeOfUser();
                                   },
                                   child: Container(
@@ -125,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                                       horizontal: 20,
                                     ),
                                     child: Text(
-                                      'Driver',
+                                      locale.Translate('Driver'),
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
@@ -133,7 +136,7 @@ class LoginScreen extends StatelessWidget {
                                     ),
                                     decoration: BoxDecoration(
                                         color: cubit.isDriver
-                                            ? Colors.green
+                                            ? Colors.blue
                                             : Colors.grey,
                                         borderRadius: BorderRadius.circular(15),
                                         border: Border.all(
@@ -144,7 +147,8 @@ class LoginScreen extends StatelessWidget {
                                 Spacer(),
                                 InkWell(
                                   onTap: () {
-                                    cubit.changeTypeOfUser();
+                                    if(cubit.isDriver)
+                                      cubit.changeTypeOfUser();
                                   },
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
@@ -152,7 +156,7 @@ class LoginScreen extends StatelessWidget {
                                       horizontal: 20,
                                     ),
                                     child: Text(
-                                      'Client',
+                                      locale.Translate('Client'),
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
@@ -161,7 +165,7 @@ class LoginScreen extends StatelessWidget {
                                     decoration: BoxDecoration(
                                         color: cubit.isDriver
                                             ? Colors.grey
-                                            : Colors.green,
+                                            : Colors.blue,
                                         borderRadius: BorderRadius.circular(15),
                                         border: Border.all(
                                           color: Colors.black,
@@ -185,7 +189,7 @@ class LoginScreen extends StatelessWidget {
                                       );
                                     }
                                   },
-                                  label: 'Login',
+                                  label: locale.Translate('Login'),
                                 ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * .02,
@@ -193,12 +197,12 @@ class LoginScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Don\'t have an account ? '),
+                              Text(locale.Translate('Don\'t have an account ?')),
                               SizedBox(
                                 width: 5,
                               ),
                               BuildTextButton(
-                                label: 'Register now',
+                                label: locale.Translate('Register now'),
                                 onPressed: () {
                                   navigate(
                                     screen: RegisterScreen(),
