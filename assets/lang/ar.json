@@ -1,4 +1,10 @@
 {
+  "Deleted successfully" : "تم الانهاء بنجاح",
+  "Are you sure ?" : "هل انت متأكد ؟",
+  "can't be deleted" : "لا يمكنك الرجوع في الاتفاق",
+  "Delete the agreement" : "انهاء الاتفاق",
+  "Enter code" : "من فضلك ادخل الكود",
+  "Register Successfully" : "تم انشاء حساب بنجاح",
   "Accepted Orders" : "العروض المقبولة",
   "Profile" : "بياناتك",
   "Make order" : "اطلب الان",

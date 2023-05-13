@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rate/rate.dart';
 import 'package:uber_final/app_localization.dart';
+import 'package:uber_final/cashe_helper/cashe_helper.dart';
 import 'package:uber_final/data_models/offer_data_model.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/data_models/rate_data_model.dart';
@@ -173,7 +174,7 @@ class BuildClientOrderItem extends StatelessWidget {
       child: Card(
         elevation: 15,
         child: Container(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width*.05),
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
           // decoration: BoxDecoration(
           //     border: Border.all(
           //   color: Colors.black,
@@ -201,7 +202,8 @@ class BuildClientOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('From')} : ${order.from}"),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('From')} : ${order.from}"),
                       ],
                     ),
                     SizedBox(
@@ -212,7 +214,8 @@ class BuildClientOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('To')} : ${order.to}"),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('To')} : ${order.to}"),
                       ],
                     ),
                     SizedBox(
@@ -223,7 +226,8 @@ class BuildClientOrderItem extends StatelessWidget {
                         Icon(
                           Icons.date_range_outlined,
                         ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date}"),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date}"),
                       ],
                     ),
                   ],
@@ -256,7 +260,7 @@ class BuildDriverOrderItem extends StatelessWidget {
         child: Card(
           elevation: 15,
           child: Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
             child: Row(
               children: [
                 CircleAvatar(
@@ -285,7 +289,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('From')} : ${order.from} "),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('From')} : ${order.from} "),
                       ],
                     ),
                     SizedBox(
@@ -296,7 +301,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                         ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('To')} : ${order.to} "),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('To')} : ${order.to} "),
                       ],
                     ),
                     SizedBox(
@@ -307,7 +313,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                         Icon(
                           Icons.date_range_outlined,
                         ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date} "),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date} "),
                       ],
                     ),
                     SizedBox(
@@ -318,7 +325,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                         Icon(
                           Icons.watch_later_outlined,
                         ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
                       ],
                     ),
                   ],
@@ -347,80 +355,138 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
         // navigate(screen: MakeOfferScreen(this.order), context: context);
         // print(this.order.time);
       },
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Card(
-          elevation: 15,
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: NetworkImage(
-                    order.clientImage!,
+      child: Card(
+        elevation: 15,
+        child: Container(
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 40,
+                backgroundImage: NetworkImage(
+                  order.clientImage!,
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    order.clientName!,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 20,
+                        ),
                   ),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      order.clientName!,
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontSize: 20,
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                      ),
+                      Text(
+                          " ${AppLocalizations.of(context)!.Translate('From')} : ${order.from} "),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                      ),
+                      Text(
+                          " ${AppLocalizations.of(context)!.Translate('To')} : ${order.to} "),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.date_range_outlined,
+                      ),
+                      Text(
+                          " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date} "),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.watch_later_outlined,
+                      ),
+                      Text(
+                          " ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  BuildTextButton(
+                    label: AppLocalizations.of(context)!.Translate('Delete the agreement'),
+                    onPressed: () {
+                      if (DateTime.parse(order.dateToDeleteTheAgreement)
+                              .difference(
+                                  DateTime.parse(DateTime.now().toString()))
+                              .inDays ==
+                          0) {
+                        Fluttertoast.showToast(
+                          msg: AppLocalizations.of(context)!.Translate('can\'t be deleted'),
+                          backgroundColor: Colors.red,
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: Text(AppLocalizations.of(context)!.Translate('Are you sure ?')),
+                            actions: [
+                              BuildTextButton(
+                                label: AppLocalizations.of(context)!.Translate('Confirm'),
+                                onPressed: () {
+                                  UberCubit.get(context).DeleteOrderFromDriver(
+                                    driverId: CasheHelper.GetData(key: 'uId'),
+                                    acceptedOrderId: order.acceptedOrderId!,
+                                    to: order.fcmToken!,
+                                    driverName: order.driverName!,
+                                    clientId: order.clientId!,
+                                    orderId: order.orderId!,
+                                  );
+                                  Fluttertoast.showToast(
+                                    msg: AppLocalizations.of(context)!.Translate('Deleted successfully'),
+                                    backgroundColor: Colors.green,
+                                  ).then((value) {
+                                    navigatePop(context: context);
+                                  });
+                                },
+                              ),
+                            ],
                           ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                        ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('From')} : ${order.from} "),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                        ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('To')} : ${order.to} "),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.date_range_outlined,
-                        ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date} "),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.watch_later_outlined,
-                        ),
-                        Text(" ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                        );
+                      }
+                    },
+                  ),
+                  // BuildButton(
+                  //   onPressed: (){
+                  //     if(DateTime.now().difference(order.dateToDeleteTheAgreement).inDays ==0){
+                  //       print('Can\'t delete the agree ');
+                  //     }
+                  //     else{
+                  //       print('deleted');
+                  //     }
+                  //   },
+                  //   label: 'Delete the agreement',
+                  // ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -510,6 +576,8 @@ class BuildOfferItem extends StatelessWidget {
                             order: order,
                             offer: offer,
                             context: context,
+                            dateToDeleteTheAgreement:
+                                order.dateToDeleteTheAgreement,
                           );
                         },
                         child: CircleAvatar(
@@ -556,7 +624,8 @@ class BuildOfferItem extends StatelessWidget {
                           ),
                           context: context);
                     },
-                    label: AppLocalizations.of(context)!.Translate('Show Driver Rates'),
+                    label: AppLocalizations.of(context)!
+                        .Translate('Show Driver Rates'),
                   ),
                 ],
               ),

@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:uber_final/components/components.dart';
 import 'package:uber_final/register_cubit/register_cubit.dart';
+import '../app_localization.dart';
 import '../register_cubit/register_states.dart';
 import '../variables.dart';
 import 'login_screen.dart';
@@ -24,7 +25,7 @@ class CheckCodeScreen extends StatelessWidget {
             phone: phone,
           );
           Fluttertoast.showToast(
-            msg: 'Register Successfully',
+            msg: AppLocalizations.of(context)!.Translate('Register Successfully'),
             backgroundColor: Colors.green,
           ).then((value) {
             navigateAndFinish(screen: LoginScreen(), context: context);
@@ -42,7 +43,7 @@ class CheckCodeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Enter code',
+                 '${AppLocalizations.of(context)!.Translate('Enter code')}',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SizedBox(

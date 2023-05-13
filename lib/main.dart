@@ -69,7 +69,7 @@ void main() async {
 
   runApp(MyApp());
 
-  print(CasheHelper.GetData(key: 'isDriver'));
+  print(DateTime.now());
 }
 
 class MyApp extends StatelessWidget {

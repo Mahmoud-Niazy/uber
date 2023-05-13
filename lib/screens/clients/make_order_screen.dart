@@ -14,6 +14,7 @@ class MakeOrderScreen extends StatelessWidget {
   var timeController = TextEditingController();
   var dateController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+  dynamic dateToDeleteTheAgreement ;
 
   @override
   Widget build(BuildContext context) {
@@ -128,12 +129,14 @@ class MakeOrderScreen extends StatelessWidget {
                           pIcon: Icons.date_range_outlined,
                           controller: dateController,
                           onPressedOnPIcon: () {
+                            // print(DateTime.parse(DateTime.now().toString()).difference(DateTime.parse('2023-04-29 01:40:29.589629')).inDays);
                             showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime.now(),
                               lastDate: DateTime.parse('2023-09-03'),
                             ).then((value) {
+                              dateToDeleteTheAgreement = value.toString();
                               dateController.text =
                                   DateFormat.yMMMMd().format(value!);
                             });
@@ -158,7 +161,9 @@ class MakeOrderScreen extends StatelessWidget {
                                       date: dateController.text,
                                       fromPlace: cubit.fromController.text,
                                       toPlace: cubit.toController.text,
+                                      dateToDeleteTheAgreement:dateToDeleteTheAgreement,
                                     );
+                                    dateToDeleteTheAgreement = null ;
                                   }
                                 },
                                 label: locale.Translate('Order'),

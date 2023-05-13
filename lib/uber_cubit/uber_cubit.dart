@@ -73,8 +73,7 @@ class UberCubit extends Cubit<UberStates> {
         emit(GetDriverDataErrorState());
         print(error);
       });
-    }
-    else {
+    } else {
       FirebaseFirestore.instance
           .collection('clients')
           .doc(userId)
@@ -193,6 +192,7 @@ class UberCubit extends Cubit<UberStates> {
     required String date,
     required String fromPlace,
     required String toPlace,
+    required dynamic dateToDeleteTheAgreement,
   }) {
     emit(MakeOrderLoadingState());
     OrderDataModel order = OrderDataModel(
@@ -208,6 +208,7 @@ class UberCubit extends Cubit<UberStates> {
       lngTo: to!.longitude,
       fcmToken: client!.fcmToken,
       agreement: false,
+      dateToDeleteTheAgreement: dateToDeleteTheAgreement,
     );
     FirebaseFirestore.instance
         .collection('clients')
@@ -227,6 +228,7 @@ class UberCubit extends Cubit<UberStates> {
           fcmToken: client!.fcmToken,
           orderId: value1.id,
           agreement: false,
+          dateToDeleteTheAgreement: dateToDeleteTheAgreement,
         );
         FirebaseFirestore.instance
             .collection('clients')
@@ -255,6 +257,7 @@ class UberCubit extends Cubit<UberStates> {
             fcmToken: client!.fcmToken,
             orderId: value1.id,
             agreement: false,
+            dateToDeleteTheAgreement: dateToDeleteTheAgreement,
           );
 
           FirebaseFirestore.instance
@@ -312,7 +315,8 @@ class UberCubit extends Cubit<UberStates> {
       "to": "/topics/drivers",
       "priority": "high",
       "notification": {
-        "body": "$clientName ${AppLocalizations.of(context)!.Translate('make an order')}",
+        "body":
+            "$clientName ${AppLocalizations.of(context)!.Translate('make an order')}",
         "title": "New order for you",
         "subtitle": "Firebase Cloud Message Subtitle"
       }
@@ -357,7 +361,9 @@ class UberCubit extends Cubit<UberStates> {
         "to": clientFcmToken,
         "priority": "high",
         "notification": {
-          "body": "${driver!.name}" + ' ' + "${AppLocalizations.of(context)!.Translate('send an offer')} ",
+          "body": "${driver!.name}" +
+              ' ' +
+              "${AppLocalizations.of(context)!.Translate('send an offer')} ",
           "title": "$price \$ ",
           "subtitle": ""
         }
@@ -394,8 +400,8 @@ class UberCubit extends Cubit<UberStates> {
             .collection('orders')
             .doc(orderId)
             .collection('offers')
-        .doc(value.id)
-        .update(offer.toMap());
+            .doc(value.id)
+            .update(offer.toMap());
         emit(MakeOfferSuccessfullyState());
       }).catchError((error) {
         emit(MakeOfferErrorState());
@@ -429,7 +435,8 @@ class UberCubit extends Cubit<UberStates> {
   AcceptOffer({
     required OrderDataModel order,
     OfferDataModel? offer,
-    required BuildContext context ,
+    required BuildContext context,
+    required dynamic dateToDeleteTheAgreement,
   }) {
     emit(AcceptedOfferLoadingState());
 
@@ -455,44 +462,73 @@ class UberCubit extends Cubit<UberStates> {
       price: offer.price,
       driverId: offer.driverId,
       clientId: CasheHelper.GetData(key: 'uId'),
+      dateToDeleteTheAgreement: dateToDeleteTheAgreement,
     );
-    FirebaseFirestore.instance
-        .collection('clients')
-        .doc(CasheHelper.GetData(key: 'uId'))
-        .collection('orders')
-        .doc(order.orderId)
-        .update(newOrder.toMap()).then((value) {
-          GetClientOrders();
-          emit(AcceptedOfferSuccessfullyState());
 
-    });
-    FirebaseFirestore.instance
-        .collection('orders')
-        .doc(order.orderId)
-        .delete();
+    FirebaseFirestore.instance.collection('orders').doc(order.orderId).delete();
     FirebaseFirestore.instance
         .collection('drivers')
         .doc(offer.driverId)
         .collection('acceptedOrders')
-        .add(newOrder.toMap());
+        .add(newOrder.toMap())
+        .then((value) {
+      newOrder = OrderDataModel(
+        date: order.date,
+        time: order.time,
+        from: order.from,
+        to: order.to,
+        clientName: order.clientName,
+        clientImage: order.clientImage,
+        latFrom: order.latFrom,
+        latTo: order.latTo,
+        lngFrom: order.lngFrom,
+        lngTo: order.lngTo,
+        fcmToken: order.fcmToken,
+        orderId: order.orderId,
+        agreement: true,
+        driverImage: offer.driverImage,
+        driverEmail: offer.driverEmail,
+        driverFcmToken: offer.driverFcmToken,
+        driverName: offer.driverName,
+        driverPhone: offer.driverPhone,
+        price: offer.price,
+        driverId: offer.driverId,
+        clientId: CasheHelper.GetData(key: 'uId'),
+        dateToDeleteTheAgreement: dateToDeleteTheAgreement,
+        acceptedOrderId: value.id,
+      );
+      FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(offer.driverId)
+          .collection('acceptedOrders')
+          .doc(value.id)
+          .update(newOrder.toMap());
+
+      FirebaseFirestore.instance
+          .collection('clients')
+          .doc(CasheHelper.GetData(key: 'uId'))
+          .collection('orders')
+          .doc(order.orderId)
+          .update(newOrder.toMap());
+    });
+
+    //     .then((value) {
+    //   GetClientOrders();
+      emit(AcceptedOfferSuccessfullyState());
+    // });
 
     SendNotification(
       to: newOrder.driverFcmToken!,
       title: newOrder.clientName!,
-      body: "${newOrder.clientName!}   ${AppLocalizations.of(context)!.Translate('accept your offer')} ",
+      body:
+          "${newOrder.clientName!}   ${AppLocalizations.of(context)!.Translate('accept your offer')} ",
     );
-
-
 
     // SendNotification(
     //   to: order.driverFcmToken!,
     //   title: "${order.clientName}  ",
     //   body: "${order.clientName} accept your offer ",
     // );
-
-
-
-
 
     // DioHelper.PostData(
     //   url: 'send',
@@ -513,7 +549,7 @@ class UberCubit extends Cubit<UberStates> {
     required String title,
     required String body,
   }) {
-     DioHelper.PostData(
+    DioHelper.PostData(
       url: 'send',
       data: {
         "to": to,
@@ -669,28 +705,93 @@ class UberCubit extends Cubit<UberStates> {
     });
   }
 
-  RejectOffer({
-    required String orderId,
-    required String offerId,
-    required String to ,
-    required String clientName,
-    required BuildContext context
-}){
+  RejectOffer(
+      {required String orderId,
+      required String offerId,
+      required String to,
+      required String clientName,
+      required BuildContext context}) {
     emit(RejectOfferLoadingState());
     FirebaseFirestore.instance
         .collection('orders')
         .doc(orderId)
         .collection('offers')
         .doc(offerId)
-        .delete().then((value) {
+        .delete()
+        .then((value) {
       SendNotification(
         to: to,
         title: '${clientName}',
-        body: "${clientName} ${AppLocalizations.of(context)!.Translate('reject your offer')} ",
+        body:
+            "${clientName} ${AppLocalizations.of(context)!.Translate('reject your offer')} ",
       );
-          emit(RejectOfferSuccessfullyState());
+      emit(RejectOfferSuccessfullyState());
     });
   }
+
+  DeleteOrderFromDriver({
+    required String driverId,
+    required String acceptedOrderId,
+    required String to,
+    required String driverName,
+    required String orderId,
+    required String clientId,
+
+  }) {
+    emit(DeleteOrderFromDriverLoadingState());
+    FirebaseFirestore.instance
+        .collection('drivers')
+        .doc(driverId)
+        .collection('acceptedOrders')
+        .doc(acceptedOrderId)
+        .delete()
+        .then((value) {
+      SendNotification(
+        to: to,
+        title: driverName,
+        body: '$driverName delete the agreement please order it again',
+      );
+      emit(DeleteOrderFromDriverSuccessfullyState());
+    });
+    FirebaseFirestore.instance.collection('clients')
+    .doc(clientId)
+    .collection('orders')
+    .doc(orderId)
+    .delete();
+  }
+
+
+  DeleteOrderFromClient({
+    required String driverId,
+    required String acceptedOrderId,
+    required String to,
+    required String clientName,
+    required String orderId,
+    required String clientId,
+
+  }) {
+    emit(DeleteOrderFromClientLoadingState());
+    FirebaseFirestore.instance
+        .collection('drivers')
+        .doc(driverId)
+        .collection('acceptedOrders')
+        .doc(acceptedOrderId)
+        .delete()
+        .then((value) {
+      SendNotification(
+        to: to,
+        title: clientName,
+        body: '$clientName delete the agreement ',
+      );
+      emit(DeleteOrderFromClientSuccessfullyState());
+    });
+    FirebaseFirestore.instance.collection('clients')
+        .doc(clientId)
+        .collection('orders')
+        .doc(orderId)
+        .delete();
+  }
+
 //   List<OrderDataModel> acceptedOffers = [];
 //
 //   AcceptOffer({

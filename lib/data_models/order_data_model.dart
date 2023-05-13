@@ -20,6 +20,8 @@ class OrderDataModel{
   String? driverImage;
   String? driverId ;
   String? clientId ;
+  dynamic dateToDeleteTheAgreement;
+  String? acceptedOrderId ;
 
 
   OrderDataModel({
@@ -44,6 +46,8 @@ class OrderDataModel{
     this.driverEmail,
     this.driverId,
     this.clientId,
+    this.dateToDeleteTheAgreement,
+    this.acceptedOrderId,
 
   });
 
@@ -69,12 +73,13 @@ class OrderDataModel{
     driverEmail = json['driverEmail'];
     driverId = json['driverId'];
     clientId = json['clientId'];
-
-
-
+    dateToDeleteTheAgreement = json['dateToDeleteTheAgreement'];
+    acceptedOrderId = json['acceptedOrderId'];
 
 
   }
+
+
   toMap(){
     return {
       'date' : date,
@@ -98,8 +103,8 @@ class OrderDataModel{
       'driverEmail' : driverEmail ,
       'driverId' : driverId ,
       'clientId' : clientId ,
-
-
+      'dateToDeleteTheAgreement' : dateToDeleteTheAgreement ,
+      'acceptedOrderId' : acceptedOrderId ,
 
 
     };

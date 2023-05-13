@@ -65,6 +65,14 @@ class GetDriverRatesLoadingState extends UberStates{}
 class GetDriverRatesSuccessfullyState extends UberStates{}
 class GetDriverRatesErrorState extends UberStates{}
 
+class DeleteOrderFromDriverLoadingState extends UberStates{}
+class DeleteOrderFromDriverSuccessfullyState extends UberStates{}
+
+class DeleteOrderFromClientLoadingState extends UberStates{}
+class DeleteOrderFromClientSuccessfullyState extends UberStates{}
+
+
+
 
 
 
