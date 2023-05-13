@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_final/components/components.dart';
 
+import '../../app_localization.dart';
 import '../../uber_cubit/uber_cubit.dart';
 import '../../uber_cubit/uber_states.dart';
 
@@ -12,7 +13,9 @@ class DriverOrderScreen extends StatelessWidget {
       listener: (context,state){},
       builder: (context,state){
         var cubit = UberCubit.get(context);
-        return ListView.separated(
+        var locale = AppLocalizations.of(context);
+        return cubit.allOrders.length >0 ?
+        ListView.separated(
           physics: BouncingScrollPhysics(),
           itemBuilder:(context,index)=> BuildDriverOrderItem(
           order: cubit.allOrders[index],
@@ -21,6 +24,25 @@ class DriverOrderScreen extends StatelessWidget {
             height: 0,
           ),
           itemCount: cubit.allOrders.length,
+        )
+        :
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/Order ride-bro.png',
+                width: MediaQuery.of(context).size.width,
+              ),
+              Text(
+                locale!.Translate('There is no orders yet') ,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

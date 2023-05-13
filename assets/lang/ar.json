@@ -1,4 +1,8 @@
 {
+  "There is no accepted orders yet" : "لا يوجد طلبات مقبولة حتي الان",
+  "There is no rates yet" : "لا توجد تقيمات حتي الان",
+  "There is no offers yet" : "لا توجد عروض حتي الان",
+  "There is no orders yet" : "لا توجد طلبات حتي الان",
   "Deleted successfully" : "تم الانهاء بنجاح",
   "Are you sure ?" : "هل انت متأكد ؟",
   "can't be deleted" : "لا يمكنك الرجوع في الاتفاق",
