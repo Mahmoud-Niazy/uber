@@ -230,6 +230,18 @@ class BuildClientOrderItem extends StatelessWidget {
                             " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date}"),
                       ],
                     ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.phone_android,
+                        ),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone}"),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -329,6 +341,18 @@ class BuildDriverOrderItem extends StatelessWidget {
                             " ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
                       ],
                     ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.phone_android,
+                        ),
+                        Text(
+                            " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone} "),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -425,6 +449,18 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                       ),
                       Text(
                           " ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.phone_android,
+                      ),
+                      Text(
+                          " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone} "),
                     ],
                   ),
                   SizedBox(

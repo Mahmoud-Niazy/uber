@@ -209,6 +209,7 @@ class UberCubit extends Cubit<UberStates> {
       fcmToken: client!.fcmToken,
       agreement: false,
       dateToDeleteTheAgreement: dateToDeleteTheAgreement,
+      clientPhone: client!.phone,
     );
     FirebaseFirestore.instance
         .collection('clients')
@@ -229,6 +230,8 @@ class UberCubit extends Cubit<UberStates> {
           orderId: value1.id,
           agreement: false,
           dateToDeleteTheAgreement: dateToDeleteTheAgreement,
+          clientPhone: client!.phone,
+
         );
         FirebaseFirestore.instance
             .collection('clients')
@@ -258,6 +261,8 @@ class UberCubit extends Cubit<UberStates> {
             orderId: value1.id,
             agreement: false,
             dateToDeleteTheAgreement: dateToDeleteTheAgreement,
+            clientPhone: client!.phone,
+
           );
 
           FirebaseFirestore.instance
@@ -463,6 +468,7 @@ class UberCubit extends Cubit<UberStates> {
       driverId: offer.driverId,
       clientId: CasheHelper.GetData(key: 'uId'),
       dateToDeleteTheAgreement: dateToDeleteTheAgreement,
+      clientPhone: client!.phone,
     );
 
     FirebaseFirestore.instance.collection('orders').doc(order.orderId).delete();
@@ -496,6 +502,7 @@ class UberCubit extends Cubit<UberStates> {
         clientId: CasheHelper.GetData(key: 'uId'),
         dateToDeleteTheAgreement: dateToDeleteTheAgreement,
         acceptedOrderId: value.id,
+        clientPhone: client!.phone,
       );
       FirebaseFirestore.instance
           .collection('drivers')

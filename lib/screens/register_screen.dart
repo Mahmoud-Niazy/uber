@@ -25,6 +25,9 @@ class RegisterScreen extends StatelessWidget {
           password = passwordController.text;
           navigateAndFinish(screen: CheckCodeScreen(), context: context);
         }
+        if(state is CreateUserSuccessfullyState){
+          RegisterCubit.get(context).profileImage = null ;
+        }
         print(state);
       },
       builder: (context, state) {

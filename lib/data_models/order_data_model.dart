@@ -5,6 +5,7 @@ class OrderDataModel{
   String? date ;
   String? clientName;
   String? clientImage ;
+  String? clientPhone ;
   double? latFrom ;
   double? latTo ;
   double? lngFrom ;
@@ -48,6 +49,7 @@ class OrderDataModel{
     this.clientId,
     this.dateToDeleteTheAgreement,
     this.acceptedOrderId,
+    this.clientPhone,
 
   });
 
@@ -75,6 +77,8 @@ class OrderDataModel{
     clientId = json['clientId'];
     dateToDeleteTheAgreement = json['dateToDeleteTheAgreement'];
     acceptedOrderId = json['acceptedOrderId'];
+    clientPhone = json['clientPhone'];
+
 
 
   }
@@ -105,6 +109,8 @@ class OrderDataModel{
       'clientId' : clientId ,
       'dateToDeleteTheAgreement' : dateToDeleteTheAgreement ,
       'acceptedOrderId' : acceptedOrderId ,
+      'clientPhone' : clientPhone ,
+
 
 
     };
