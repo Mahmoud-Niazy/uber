@@ -15,7 +15,10 @@ class ClientOrdersScreen extends StatelessWidget {
         var cubit = UberCubit.get(context);
         var locale = AppLocalizations.of(context)!;
         return Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.symmetric(
+            vertical: 25,
+            horizontal: 15,
+          ),
           child: cubit.orders.length > 0
               ? ListView.separated(
                   physics: BouncingScrollPhysics(),

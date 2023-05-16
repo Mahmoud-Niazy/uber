@@ -40,6 +40,11 @@ class UberCubit extends Cubit<UberStates> {
     ClientSettingScreen(),
   ];
 
+  List<String> titles = [
+    'Your Orders',
+    'Make Your order',
+    'Your information',
+  ];
   DriverDataModel? driver;
   ClientDataModel? client;
 

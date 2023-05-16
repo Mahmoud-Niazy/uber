@@ -181,68 +181,88 @@ class BuildClientOrderItem extends StatelessWidget {
           // )),
           child: Row(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.black, width: 2)),
-                child: CircleAvatar(
-                  radius: 40,
-                  child: Text(
-                    '${order.time}',
-                  ),
-                  backgroundColor: Colors.white,
+              CircleAvatar(
+                radius: 40,
+                backgroundImage: NetworkImage(
+                  order.clientImage!,
                 ),
               ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       border: Border.all(color: Colors.black, width: 2)),
+              //   child: CircleAvatar(
+              //     radius: 40,
+              //     child: Text(
+              //       '${order.time}',
+              //     ),
+              //     backgroundColor: Colors.white,
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                        ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate('From')} : ${order.from}"),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                        ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate('To')} : ${order.to}"),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.date_range_outlined,
-                        ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date}"),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.phone_android,
-                        ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone}"),
-                      ],
-                    ),
-                  ],
+                child: Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.Translate('From')} : ${order.from}"),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.Translate('To')} : ${order.to}"),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.date_range_outlined,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date}"),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.watch_later_outlined,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time}"),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.phone_android,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone}"),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -467,7 +487,8 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                     height: 15,
                   ),
                   BuildTextButton(
-                    label: AppLocalizations.of(context)!.Translate('Delete the agreement'),
+                    label: AppLocalizations.of(context)!
+                        .Translate('Delete the agreement'),
                     onPressed: () {
                       if (DateTime.parse(order.dateToDeleteTheAgreement)
                               .difference(
@@ -475,17 +496,20 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                               .inDays ==
                           0) {
                         Fluttertoast.showToast(
-                          msg: AppLocalizations.of(context)!.Translate('can\'t be deleted'),
+                          msg: AppLocalizations.of(context)!
+                              .Translate('can\'t be deleted'),
                           backgroundColor: Colors.red,
                         );
                       } else {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            content: Text(AppLocalizations.of(context)!.Translate('Are you sure ?')),
+                            content: Text(AppLocalizations.of(context)!
+                                .Translate('Are you sure ?')),
                             actions: [
                               BuildTextButton(
-                                label: AppLocalizations.of(context)!.Translate('Confirm'),
+                                label: AppLocalizations.of(context)!
+                                    .Translate('Confirm'),
                                 onPressed: () {
                                   UberCubit.get(context).DeleteOrderFromDriver(
                                     driverId: CasheHelper.GetData(key: 'uId'),
@@ -496,7 +520,8 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                                     orderId: order.orderId!,
                                   );
                                   Fluttertoast.showToast(
-                                    msg: AppLocalizations.of(context)!.Translate('Deleted successfully'),
+                                    msg: AppLocalizations.of(context)!
+                                        .Translate('Deleted successfully'),
                                     backgroundColor: Colors.green,
                                   ).then((value) {
                                     navigatePop(context: context);

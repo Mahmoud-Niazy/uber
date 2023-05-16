@@ -17,6 +17,11 @@ class LayoutForClient extends StatelessWidget{
         var locale = AppLocalizations.of(context)!;
         return SafeArea(
           child: Scaffold(
+            // appBar: AppBar(
+            //   title: Text(
+            //     cubit.titles[cubit.currentIndexInClientsLayout],
+            //   ),
+            // ),
             bottomNavigationBar: SalomonBottomBar(
               currentIndex:cubit.currentIndexInClientsLayout,
               onTap: (i) => cubit.BottomNavigationInClientsLayout(i),
