@@ -67,6 +67,8 @@ void main() async {
   //   sound: true,
   // );
 
+  print(CasheHelper.GetData(key: 'uId'));
+
   runApp(MyApp());
 
   print(DateTime.now());

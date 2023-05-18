@@ -6,9 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:uber_final/app_localization.dart';
 import 'package:uber_final/data_models/client_data_model.dart';
 import 'package:uber_final/data_models/driver_data_model.dart';
+import 'package:uber_final/data_models/messege_data_model.dart';
 import 'package:uber_final/data_models/offer_data_model.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/data_models/rate_data_model.dart';
@@ -236,7 +238,6 @@ class UberCubit extends Cubit<UberStates> {
           agreement: false,
           dateToDeleteTheAgreement: dateToDeleteTheAgreement,
           clientPhone: client!.phone,
-
         );
         FirebaseFirestore.instance
             .collection('clients')
@@ -267,7 +268,6 @@ class UberCubit extends Cubit<UberStates> {
             agreement: false,
             dateToDeleteTheAgreement: dateToDeleteTheAgreement,
             clientPhone: client!.phone,
-
           );
 
           FirebaseFirestore.instance
@@ -526,7 +526,7 @@ class UberCubit extends Cubit<UberStates> {
 
     //     .then((value) {
     //   GetClientOrders();
-      emit(AcceptedOfferSuccessfullyState());
+    emit(AcceptedOfferSuccessfullyState());
     // });
 
     SendNotification(
@@ -569,6 +569,7 @@ class UberCubit extends Cubit<UberStates> {
         "notification": {"body": body, "title": title, "subtitle": ""}
       },
     );
+    emit(SendNotificationSuccessfullyState());
   }
 
   List<OrderDataModel> acceptedOrders = [];
@@ -748,7 +749,6 @@ class UberCubit extends Cubit<UberStates> {
     required String driverName,
     required String orderId,
     required String clientId,
-
   }) {
     emit(DeleteOrderFromDriverLoadingState());
     FirebaseFirestore.instance
@@ -765,13 +765,13 @@ class UberCubit extends Cubit<UberStates> {
       );
       emit(DeleteOrderFromDriverSuccessfullyState());
     });
-    FirebaseFirestore.instance.collection('clients')
-    .doc(clientId)
-    .collection('orders')
-    .doc(orderId)
-    .delete();
+    FirebaseFirestore.instance
+        .collection('clients')
+        .doc(clientId)
+        .collection('orders')
+        .doc(orderId)
+        .delete();
   }
-
 
   DeleteOrderFromClient({
     required String driverId,
@@ -780,7 +780,6 @@ class UberCubit extends Cubit<UberStates> {
     required String clientName,
     required String orderId,
     required String clientId,
-
   }) {
     emit(DeleteOrderFromClientLoadingState());
     FirebaseFirestore.instance
@@ -797,11 +796,120 @@ class UberCubit extends Cubit<UberStates> {
       );
       emit(DeleteOrderFromClientSuccessfullyState());
     });
-    FirebaseFirestore.instance.collection('clients')
+    FirebaseFirestore.instance
+        .collection('clients')
         .doc(clientId)
         .collection('orders')
         .doc(orderId)
         .delete();
+  }
+
+  SendMessege({
+    required String recieverId,
+    required String senderId,
+    required String text,
+    // required String FcmTo,
+    // required String title,
+    // required String body,
+  }) {
+    emit(SendMessegeLoadingState());
+    // SendNotification(
+    //   to: FcmTo,
+    //   title: title,
+    //   body: body,
+    // );
+    MessegeDataModel messege = MessegeDataModel(
+      time: DateFormat.jm().format(DateTime.now()),
+      dateTime: DateTime.now(),
+      senderId: senderId,
+      text: text,
+      recieverId: recieverId,
+      date: DateFormat('yMd').format(DateTime.now()),
+    );
+
+    if (!CasheHelper.GetData(key: 'isDriver')) {
+      FirebaseFirestore.instance
+          .collection('clients')
+          .doc(senderId)
+          .collection('messeges')
+          .doc(recieverId)
+          .collection('messeges')
+          .add(messege.ToMap());
+
+      FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(recieverId)
+          .collection('messeges')
+          .doc(senderId)
+          .collection('messeges')
+          .add(messege.ToMap())
+          .then((value) {
+
+        emit(SendMessegeSuccessfullyState());
+      });
+    } else {
+      FirebaseFirestore.instance
+          .collection('clients')
+          .doc(recieverId)
+          .collection('messeges')
+          .doc(senderId)
+          .collection('messeges')
+          .add(messege.ToMap());
+
+      FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(senderId)
+          .collection('messeges')
+          .doc(recieverId)
+          .collection('messeges')
+          .add(messege.ToMap())
+          .then((value) {
+        emit(SendMessegeSuccessfullyState());
+      });
+    }
+
+  }
+
+  List<MessegeDataModel> allMesseges = [];
+
+  GetAllMesseges({
+    String? clientId,
+    String? driverId,
+  }) {
+    emit(GetAllMessegesLoadingState());
+    if (CasheHelper.GetData(key: 'isDriver')) {
+      FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(driverId)
+          .collection('messeges')
+          .doc(clientId)
+          .collection('messeges')
+          .orderBy('dateTime')
+          .snapshots()
+          .listen((event) {
+        allMesseges = [];
+        event.docs.forEach((element) {
+          allMesseges.add(MessegeDataModel.fromJson(element.data()));
+        });
+        emit(GetAllMessegesSuccessfullyStates());
+      });
+    } else {
+      FirebaseFirestore.instance
+          .collection('clients')
+          .doc(clientId)
+          .collection('messeges')
+          .doc(driverId)
+          .collection('messeges')
+          .orderBy('dateTime')
+          .snapshots()
+          .listen((event) {
+        allMesseges = [];
+        event.docs.forEach((element) {
+          allMesseges.add(MessegeDataModel.fromJson(element.data()));
+        });
+        emit(GetAllMessegesSuccessfullyStates());
+      });
+    }
   }
 
 //   List<OrderDataModel> acceptedOffers = [];

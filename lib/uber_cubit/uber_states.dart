@@ -71,6 +71,15 @@ class DeleteOrderFromDriverSuccessfullyState extends UberStates{}
 class DeleteOrderFromClientLoadingState extends UberStates{}
 class DeleteOrderFromClientSuccessfullyState extends UberStates{}
 
+class GetAllMessegesLoadingState extends UberStates {}
+class GetAllMessegesSuccessfullyStates extends UberStates{}
+
+class SendMessegeLoadingState extends UberStates{}
+class SendMessegeSuccessfullyState extends UberStates{}
+
+class SendNotificationSuccessfullyState extends UberStates{}
+
+
 
 
 

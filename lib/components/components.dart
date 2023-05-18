@@ -6,6 +6,7 @@ import 'package:uber_final/cashe_helper/cashe_helper.dart';
 import 'package:uber_final/data_models/offer_data_model.dart';
 import 'package:uber_final/data_models/order_data_model.dart';
 import 'package:uber_final/data_models/rate_data_model.dart';
+import 'package:uber_final/screens/chat_screen.dart';
 import 'package:uber_final/screens/clients/all_driver_rates.dart';
 import 'package:uber_final/screens/clients/all_offers_screen.dart';
 import 'package:uber_final/screens/drivers/location_of_order_screen.dart';
@@ -486,6 +487,13 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                   SizedBox(
                     height: 15,
                   ),
+                  BuildTextButton(
+                    onPressed: (){
+                      navigate(screen: ChatScreen(order), context: context);
+                    },
+                    label: AppLocalizations.of(context)!.Translate('Chat'),
+                  ),
+
                   BuildTextButton(
                     label: AppLocalizations.of(context)!
                         .Translate('Delete the agreement'),
