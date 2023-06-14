@@ -200,6 +200,7 @@ class UberCubit extends Cubit<UberStates> {
     required String fromPlace,
     required String toPlace,
     required dynamic dateToDeleteTheAgreement,
+    required String dateToOrder,
   }) {
     emit(MakeOrderLoadingState());
     OrderDataModel order = OrderDataModel(
@@ -217,6 +218,7 @@ class UberCubit extends Cubit<UberStates> {
       agreement: false,
       dateToDeleteTheAgreement: dateToDeleteTheAgreement,
       clientPhone: client!.phone,
+      dateToOrder: dateToOrder,
     );
     FirebaseFirestore.instance
         .collection('clients')
@@ -238,6 +240,7 @@ class UberCubit extends Cubit<UberStates> {
           agreement: false,
           dateToDeleteTheAgreement: dateToDeleteTheAgreement,
           clientPhone: client!.phone,
+          dateToOrder: dateToOrder,
         );
         FirebaseFirestore.instance
             .collection('clients')
@@ -268,6 +271,7 @@ class UberCubit extends Cubit<UberStates> {
             agreement: false,
             dateToDeleteTheAgreement: dateToDeleteTheAgreement,
             clientPhone: client!.phone,
+            dateToOrder: dateToOrder,
           );
 
           FirebaseFirestore.instance
@@ -291,8 +295,7 @@ class UberCubit extends Cubit<UberStates> {
         .collection('clients')
         .doc(CasheHelper.GetData(key: 'uId'))
         .collection('orders')
-        .orderBy('date')
-        .orderBy('time')
+        .orderBy('dateToOrder')
         .snapshots()
         .listen((value) {
       orders = [];
@@ -344,7 +347,7 @@ class UberCubit extends Cubit<UberStates> {
       emit(GetAllOrdersLoadingState());
       FirebaseFirestore.instance
           .collection('orders')
-          .orderBy('date')
+          .orderBy('dateToOrder')
           .snapshots()
           .listen((event) {
         allOrders = [];
@@ -414,9 +417,11 @@ class UberCubit extends Cubit<UberStates> {
             .update(offer.toMap());
         emit(MakeOfferSuccessfullyState());
       }).catchError((error) {
+        print(error);
         emit(MakeOfferErrorState());
       });
     }).catchError((error) {
+      print(error);
       emit(SendNotificationToClientErrorState());
     });
   }
@@ -455,8 +460,10 @@ class UberCubit extends Cubit<UberStates> {
       time: order.time,
       from: order.from,
       to: order.to,
+      dateToOrder: order.dateToOrder,
       clientName: order.clientName,
       clientImage: order.clientImage,
+
       latFrom: order.latFrom,
       latTo: order.latTo,
       lngFrom: order.lngFrom,
@@ -487,6 +494,7 @@ class UberCubit extends Cubit<UberStates> {
         date: order.date,
         time: order.time,
         from: order.from,
+        dateToOrder: order.dateToOrder,
         to: order.to,
         clientName: order.clientName,
         clientImage: order.clientImage,
@@ -582,6 +590,7 @@ class UberCubit extends Cubit<UberStates> {
           .collection('drivers')
           .doc(CasheHelper.GetData(key: 'uId'))
           .collection('acceptedOrders')
+      .orderBy('dateToOrder')
           .snapshots()
           .listen((event) {
         acceptedOrders = [];
@@ -732,14 +741,15 @@ class UberCubit extends Cubit<UberStates> {
         .doc(offerId)
         .delete()
         .then((value) {
-      SendNotification(
-        to: to,
-        title: '${clientName}',
-        body:
-            "${clientName} ${AppLocalizations.of(context)!.Translate('reject your offer')} ",
-      );
+
       emit(RejectOfferSuccessfullyState());
     });
+    SendNotification(
+      to: to,
+      title: '${clientName}',
+      body:
+      " ${AppLocalizations.of(context)!.Translate('reject your offer')} ",
+    );
   }
 
   DeleteOrderFromDriver({
@@ -749,6 +759,7 @@ class UberCubit extends Cubit<UberStates> {
     required String driverName,
     required String orderId,
     required String clientId,
+    required BuildContext context,
   }) {
     emit(DeleteOrderFromDriverLoadingState());
     FirebaseFirestore.instance
@@ -758,13 +769,14 @@ class UberCubit extends Cubit<UberStates> {
         .doc(acceptedOrderId)
         .delete()
         .then((value) {
-      SendNotification(
-        to: to,
-        title: driverName,
-        body: '$driverName delete the agreement please order it again',
-      );
+
       emit(DeleteOrderFromDriverSuccessfullyState());
     });
+    SendNotification(
+      to: to,
+      title: driverName,
+      body: 'delete the agreement please order it again',
+    );
     FirebaseFirestore.instance
         .collection('clients')
         .doc(clientId)
@@ -780,6 +792,7 @@ class UberCubit extends Cubit<UberStates> {
     required String clientName,
     required String orderId,
     required String clientId,
+    required BuildContext context,
   }) {
     emit(DeleteOrderFromClientLoadingState());
     FirebaseFirestore.instance
@@ -792,7 +805,7 @@ class UberCubit extends Cubit<UberStates> {
       SendNotification(
         to: to,
         title: clientName,
-        body: '$clientName delete the agreement ',
+        body: 'delete the agreement',
       );
       emit(DeleteOrderFromClientSuccessfullyState());
     });

@@ -23,6 +23,7 @@ class OrderDataModel{
   String? clientId ;
   dynamic dateToDeleteTheAgreement;
   String? acceptedOrderId ;
+  late String dateToOrder ;
 
 
   OrderDataModel({
@@ -47,14 +48,16 @@ class OrderDataModel{
     this.driverEmail,
     this.driverId,
     this.clientId,
-    this.dateToDeleteTheAgreement,
+    required this.dateToDeleteTheAgreement,
     this.acceptedOrderId,
     this.clientPhone,
+    required this.dateToOrder,
 
   });
 
   OrderDataModel.fromJson(Map<String,dynamic>json){
     date = json['date'];
+    dateToOrder = json['dateToOrder'];
     time = json['time'];
     from = json['from'];
     to = json['to'];
@@ -87,6 +90,7 @@ class OrderDataModel{
   toMap(){
     return {
       'date' : date,
+      'dateToOrder' : dateToOrder,
       'time' : time ,
       'from' : from ,
       'to' : to ,

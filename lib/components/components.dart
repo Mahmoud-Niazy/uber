@@ -262,6 +262,116 @@ class BuildClientOrderItem extends StatelessWidget {
                               " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone}"),
                         ],
                       ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      if(order.agreement == true)
+                      BuildTextButton(
+                        label: AppLocalizations.of(context)!.Translate(
+                            'Delete the agreement'),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) =>
+                              AlertDialog(
+                                content: Text(
+                                  AppLocalizations.of(context)!.Translate(
+                                      'Are you sure ?'),
+                                ),
+                                actions: [
+                                  BuildTextButton(
+                                    label: AppLocalizations.of(context)!.Translate(
+                                        'Confirm'),
+                                    onPressed: () {
+                                      UberCubit.get(context)
+                                          .DeleteOrderFromClient(
+                                        context: context,
+                                        driverId: order
+                                            .driverId!,
+                                        acceptedOrderId: order
+                                            .acceptedOrderId!,
+                                        to: order
+                                            .driverFcmToken!,
+                                        clientName: order
+                                            .clientName!,
+                                        clientId: order
+                                            .clientId!,
+                                        orderId:
+                                        order.orderId!,
+                                      );
+                                      Fluttertoast.showToast(
+                                        msg: AppLocalizations.of(context)!.Translate(
+                                            'Deleted successfully'),
+                                        backgroundColor:
+                                        Colors.green,
+                                      ).then((value) {
+                                        navigatePop(
+                                            context: context);
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                          );
+                        //   if (DateTime.parse(order
+                        //       .dateToDeleteTheAgreement)
+                        //       .difference(DateTime.parse(
+                        //       DateTime.now()
+                        //           .toString()))
+                        //       .inDays ==
+                        //       0) {
+                        //     Fluttertoast.showToast(
+                        //       msg: AppLocalizations.of(context)!.Translate(
+                        //           'can\'t be deleted'),
+                        //       backgroundColor: Colors.red,
+                        //     );
+                        //   } else {
+                        //     showDialog(
+                        //       context: context,
+                        //       builder: (context) =>
+                        //           AlertDialog(
+                        //             content: Text(
+                        //               AppLocalizations.of(context)!.Translate(
+                        //                   'Are you sure ?'),
+                        //             ),
+                        //             actions: [
+                        //               BuildTextButton(
+                        //                 label: AppLocalizations.of(context)!.Translate(
+                        //                     'Confirm'),
+                        //                 onPressed: () {
+                        //                   UberCubit.get(context)
+                        //                       .DeleteOrderFromClient(
+                        //                     context: context,
+                        //                     driverId: order
+                        //                         .driverId!,
+                        //                     acceptedOrderId: order
+                        //                         .acceptedOrderId!,
+                        //                     to: order
+                        //                         .driverFcmToken!,
+                        //                     clientName: order
+                        //                         .clientName!,
+                        //                     clientId: order
+                        //                         .clientId!,
+                        //                     orderId:
+                        //                     order.orderId!,
+                        //                   );
+                        //                   Fluttertoast.showToast(
+                        //                     msg: AppLocalizations.of(context)!.Translate(
+                        //                         'Deleted successfully'),
+                        //                     backgroundColor:
+                        //                     Colors.green,
+                        //                   ).then((value) {
+                        //                     navigatePop(
+                        //                         context: context);
+                        //                   });
+                        //                 },
+                        //               ),
+                        //             ],
+                        //           ),
+                        //     );
+                        //   }
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -526,6 +636,7 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                                     driverName: order.driverName!,
                                     clientId: order.clientId!,
                                     orderId: order.orderId!,
+                                    context: context,
                                   );
                                   Fluttertoast.showToast(
                                     msg: AppLocalizations.of(context)!

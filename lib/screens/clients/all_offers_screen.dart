@@ -225,69 +225,71 @@ class AllOffersScreen extends StatelessWidget {
                                         SizedBox(
                                           height: 5,
                                         ),
-                                        BuildTextButton(
-                                          label: locale.Translate(
-                                              'Delete the agreement'),
-                                          onPressed: () {
-                                            if (DateTime.parse(order[0]
-                                                        .dateToDeleteTheAgreement)
-                                                    .difference(DateTime.parse(
-                                                        DateTime.now()
-                                                            .toString()))
-                                                    .inDays ==
-                                                0) {
-                                              Fluttertoast.showToast(
-                                                msg: locale.Translate(
-                                                    'can\'t be deleted'),
-                                                backgroundColor: Colors.red,
-                                              );
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                  content: Text(
-                                                    locale.Translate(
-                                                        'Are you sure ?'),
-                                                  ),
-                                                  actions: [
-                                                    BuildTextButton(
-                                                      label: locale.Translate(
-                                                          'Confirm'),
-                                                      onPressed: () {
-                                                        UberCubit.get(context)
-                                                            .DeleteOrderFromClient(
-                                                          driverId: order[0]
-                                                              .driverId!,
-                                                          acceptedOrderId: order[
-                                                                  0]
-                                                              .acceptedOrderId!,
-                                                          to: order[0]
-                                                              .driverFcmToken!,
-                                                          clientName: order[0]
-                                                              .clientName!,
-                                                          clientId: order[0]
-                                                              .clientId!,
-                                                          orderId:
-                                                              order[0].orderId!,
-                                                        );
-                                                        Fluttertoast.showToast(
-                                                          msg: locale.Translate(
-                                                              'Deleted successfully'),
-                                                          backgroundColor:
-                                                              Colors.green,
-                                                        ).then((value) {
-                                                          navigatePop(
-                                                              context: context);
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            }
-                                          },
-                                        ),
+                                        // BuildTextButton(
+                                        //   label: locale.Translate(
+                                        //       'Delete the agreement'),
+                                        //   onPressed: () {
+                                        //     if (DateTime.parse(order[0]
+                                        //                 .dateToDeleteTheAgreement)
+                                        //             .difference(DateTime.parse(
+                                        //                 DateTime.now()
+                                        //                     .toString()))
+                                        //             .inDays ==
+                                        //         0) {
+                                        //       Fluttertoast.showToast(
+                                        //         msg: locale.Translate(
+                                        //             'can\'t be deleted'),
+                                        //         backgroundColor: Colors.red,
+                                        //       );
+                                        //     } else {
+                                        //       showDialog(
+                                        //         context: context,
+                                        //         builder: (context) =>
+                                        //             AlertDialog(
+                                        //           content: Text(
+                                        //             locale.Translate(
+                                        //                 'Are you sure ?'),
+                                        //           ),
+                                        //           actions: [
+                                        //             BuildTextButton(
+                                        //               label: locale.Translate(
+                                        //                   'Confirm'),
+                                        //               onPressed: () {
+                                        //                 UberCubit.get(context)
+                                        //                     .DeleteOrderFromClient(
+                                        //                   context: context,
+                                        //                   driverId: order[0]
+                                        //                       .driverId!,
+                                        //                   acceptedOrderId: order[
+                                        //                           0]
+                                        //                       .acceptedOrderId!,
+                                        //                   to: order[0]
+                                        //                       .driverFcmToken!,
+                                        //                   clientName: order[0]
+                                        //                       .clientName!,
+                                        //                   clientId: order[0]
+                                        //                       .clientId!,
+                                        //                   orderId:
+                                        //                       order[0].orderId!,
+                                        //                 );
+                                        //                 Fluttertoast.showToast(
+                                        //                   msg: locale.Translate(
+                                        //                       'Deleted successfully'),
+                                        //                   backgroundColor:
+                                        //                       Colors.green,
+                                        //                 ).then((value) {
+                                        //                   navigatePop(
+                                        //                       context: context);
+                                        //                 });
+                                        //               },
+                                        //             ),
+                                        //           ],
+                                        //         ),
+                                        //       );
+                                        //     }
+                                        //   },
+                                        // ),
+                                        /////////////////////////////////////////////////
                                         // BuildButton(
                                         //   onPressed: () {
                                         //     if(DateTime.now().difference(order[0].dateToDeleteTheAgreement).inDays ==0){

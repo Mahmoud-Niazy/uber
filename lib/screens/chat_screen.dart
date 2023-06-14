@@ -94,7 +94,7 @@ class ChatScreen extends StatelessWidget {
                                     itemCount: cubit.allMesseges.length,
                                   ),
                                 )
-                              : Center(child: CircularProgressIndicator()),
+                              : Spacer(),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 15,

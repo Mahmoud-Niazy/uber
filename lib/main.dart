@@ -29,11 +29,11 @@ void main() async {
   await Firebase.initializeApp();
   await CasheHelper.Init();
   DioHelper.Init();
-
+  int i = 0;
   FirebaseMessaging.onMessage.listen((event) {
     AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: 5,
+        id: i++,
         channelKey: 'Firebase',
         title: event.notification!.title,
         body: event.notification!.body,

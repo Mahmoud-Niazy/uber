@@ -162,6 +162,7 @@ class MakeOrderScreen extends StatelessWidget {
                                       fromPlace: cubit.fromController.text,
                                       toPlace: cubit.toController.text,
                                       dateToDeleteTheAgreement:dateToDeleteTheAgreement,
+                                      dateToOrder: DateTime.now().toString(),
                                     );
                                     dateToDeleteTheAgreement = null ;
                                   }

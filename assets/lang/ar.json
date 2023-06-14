@@ -1,4 +1,6 @@
 {
+  "delete the agreement please order it again" : "قام بالغاء الاتفاق من فضلك قم بالطلب مجددا",
+  "delete the agreement" : "قام بالغاء الاتفاق",
   "Write your messege" : "اكتب رسالتك",
   "Chat" : "محادثة",
   "can't be deleted" : "لا يمكنك انهاء الاتفاق الان ",
@@ -55,4 +57,5 @@
   "Email can't be empty" : "ادخل البريد الالكتروني",
   "Password" : "كلمة المرور",
   "Email" : "البريد الالكتروني"
+
 }

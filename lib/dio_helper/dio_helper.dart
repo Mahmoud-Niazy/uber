@@ -7,12 +7,12 @@ class DioHelper {
       BaseOptions(
         baseUrl: 'https://fcm.googleapis.com/fcm/',
         receiveDataWhenStatusError: true ,
-        connectTimeout: Duration(
-          milliseconds: 50000,
-        ),
-        receiveTimeout: Duration(
-          milliseconds: 50000,
-        ),
+        // connectTimeout: Duration(
+        //   milliseconds: 50000,
+        // ),
+        // receiveTimeout: Duration(
+        //   milliseconds: 50000,
+        // ),
         contentType: 'application/json',
         validateStatus: (statusCode){
           if(statusCode == null){
@@ -64,13 +64,13 @@ class DioHelper {
     required String url,
     Map<String,dynamic>? query ,
     dynamic data ,
-    String? token,
+    // String? token,
 
   })async{
 
     dio.options.headers= {
       'Content-Type' : 'application/json' ,
-      'Authorization': '',
+      'Authorization': 'key=AAAAWbrUMew:APA91bGdoONCURVyrG3Ivt_80uAPDvpnjr8XrDkW77qb9rJOBEsE2ldsUnccXVZgYaALADoYmQTz0BoBqdqma5Db1d1cQQQohLGu2fxBip2eF3w4mR63yO75lf2FQergtr0-5ZY03bEY',
 
     };
 
