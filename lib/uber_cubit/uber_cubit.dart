@@ -875,41 +875,52 @@ class UberCubit extends Cubit<UberStates> {
   GetAllMesseges({
     String? clientId,
     String? driverId,
+    // required String driverSend ,
   }) {
-    emit(GetAllMessegesLoadingState());
-    if (CasheHelper.GetData(key: 'isDriver')) {
-      FirebaseFirestore.instance
-          .collection('drivers')
-          .doc(driverId)
-          .collection('messeges')
-          .doc(clientId)
-          .collection('messeges')
-          .orderBy('dateTime')
-          .snapshots()
-          .listen((event) {
-        allMesseges = [];
-        event.docs.forEach((element) {
-          allMesseges.add(MessegeDataModel.fromJson(element.data()));
+      allMesseges = [];
+      emit(GetAllMessegesLoadingState());
+      if (CasheHelper.GetData(key: 'isDriver')) {
+        FirebaseFirestore.instance
+            .collection('drivers')
+            .doc(CasheHelper.GetData(key: 'uId'))
+            .collection('messeges')
+            .doc(clientId)
+            .collection('messeges')
+            .orderBy('dateTime')
+            .snapshots()
+            .listen((event) {
+          if(CasheHelper.GetData(key: 'uId') == driverId){
+            allMesseges = [];
+            event.docs.forEach((element) {
+              allMesseges.add(MessegeDataModel.fromJson(element.data()));
+            });
+            emit(GetAllMessegesSuccessfullyStates());
+          }
         });
-        emit(GetAllMessegesSuccessfullyStates());
-      });
-    } else {
-      FirebaseFirestore.instance
-          .collection('clients')
-          .doc(clientId)
-          .collection('messeges')
-          .doc(driverId)
-          .collection('messeges')
-          .orderBy('dateTime')
-          .snapshots()
-          .listen((event) {
-        allMesseges = [];
-        event.docs.forEach((element) {
-          allMesseges.add(MessegeDataModel.fromJson(element.data()));
+      }
+      else {
+        FirebaseFirestore.instance
+            .collection('clients')
+            .doc(CasheHelper.GetData(key: 'uId'))
+            .collection('messeges')
+            .doc(driverId)
+            .collection('messeges')
+            .orderBy('dateTime')
+            .snapshots()
+            .listen((event) {
+          allMesseges = [];
+          // GetAllMesseges(
+          //   clientId: clientId,
+          //   driverId: driverId,
+          // );
+          event.docs.forEach((element) {
+            allMesseges.add(MessegeDataModel.fromJson(element.data()));
+          });
+          emit(GetAllMessegesSuccessfullyStates());
         });
-        emit(GetAllMessegesSuccessfullyStates());
-      });
-    }
+      }
+
+
   }
 
 //   List<OrderDataModel> acceptedOffers = [];
