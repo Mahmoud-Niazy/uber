@@ -132,9 +132,8 @@ navigate({
   required Widget screen,
   required BuildContext context,
 }) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => screen),
+  Navigator.of(context).push(
+    PageTransition(screen)
   );
 }
 
@@ -142,10 +141,10 @@ navigateAndFinish({
   required Widget screen,
   required BuildContext context,
 }) {
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(builder: (context) => screen),
-    (route) => false,
+  Navigator.of(context).pushAndRemoveUntil(
+    PageTransition(screen),
+    // MaterialPageRoute(builder: (context) => screen),
+        (route) => false,
   );
 }
 
@@ -153,6 +152,25 @@ navigatePop({
   required BuildContext context,
 }) {
   Navigator.pop(context);
+}
+
+class PageTransition extends PageRouteBuilder {
+  late Widget page;
+  PageTransition(this.page) : super(
+      pageBuilder: (context, animation1, animation2) {
+        return page;
+      },
+      transitionsBuilder: (context, animation1, animation2, child) {
+    return SlideTransition(
+      position : animation1.drive(Tween<Offset>(
+        begin: Offset(1,0),
+        end: Offset(0,0),
+      )),
+      child: child,
+    );
+  }
+
+  );
 }
 
 class BuildClientOrderItem extends StatelessWidget {
@@ -175,7 +193,10 @@ class BuildClientOrderItem extends StatelessWidget {
       child: Card(
         elevation: 15,
         child: Container(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
+          padding: EdgeInsets.all(MediaQuery
+              .of(context)
+              .size
+              .width * .05),
           // decoration: BoxDecoration(
           //     border: Border.all(
           //   color: Colors.black,
@@ -211,7 +232,8 @@ class BuildClientOrderItem extends StatelessWidget {
                             Icons.location_on_outlined,
                           ),
                           Text(
-                              " ${AppLocalizations.of(context)!.Translate('From')} : ${order.from}"),
+                              " ${AppLocalizations.of(context)!.Translate(
+                                  'From')} : ${order.from}"),
                         ],
                       ),
                       SizedBox(
@@ -223,7 +245,8 @@ class BuildClientOrderItem extends StatelessWidget {
                             Icons.location_on_outlined,
                           ),
                           Text(
-                              " ${AppLocalizations.of(context)!.Translate('To')} : ${order.to}"),
+                              " ${AppLocalizations.of(context)!.Translate(
+                                  'To')} : ${order.to}"),
                         ],
                       ),
                       SizedBox(
@@ -235,7 +258,8 @@ class BuildClientOrderItem extends StatelessWidget {
                             Icons.date_range_outlined,
                           ),
                           Text(
-                              " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date}"),
+                              " ${AppLocalizations.of(context)!.Translate(
+                                  'Date')} : ${order.date}"),
                         ],
                       ),
                       SizedBox(
@@ -247,7 +271,8 @@ class BuildClientOrderItem extends StatelessWidget {
                             Icons.watch_later_outlined,
                           ),
                           Text(
-                              " ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time}"),
+                              " ${AppLocalizations.of(context)!.Translate(
+                                  'Time')} : ${order.time}"),
                         ],
                       ),
                       SizedBox(
@@ -259,119 +284,122 @@ class BuildClientOrderItem extends StatelessWidget {
                             Icons.phone_android,
                           ),
                           Text(
-                              " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone}"),
+                              " ${AppLocalizations.of(context)!.Translate(
+                                  'Phone')} : ${order.clientPhone}"),
                         ],
                       ),
                       SizedBox(
                         height: 15,
                       ),
                       if(order.agreement == true)
-                      BuildTextButton(
-                        label: AppLocalizations.of(context)!.Translate(
-                            'Delete the agreement'),
-                        onPressed: () {
-                          showDialog(
+                        BuildTextButton(
+                          label: AppLocalizations.of(context)!.Translate(
+                              'Delete the agreement'),
+                          onPressed: () {
+                            showDialog(
                               context: context,
                               builder: (context) =>
-                              AlertDialog(
-                                content: Text(
-                                  AppLocalizations.of(context)!.Translate(
-                                      'Are you sure ?'),
-                                ),
-                                actions: [
-                                  BuildTextButton(
-                                    label: AppLocalizations.of(context)!.Translate(
-                                        'Confirm'),
-                                    onPressed: () {
-                                      UberCubit.get(context)
-                                          .DeleteOrderFromClient(
-                                        context: context,
-                                        driverId: order
-                                            .driverId!,
-                                        acceptedOrderId: order
-                                            .acceptedOrderId!,
-                                        to: order
-                                            .driverFcmToken!,
-                                        clientName: order
-                                            .clientName!,
-                                        clientId: order
-                                            .clientId!,
-                                        orderId:
-                                        order.orderId!,
-                                      );
-                                      Fluttertoast.showToast(
-                                        msg: AppLocalizations.of(context)!.Translate(
-                                            'Deleted successfully'),
-                                        backgroundColor:
-                                        Colors.green,
-                                      ).then((value) {
-                                        navigatePop(
-                                            context: context);
-                                      });
-                                    },
+                                  AlertDialog(
+                                    content: Text(
+                                      AppLocalizations.of(context)!.Translate(
+                                          'Are you sure ?'),
+                                    ),
+                                    actions: [
+                                      BuildTextButton(
+                                        label: AppLocalizations.of(context)!
+                                            .Translate(
+                                            'Confirm'),
+                                        onPressed: () {
+                                          UberCubit.get(context)
+                                              .DeleteOrderFromClient(
+                                            context: context,
+                                            driverId: order
+                                                .driverId!,
+                                            acceptedOrderId: order
+                                                .acceptedOrderId!,
+                                            to: order
+                                                .driverFcmToken!,
+                                            clientName: order
+                                                .clientName!,
+                                            clientId: order
+                                                .clientId!,
+                                            orderId:
+                                            order.orderId!,
+                                          );
+                                          Fluttertoast.showToast(
+                                            msg: AppLocalizations.of(context)!
+                                                .Translate(
+                                                'Deleted successfully'),
+                                            backgroundColor:
+                                            Colors.green,
+                                          ).then((value) {
+                                            navigatePop(
+                                                context: context);
+                                          });
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                          );
-                        //   if (DateTime.parse(order
-                        //       .dateToDeleteTheAgreement)
-                        //       .difference(DateTime.parse(
-                        //       DateTime.now()
-                        //           .toString()))
-                        //       .inDays ==
-                        //       0) {
-                        //     Fluttertoast.showToast(
-                        //       msg: AppLocalizations.of(context)!.Translate(
-                        //           'can\'t be deleted'),
-                        //       backgroundColor: Colors.red,
-                        //     );
-                        //   } else {
-                        //     showDialog(
-                        //       context: context,
-                        //       builder: (context) =>
-                        //           AlertDialog(
-                        //             content: Text(
-                        //               AppLocalizations.of(context)!.Translate(
-                        //                   'Are you sure ?'),
-                        //             ),
-                        //             actions: [
-                        //               BuildTextButton(
-                        //                 label: AppLocalizations.of(context)!.Translate(
-                        //                     'Confirm'),
-                        //                 onPressed: () {
-                        //                   UberCubit.get(context)
-                        //                       .DeleteOrderFromClient(
-                        //                     context: context,
-                        //                     driverId: order
-                        //                         .driverId!,
-                        //                     acceptedOrderId: order
-                        //                         .acceptedOrderId!,
-                        //                     to: order
-                        //                         .driverFcmToken!,
-                        //                     clientName: order
-                        //                         .clientName!,
-                        //                     clientId: order
-                        //                         .clientId!,
-                        //                     orderId:
-                        //                     order.orderId!,
-                        //                   );
-                        //                   Fluttertoast.showToast(
-                        //                     msg: AppLocalizations.of(context)!.Translate(
-                        //                         'Deleted successfully'),
-                        //                     backgroundColor:
-                        //                     Colors.green,
-                        //                   ).then((value) {
-                        //                     navigatePop(
-                        //                         context: context);
-                        //                   });
-                        //                 },
-                        //               ),
-                        //             ],
-                        //           ),
-                        //     );
-                        //   }
-                        },
-                      ),
+                            );
+                            //   if (DateTime.parse(order
+                            //       .dateToDeleteTheAgreement)
+                            //       .difference(DateTime.parse(
+                            //       DateTime.now()
+                            //           .toString()))
+                            //       .inDays ==
+                            //       0) {
+                            //     Fluttertoast.showToast(
+                            //       msg: AppLocalizations.of(context)!.Translate(
+                            //           'can\'t be deleted'),
+                            //       backgroundColor: Colors.red,
+                            //     );
+                            //   } else {
+                            //     showDialog(
+                            //       context: context,
+                            //       builder: (context) =>
+                            //           AlertDialog(
+                            //             content: Text(
+                            //               AppLocalizations.of(context)!.Translate(
+                            //                   'Are you sure ?'),
+                            //             ),
+                            //             actions: [
+                            //               BuildTextButton(
+                            //                 label: AppLocalizations.of(context)!.Translate(
+                            //                     'Confirm'),
+                            //                 onPressed: () {
+                            //                   UberCubit.get(context)
+                            //                       .DeleteOrderFromClient(
+                            //                     context: context,
+                            //                     driverId: order
+                            //                         .driverId!,
+                            //                     acceptedOrderId: order
+                            //                         .acceptedOrderId!,
+                            //                     to: order
+                            //                         .driverFcmToken!,
+                            //                     clientName: order
+                            //                         .clientName!,
+                            //                     clientId: order
+                            //                         .clientId!,
+                            //                     orderId:
+                            //                     order.orderId!,
+                            //                   );
+                            //                   Fluttertoast.showToast(
+                            //                     msg: AppLocalizations.of(context)!.Translate(
+                            //                         'Deleted successfully'),
+                            //                     backgroundColor:
+                            //                     Colors.green,
+                            //                   ).then((value) {
+                            //                     navigatePop(
+                            //                         context: context);
+                            //                   });
+                            //                 },
+                            //               ),
+                            //             ],
+                            //           ),
+                            //     );
+                            //   }
+                          },
+                        ),
                     ],
                   ),
                 ),
@@ -403,7 +431,10 @@ class BuildDriverOrderItem extends StatelessWidget {
         child: Card(
           elevation: 15,
           child: Container(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
+            padding: EdgeInsets.all(MediaQuery
+                .of(context)
+                .size
+                .width * .05),
             child: Row(
               children: [
                 CircleAvatar(
@@ -420,9 +451,13 @@ class BuildDriverOrderItem extends StatelessWidget {
                   children: [
                     Text(
                       order.clientName!,
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontSize: 20,
-                          ),
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyText1!
+                          .copyWith(
+                        fontSize: 20,
+                      ),
                     ),
                     SizedBox(
                       height: 15,
@@ -433,7 +468,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                           Icons.location_on_outlined,
                         ),
                         Text(
-                            " ${AppLocalizations.of(context)!.Translate('From')} : ${order.from} "),
+                            " ${AppLocalizations.of(context)!.Translate(
+                                'From')} : ${order.from} "),
                       ],
                     ),
                     SizedBox(
@@ -445,7 +481,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                           Icons.location_on_outlined,
                         ),
                         Text(
-                            " ${AppLocalizations.of(context)!.Translate('To')} : ${order.to} "),
+                            " ${AppLocalizations.of(context)!.Translate(
+                                'To')} : ${order.to} "),
                       ],
                     ),
                     SizedBox(
@@ -457,7 +494,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                           Icons.date_range_outlined,
                         ),
                         Text(
-                            " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date} "),
+                            " ${AppLocalizations.of(context)!.Translate(
+                                'Date')} : ${order.date} "),
                       ],
                     ),
                     SizedBox(
@@ -469,7 +507,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                           Icons.watch_later_outlined,
                         ),
                         Text(
-                            " ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
+                            " ${AppLocalizations.of(context)!.Translate(
+                                'Time')} : ${order.time} "),
                       ],
                     ),
                     SizedBox(
@@ -481,7 +520,8 @@ class BuildDriverOrderItem extends StatelessWidget {
                           Icons.phone_android,
                         ),
                         Text(
-                            " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone} "),
+                            " ${AppLocalizations.of(context)!.Translate(
+                                'Phone')} : ${order.clientPhone} "),
                       ],
                     ),
                   ],
@@ -513,7 +553,10 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
       child: Card(
         elevation: 15,
         child: Container(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
+          padding: EdgeInsets.all(MediaQuery
+              .of(context)
+              .size
+              .width * .05),
           child: Row(
             children: [
               CircleAvatar(
@@ -530,9 +573,13 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                 children: [
                   Text(
                     order.clientName!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontSize: 20,
-                        ),
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(
+                      fontSize: 20,
+                    ),
                   ),
                   SizedBox(
                     height: 15,
@@ -543,7 +590,8 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icons.location_on_outlined,
                       ),
                       Text(
-                          " ${AppLocalizations.of(context)!.Translate('From')} : ${order.from} "),
+                          " ${AppLocalizations.of(context)!.Translate(
+                              'From')} : ${order.from} "),
                     ],
                   ),
                   SizedBox(
@@ -555,7 +603,8 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icons.location_on_outlined,
                       ),
                       Text(
-                          " ${AppLocalizations.of(context)!.Translate('To')} : ${order.to} "),
+                          " ${AppLocalizations.of(context)!.Translate(
+                              'To')} : ${order.to} "),
                     ],
                   ),
                   SizedBox(
@@ -567,7 +616,8 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icons.date_range_outlined,
                       ),
                       Text(
-                          " ${AppLocalizations.of(context)!.Translate('Date')} : ${order.date} "),
+                          " ${AppLocalizations.of(context)!.Translate(
+                              'Date')} : ${order.date} "),
                     ],
                   ),
                   SizedBox(
@@ -579,7 +629,8 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icons.watch_later_outlined,
                       ),
                       Text(
-                          " ${AppLocalizations.of(context)!.Translate('Time')} : ${order.time} "),
+                          " ${AppLocalizations.of(context)!.Translate(
+                              'Time')} : ${order.time} "),
                     ],
                   ),
                   SizedBox(
@@ -591,14 +642,15 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                         Icons.phone_android,
                       ),
                       Text(
-                          " ${AppLocalizations.of(context)!.Translate('Phone')} : ${order.clientPhone} "),
+                          " ${AppLocalizations.of(context)!.Translate(
+                              'Phone')} : ${order.clientPhone} "),
                     ],
                   ),
                   SizedBox(
                     height: 15,
                   ),
                   BuildTextButton(
-                    onPressed: (){
+                    onPressed: () {
                       navigate(screen: ChatScreen(order), context: context);
                     },
                     label: AppLocalizations.of(context)!.Translate('Chat'),
@@ -608,10 +660,11 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                     label: AppLocalizations.of(context)!
                         .Translate('Delete the agreement'),
                     onPressed: () {
-                      if (DateTime.parse(order.dateToDeleteTheAgreement)
-                              .difference(
-                                  DateTime.parse(DateTime.now().toString()))
-                              .inDays ==
+                      if (DateTime
+                          .parse(order.dateToDeleteTheAgreement)
+                          .difference(
+                          DateTime.parse(DateTime.now().toString()))
+                          .inDays ==
                           0) {
                         Fluttertoast.showToast(
                           msg: AppLocalizations.of(context)!
@@ -621,34 +674,37 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
                       } else {
                         showDialog(
                           context: context,
-                          builder: (context) => AlertDialog(
-                            content: Text(AppLocalizations.of(context)!
-                                .Translate('Are you sure ?')),
-                            actions: [
-                              BuildTextButton(
-                                label: AppLocalizations.of(context)!
-                                    .Translate('Confirm'),
-                                onPressed: () {
-                                  UberCubit.get(context).DeleteOrderFromDriver(
-                                    driverId: CasheHelper.GetData(key: 'uId'),
-                                    acceptedOrderId: order.acceptedOrderId!,
-                                    to: order.fcmToken!,
-                                    driverName: order.driverName!,
-                                    clientId: order.clientId!,
-                                    orderId: order.orderId!,
-                                    context: context,
-                                  );
-                                  Fluttertoast.showToast(
-                                    msg: AppLocalizations.of(context)!
-                                        .Translate('Deleted successfully'),
-                                    backgroundColor: Colors.green,
-                                  ).then((value) {
-                                    navigatePop(context: context);
-                                  });
-                                },
+                          builder: (context) =>
+                              AlertDialog(
+                                content: Text(AppLocalizations.of(context)!
+                                    .Translate('Are you sure ?')),
+                                actions: [
+                                  BuildTextButton(
+                                    label: AppLocalizations.of(context)!
+                                        .Translate('Confirm'),
+                                    onPressed: () {
+                                      UberCubit.get(context)
+                                          .DeleteOrderFromDriver(
+                                        driverId: CasheHelper.GetData(
+                                            key: 'uId'),
+                                        acceptedOrderId: order.acceptedOrderId!,
+                                        to: order.fcmToken!,
+                                        driverName: order.driverName!,
+                                        clientId: order.clientId!,
+                                        orderId: order.orderId!,
+                                        context: context,
+                                      );
+                                      Fluttertoast.showToast(
+                                        msg: AppLocalizations.of(context)!
+                                            .Translate('Deleted successfully'),
+                                        backgroundColor: Colors.green,
+                                      ).then((value) {
+                                        navigatePop(context: context);
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
                         );
                       }
                     },
@@ -708,9 +764,13 @@ class BuildOfferItem extends StatelessWidget {
                 children: [
                   Text(
                     offer.driverName!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontSize: 20,
-                        ),
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(
+                      fontSize: 20,
+                    ),
                   ),
                   SizedBox(
                     height: 15,
@@ -719,9 +779,13 @@ class BuildOfferItem extends StatelessWidget {
                     children: [
                       Text(
                         '${offer.price} \$',
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              fontSize: 17,
-                            ),
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(
+                          fontSize: 17,
+                        ),
                       ),
                       SizedBox(
                         width: 20,
@@ -757,7 +821,7 @@ class BuildOfferItem extends StatelessWidget {
                             offer: offer,
                             context: context,
                             dateToDeleteTheAgreement:
-                                order.dateToDeleteTheAgreement,
+                            order.dateToDeleteTheAgreement,
                           );
                         },
                         child: CircleAvatar(

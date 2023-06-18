@@ -15,7 +15,7 @@ class DriverOrderScreen extends StatelessWidget {
         var cubit = UberCubit.get(context);
         var locale = AppLocalizations.of(context);
         return cubit.allOrders.length >0 ?
-        ListView.separated(
+          ListView.separated(
           physics: BouncingScrollPhysics(),
           itemBuilder:(context,index)=> BuildDriverOrderItem(
           order: cubit.allOrders[index],

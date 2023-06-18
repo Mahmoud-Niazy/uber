@@ -347,7 +347,7 @@ class UberCubit extends Cubit<UberStates> {
       emit(GetAllOrdersLoadingState());
       FirebaseFirestore.instance
           .collection('orders')
-          .orderBy('dateToOrder')
+          .orderBy('dateToOrder',descending:true, )
           .snapshots()
           .listen((event) {
         allOrders = [];
