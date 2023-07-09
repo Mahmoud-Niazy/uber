@@ -10,13 +10,14 @@ import '../variables.dart';
 import 'login_screen.dart';
 
 class CheckCodeScreen extends StatelessWidget {
-  var codeController = TextEditingController();
+  final  codeController = TextEditingController();
+
+  CheckCodeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RegisterCubit, RegisterStates>(
       listener: (context, state) {
-        print(state);
         if (state is PhoneAuthSuccessfullyState) {
           RegisterCubit.get(context).createUser(
             email: email.toString().trim(),
@@ -25,7 +26,7 @@ class CheckCodeScreen extends StatelessWidget {
             phone: phone,
           );
           Fluttertoast.showToast(
-            msg: AppLocalizations.of(context)!.Translate('Register Successfully'),
+            msg: AppLocalizations.of(context)!.translate('Register Successfully'),
             backgroundColor: Colors.green,
           ).then((value) {
             navigateAndFinish(screen: LoginScreen(), context: context);
@@ -43,8 +44,8 @@ class CheckCodeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                 '${AppLocalizations.of(context)!.Translate('Enter code')}',
-                    style: Theme.of(context).textTheme.bodyText1,
+                 AppLocalizations.of(context)!.translate('Enter code'),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .1,
@@ -62,17 +63,15 @@ class CheckCodeScreen extends StatelessWidget {
                       fieldWidth: 40,
                       activeFillColor: Colors.white,
                     ),
-                    animationDuration: Duration(milliseconds: 300),
+                    animationDuration: const Duration(milliseconds: 300),
                     enableActiveFill: true,
                     controller: codeController,
                     onCompleted: (v) {
-                      cubit.CheckCode(smsCode: codeController.text);
+                      cubit.checkCode(smsCode: codeController.text);
                     },
                     onChanged: (value) {
-                      print(value);
                     },
                     beforeTextPaste: (text) {
-                      print("Allowing to paste $text");
                       //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
                       //but you can show anything you want here, like your pop up saying wrong paste format or etc
                       return true;

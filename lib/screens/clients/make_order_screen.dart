@@ -11,17 +11,19 @@ import '../../uber_cubit/uber_states.dart';
 class MakeOrderScreen extends StatelessWidget {
   // var fromController = TextEditingController();
   // var toController = TextEditingController();
-  var timeController = TextEditingController();
-  var dateController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
+  final timeController = TextEditingController();
+  final dateController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   dynamic dateToDeleteTheAgreement ;
+
+  MakeOrderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UberCubit, UberStates>(
       listener: (context, state) {
         if (state is MakeOrderSuccessfullyState) {
-          UberCubit.get(context).SendNotificationToAlldrivers(
+          UberCubit.get(context).sendNotificationToAlldrivers(
             clientName: UberCubit.get(context).client!.name,
             context: context,
           );
@@ -31,13 +33,12 @@ class MakeOrderScreen extends StatelessWidget {
           UberCubit.get(context).fromController.text = '';
           UberCubit.get(context).toController.text = '';
         }
-        print(state);
       },
       builder: (context, state) {
         var cubit = UberCubit.get(context);
         var locale = AppLocalizations.of(context)!;
         return SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               Image.asset(
@@ -53,8 +54,8 @@ class MakeOrderScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          locale.Translate('Make Your order'),
-                          style: TextStyle(
+                          locale.translate('Make Your order'),
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -63,47 +64,49 @@ class MakeOrderScreen extends StatelessWidget {
                           height: MediaQuery.of(context).size.height * .05,
                         ),
                         BuildTextFormField(
-                          label: locale.Translate('From'),
+                          label: locale.translate('From'),
                           pIcon: Icons.location_on_outlined,
                           controller: cubit.fromController,
                           onPressedOnPIcon: () {
                             cubit.isFrom = true;
                             navigate(
-                                screen: GoogleMapScreen(), context: context);
+                                screen: const GoogleMapScreen(), context: context);
                           },
                           validation: (value) {
                             if (value!.isEmpty) {
-                              return locale.Translate('Location is empty');
+                              return locale.translate('Location is empty');
                             }
+                            return null;
                           },
                           pIconColor: Colors.blue,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         BuildTextFormField(
-                          label: locale.Translate('To'),
+                          label: locale.translate('To'),
                           pIcon: Icons.location_on_outlined,
                           controller: cubit.toController,
                           onPressedOnPIcon: cubit.isFrom
                               ? null
                               : () {
                                   navigate(
-                                      screen: GoogleMapScreen(),
+                                      screen: const GoogleMapScreen(),
                                       context: context);
                                 },
                           validation: (value) {
                             if (value!.isEmpty) {
-                              return locale.Translate('Location is empty');
+                              return locale.translate('Location is empty');
                             }
+                            return null;
                           },
                           pIconColor: cubit.isFrom ? Colors.grey : Colors.blue,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         BuildTextFormField(
-                          label: locale.Translate('Time'),
+                          label: locale.translate('Time'),
                           pIcon: Icons.watch_later_outlined,
                           controller: timeController,
                           onPressedOnPIcon: () {
@@ -116,16 +119,17 @@ class MakeOrderScreen extends StatelessWidget {
                           },
                           validation: (value) {
                             if (value!.isEmpty) {
-                              return locale.Translate('Time is empty');
+                              return locale.translate('Time is empty');
                             }
+                            return null;
                           },
                           pIconColor: Colors.blue,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         BuildTextFormField(
-                          label: locale.Translate('Date'),
+                          label: locale.translate('Date'),
                           pIcon: Icons.date_range_outlined,
                           controller: dateController,
                           onPressedOnPIcon: () {
@@ -143,8 +147,9 @@ class MakeOrderScreen extends StatelessWidget {
                           },
                           validation: (value) {
                             if (value!.isEmpty) {
-                              return locale.Translate('Date is empty');
+                              return locale.translate('Date is empty');
                             }
+                            return null;
                           },
                           pIconColor: Colors.blue,
                         ),
@@ -152,11 +157,11 @@ class MakeOrderScreen extends StatelessWidget {
                           height: MediaQuery.of(context).size.height * .06,
                         ),
                         state is MakeOrderLoadingState
-                            ? Center(child: CircularProgressIndicator())
+                            ? const Center(child: CircularProgressIndicator())
                             : BuildButton(
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
-                                    cubit.MakeOrder(
+                                    cubit.makeOrder(
                                       time: timeController.text,
                                       date: dateController.text,
                                       fromPlace: cubit.fromController.text,
@@ -167,7 +172,7 @@ class MakeOrderScreen extends StatelessWidget {
                                     dateToDeleteTheAgreement = null ;
                                   }
                                 },
-                                label: locale.Translate('Order'),
+                                label: locale.translate('Order'),
                               ),
                       ],
                     ),

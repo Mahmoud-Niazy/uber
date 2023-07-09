@@ -31,30 +31,37 @@ class UberCubit extends Cubit<UberStates> {
 
   int currentIndexInClientsLayout = 0;
 
-  BottomNavigationInClientsLayout(int index) {
+  bottomNavigationInClientsLayout(int index) {
     currentIndexInClientsLayout = index;
     emit(BottomNavigationState());
   }
 
   List<Widget> screensInClientsLayout = [
-    ClientOrdersScreen(),
+    const ClientOrdersScreen(),
     MakeOrderScreen(),
-    ClientSettingScreen(),
+    const ClientSettingScreen(),
   ];
 
-  List<String> titles = [
+  List<String> titlesForClient = [
     'Your Orders',
     'Make Your order',
     'Your information',
   ];
+
+  List<String> titlesForDriver = [
+    'All Orders',
+    'Your accepted orders',
+    'Your information',
+  ];
+
   DriverDataModel? driver;
   ClientDataModel? client;
 
-  GetUserData({
+  getUserData({
     String? userId,
   }) {
     emit(GetUserDataLoadingState());
-    if (CasheHelper.GetData(key: 'isDriver')) {
+    if (CasheHelper.getData(key: 'isDriver')) {
       FirebaseFirestore.instance
           .collection('drivers')
           .doc(userId)
@@ -78,7 +85,6 @@ class UberCubit extends Cubit<UberStates> {
         emit(GetDriverDataSuccessfullyState());
       }).catchError((error) {
         emit(GetDriverDataErrorState());
-        print(error);
       });
     } else {
       FirebaseFirestore.instance
@@ -104,7 +110,6 @@ class UberCubit extends Cubit<UberStates> {
         emit(GetClientDataSuccessfullyState());
       }).catchError((error) {
         emit(GetClientDataErrorState());
-        print(error);
       });
     }
   }
@@ -118,7 +123,7 @@ class UberCubit extends Cubit<UberStates> {
 
   var clientLocation;
 
-  Future<Position> GetUserLocation() async {
+  Future<Position> getUserLocation() async {
     emit(GetClientLocationErrorState());
     bool serviceEnabled;
     LocationPermission permission;
@@ -147,8 +152,6 @@ class UberCubit extends Cubit<UberStates> {
     dLat = clientLocation.latitude;
     dLng = clientLocation.longitude;
 
-    print(longitude);
-    print(latitude);
     return clientLocation;
   }
 
@@ -184,17 +187,17 @@ class UberCubit extends Cubit<UberStates> {
     marker.clear();
   }
 
-  AddMark(LatLng position) {
+  addMark(LatLng position) {
     marker.clear();
     marker.add(Marker(
       position: position,
-      markerId: MarkerId('${i}'),
+      markerId: MarkerId('$i'),
     ));
     i++;
     emit(AddMarkState());
   }
 
-  MakeOrder({
+  makeOrder({
     required String time,
     required String date,
     required String fromPlace,
@@ -222,7 +225,7 @@ class UberCubit extends Cubit<UberStates> {
     );
     FirebaseFirestore.instance
         .collection('clients')
-        .doc(CasheHelper.GetData(key: 'uId'))
+        .doc(CasheHelper.getData(key: 'uId'))
       ..collection('orders').add(order.toMap()).then((value1) {
         order = OrderDataModel(
           date: date,
@@ -244,7 +247,7 @@ class UberCubit extends Cubit<UberStates> {
         );
         FirebaseFirestore.instance
             .collection('clients')
-            .doc(CasheHelper.GetData(key: 'uId'))
+            .doc(CasheHelper.getData(key: 'uId'))
           ..collection('orders')
               .doc(value1.id)
               .update(order.toMap())
@@ -289,11 +292,11 @@ class UberCubit extends Cubit<UberStates> {
 
   List<OrderDataModel> orders = [];
 
-  GetClientOrders() {
+  getClientOrders() {
     emit(GetClientOrdersLoadingState());
     FirebaseFirestore.instance
         .collection('clients')
-        .doc(CasheHelper.GetData(key: 'uId'))
+        .doc(CasheHelper.getData(key: 'uId'))
         .collection('orders')
         .orderBy('dateToOrder')
         .snapshots()
@@ -308,28 +311,28 @@ class UberCubit extends Cubit<UberStates> {
 
   int currentIndexInDriversLayout = 0;
 
-  BottomNavigationInDriversLayout(int index) {
+  bottomNavigationInDriversLayout(int index) {
     currentIndexInDriversLayout = index;
     emit(BottomNavigationState());
   }
 
   List<Widget> screensInDriversLayout = [
-    DriverOrderScreen(),
-    AcceptedOrdersScreen(),
-    DriverSettingScreen(),
+    const DriverOrderScreen(),
+    const AcceptedOrdersScreen(),
+    const DriverSettingScreen(),
   ];
 
-  SendNotificationToAlldrivers({
+  sendNotificationToAlldrivers({
     required String clientName,
     required BuildContext context,
   }) {
     emit(SendNotificationToAllDriversLoadingState());
-    DioHelper.PostData(url: 'send', data: {
+    DioHelper.postData(url: 'send', data: {
       "to": "/topics/drivers",
       "priority": "high",
       "notification": {
         "body":
-            "$clientName ${AppLocalizations.of(context)!.Translate('make an order')}",
+            "$clientName ${AppLocalizations.of(context)!.translate('make an order')}",
         "title": "New order for you",
         "subtitle": "Firebase Cloud Message Subtitle"
       }
@@ -342,8 +345,8 @@ class UberCubit extends Cubit<UberStates> {
 
   List<OrderDataModel> allOrders = [];
 
-  GetAllOrders() {
-    if (CasheHelper.GetData(key: 'isDriver')) {
+  getAllOrders() {
+    if (CasheHelper.getData(key: 'isDriver')) {
       emit(GetAllOrdersLoadingState());
       FirebaseFirestore.instance
           .collection('orders')
@@ -360,7 +363,7 @@ class UberCubit extends Cubit<UberStates> {
     return 1;
   }
 
-  MakeOffer({
+  makeOffer({
     required String orderId,
     required dynamic price,
     required String clientFcmToken,
@@ -368,15 +371,15 @@ class UberCubit extends Cubit<UberStates> {
   }) {
     emit(MakeOfferLoadingState());
 
-    DioHelper.PostData(
+    DioHelper.postData(
       url: 'send',
       data: {
         "to": clientFcmToken,
         "priority": "high",
         "notification": {
-          "body": "${driver!.name}" +
+          "body": driver!.name +
               ' ' +
-              "${AppLocalizations.of(context)!.Translate('send an offer')} ",
+              "${AppLocalizations.of(context)!.translate('send an offer')} ",
           "title": "$price \$ ",
           "subtitle": ""
         }
@@ -417,18 +420,16 @@ class UberCubit extends Cubit<UberStates> {
             .update(offer.toMap());
         emit(MakeOfferSuccessfullyState());
       }).catchError((error) {
-        print(error);
         emit(MakeOfferErrorState());
       });
     }).catchError((error) {
-      print(error);
       emit(SendNotificationToClientErrorState());
     });
   }
 
   List<OfferDataModel> offers = [];
 
-  GetAllOffers({
+  getAllOffers({
     required String orderId,
   }) {
     offers = [];
@@ -447,7 +448,7 @@ class UberCubit extends Cubit<UberStates> {
     });
   }
 
-  AcceptOffer({
+  acceptOffer({
     required OrderDataModel order,
     OfferDataModel? offer,
     required BuildContext context,
@@ -478,7 +479,7 @@ class UberCubit extends Cubit<UberStates> {
       driverPhone: offer.driverPhone,
       price: offer.price,
       driverId: offer.driverId,
-      clientId: CasheHelper.GetData(key: 'uId'),
+      clientId: CasheHelper.getData(key: 'uId'),
       dateToDeleteTheAgreement: dateToDeleteTheAgreement,
       clientPhone: client!.phone,
     );
@@ -512,7 +513,7 @@ class UberCubit extends Cubit<UberStates> {
         driverPhone: offer.driverPhone,
         price: offer.price,
         driverId: offer.driverId,
-        clientId: CasheHelper.GetData(key: 'uId'),
+        clientId: CasheHelper.getData(key: 'uId'),
         dateToDeleteTheAgreement: dateToDeleteTheAgreement,
         acceptedOrderId: value.id,
         clientPhone: client!.phone,
@@ -526,7 +527,7 @@ class UberCubit extends Cubit<UberStates> {
 
       FirebaseFirestore.instance
           .collection('clients')
-          .doc(CasheHelper.GetData(key: 'uId'))
+          .doc(CasheHelper.getData(key: 'uId'))
           .collection('orders')
           .doc(order.orderId)
           .update(newOrder.toMap());
@@ -537,11 +538,11 @@ class UberCubit extends Cubit<UberStates> {
     emit(AcceptedOfferSuccessfullyState());
     // });
 
-    SendNotification(
+    sendNotification(
       to: newOrder.driverFcmToken!,
       title: newOrder.clientName!,
       body:
-          "${newOrder.clientName!}   ${AppLocalizations.of(context)!.Translate('accept your offer')} ",
+          "${newOrder.clientName!}   ${AppLocalizations.of(context)!.translate('accept your offer')} ",
     );
 
     // SendNotification(
@@ -564,12 +565,12 @@ class UberCubit extends Cubit<UberStates> {
     // );
   }
 
-  SendNotification({
+  sendNotification({
     required String to,
     required String title,
     required String body,
   }) {
-    DioHelper.PostData(
+    DioHelper.postData(
       url: 'send',
       data: {
         "to": to,
@@ -582,13 +583,13 @@ class UberCubit extends Cubit<UberStates> {
 
   List<OrderDataModel> acceptedOrders = [];
 
-  GetAcceptedOrders() {
-    if (CasheHelper.GetData(key: 'isDriver')) {
+  getAcceptedOrders() {
+    if (CasheHelper.getData(key: 'isDriver')) {
       acceptedOrders = [];
       emit(GetAcceptedOrdersLoadingState());
       FirebaseFirestore.instance
           .collection('drivers')
-          .doc(CasheHelper.GetData(key: 'uId'))
+          .doc(CasheHelper.getData(key: 'uId'))
           .collection('acceptedOrders')
       .orderBy('dateToOrder')
           .snapshots()
@@ -604,7 +605,7 @@ class UberCubit extends Cubit<UberStates> {
 
   int x = 2;
 
-  AddMarkeratDriverLocation({
+  addMarkeratDriverLocation({
     double? driverLat,
     double? driverLng,
     double? latFrom,
@@ -613,7 +614,7 @@ class UberCubit extends Cubit<UberStates> {
     double? lngTo,
   }) {
     orderLocationsMarkers.clear();
-    AddMarkeratClientLocations(
+    addMarkeratClientLocations(
       lngFrom: lngFrom,
       latFrom: latFrom,
       latTo: latTo,
@@ -622,14 +623,14 @@ class UberCubit extends Cubit<UberStates> {
     orderLocationsMarkers.add(Marker(
       markerId: MarkerId('$x'),
       position: LatLng(driverLat!, driverLng!),
-      infoWindow: InfoWindow(title: 'Your location'),
+      infoWindow: const InfoWindow(title: 'Your location'),
     ));
     emit(AddMarkerToDriverLocationState());
   }
 
   var orderLocationsMarkers = HashSet<Marker>();
 
-  AddMarkeratClientLocations({
+  addMarkeratClientLocations({
     double? latFrom,
     double? lngFrom,
     double? latTo,
@@ -637,16 +638,16 @@ class UberCubit extends Cubit<UberStates> {
   }) {
     orderLocationsMarkers.add(
       Marker(
-        markerId: MarkerId('0'),
+        markerId: const MarkerId('0'),
         position: LatLng(latFrom!, lngFrom!),
-        infoWindow: InfoWindow(title: 'From'),
+        infoWindow: const InfoWindow(title: 'From'),
       ),
     );
     orderLocationsMarkers.add(
       Marker(
-        markerId: MarkerId('1'),
+        markerId: const MarkerId('1'),
         position: LatLng(latTo!, lngTo!),
-        infoWindow: InfoWindow(title: 'To'),
+        infoWindow: const InfoWindow(title: 'To'),
       ),
     );
   }
@@ -667,7 +668,7 @@ class UberCubit extends Cubit<UberStates> {
 
     var polygonSet = Set<Polygon>();
     polygonSet.add(Polygon(
-        polygonId: PolygonId('test'),
+        polygonId: const PolygonId('test'),
         points: polygonCoords,
         strokeColor: Colors.red.withOpacity(.2),
         visible: true,
@@ -676,13 +677,13 @@ class UberCubit extends Cubit<UberStates> {
     return polygonSet;
   }
 
-  LocationOfDriverInPloygon(Position? position) {
+  getLocationOfDriverInPloygon(Position? position) {
     dLat = position!.latitude;
     dLng = position.longitude;
     emit(PolygonState());
   }
 
-  RateDriver({
+  rateDriver({
     required String driverId,
     required String clientId,
     required double rate,
@@ -709,7 +710,7 @@ class UberCubit extends Cubit<UberStates> {
 
   List<RateDataModel> driverRates = [];
 
-  GetDriverRates({
+  getDriverRates({
     required String driverId,
   }) {
     emit(GetDriverRatesLoadingState());
@@ -727,7 +728,7 @@ class UberCubit extends Cubit<UberStates> {
     });
   }
 
-  RejectOffer(
+  rejectOffer(
       {required String orderId,
       required String offerId,
       required String to,
@@ -744,15 +745,15 @@ class UberCubit extends Cubit<UberStates> {
 
       emit(RejectOfferSuccessfullyState());
     });
-    SendNotification(
+    sendNotification(
       to: to,
-      title: '${clientName}',
+      title: clientName,
       body:
-      " ${AppLocalizations.of(context)!.Translate('reject your offer')} ",
+      " ${AppLocalizations.of(context)!.translate('reject your offer')} ",
     );
   }
 
-  DeleteOrderFromDriver({
+  deleteOrderFromDriver({
     required String driverId,
     required String acceptedOrderId,
     required String to,
@@ -772,7 +773,7 @@ class UberCubit extends Cubit<UberStates> {
 
       emit(DeleteOrderFromDriverSuccessfullyState());
     });
-    SendNotification(
+    sendNotification(
       to: to,
       title: driverName,
       body: 'delete the agreement please order it again',
@@ -785,7 +786,7 @@ class UberCubit extends Cubit<UberStates> {
         .delete();
   }
 
-  DeleteOrderFromClient({
+  deleteOrderFromClient({
     required String driverId,
     required String acceptedOrderId,
     required String to,
@@ -802,7 +803,7 @@ class UberCubit extends Cubit<UberStates> {
         .doc(acceptedOrderId)
         .delete()
         .then((value) {
-      SendNotification(
+      sendNotification(
         to: to,
         title: clientName,
         body: 'delete the agreement',
@@ -817,7 +818,7 @@ class UberCubit extends Cubit<UberStates> {
         .delete();
   }
 
-  SendMessege({
+  sendMessege({
     required String recieverId,
     required String senderId,
     required String text,
@@ -840,14 +841,14 @@ class UberCubit extends Cubit<UberStates> {
       date: DateFormat('yMd').format(DateTime.now()),
     );
 
-    if (!CasheHelper.GetData(key: 'isDriver')) {
+    if (!CasheHelper.getData(key: 'isDriver')) {
       FirebaseFirestore.instance
           .collection('clients')
           .doc(senderId)
           .collection('messeges')
           .doc(recieverId)
           .collection('messeges')
-          .add(messege.ToMap());
+          .add(messege.toMap());
 
       FirebaseFirestore.instance
           .collection('drivers')
@@ -855,7 +856,7 @@ class UberCubit extends Cubit<UberStates> {
           .collection('messeges')
           .doc(senderId)
           .collection('messeges')
-          .add(messege.ToMap())
+          .add(messege.toMap())
           .then((value) {
 
         emit(SendMessegeSuccessfullyState());
@@ -867,7 +868,7 @@ class UberCubit extends Cubit<UberStates> {
           .collection('messeges')
           .doc(senderId)
           .collection('messeges')
-          .add(messege.ToMap());
+          .add(messege.toMap());
 
       FirebaseFirestore.instance
           .collection('drivers')
@@ -875,7 +876,7 @@ class UberCubit extends Cubit<UberStates> {
           .collection('messeges')
           .doc(recieverId)
           .collection('messeges')
-          .add(messege.ToMap())
+          .add(messege.toMap())
           .then((value) {
         emit(SendMessegeSuccessfullyState());
       });
@@ -885,24 +886,24 @@ class UberCubit extends Cubit<UberStates> {
 
   List<MessegeDataModel> allMesseges = [];
 
-  GetAllMesseges({
+  getAllMesseges({
     String? clientId,
     String? driverId,
     // required String driverSend ,
   }) {
       allMesseges = [];
       emit(GetAllMessegesLoadingState());
-      if (CasheHelper.GetData(key: 'isDriver')) {
+      if (CasheHelper.getData(key: 'isDriver')) {
         FirebaseFirestore.instance
             .collection('drivers')
-            .doc(CasheHelper.GetData(key: 'uId'))
+            .doc(CasheHelper.getData(key: 'uId'))
             .collection('messeges')
             .doc(clientId)
             .collection('messeges')
             .orderBy('dateTime')
             .snapshots()
             .listen((event) {
-          if(CasheHelper.GetData(key: 'uId') == driverId){
+          if(CasheHelper.getData(key: 'uId') == driverId){
             allMesseges = [];
             event.docs.forEach((element) {
               allMesseges.add(MessegeDataModel.fromJson(element.data()));
@@ -914,7 +915,7 @@ class UberCubit extends Cubit<UberStates> {
       else {
         FirebaseFirestore.instance
             .collection('clients')
-            .doc(CasheHelper.GetData(key: 'uId'))
+            .doc(CasheHelper.getData(key: 'uId'))
             .collection('messeges')
             .doc(driverId)
             .collection('messeges')

@@ -7,6 +7,8 @@ import '../../uber_cubit/uber_cubit.dart';
 import '../../uber_cubit/uber_states.dart';
 
 class ClientOrdersScreen extends StatelessWidget {
+  const ClientOrdersScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UberCubit, UberStates>(
@@ -19,13 +21,13 @@ class ClientOrdersScreen extends StatelessWidget {
             vertical: 25,
             horizontal: 15,
           ),
-          child: cubit.orders.length > 0
+          child: cubit.orders.isNotEmpty
               ? ListView.separated(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) => BuildClientOrderItem(
                     order: cubit.orders[index],
                   ),
-                  separatorBuilder: (context, index) => SizedBox(
+                  separatorBuilder: (context, index) => const SizedBox(
                     height: 20,
                   ),
                   itemCount: cubit.orders.length,
@@ -39,8 +41,8 @@ class ClientOrdersScreen extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                       ),
                       Text(
-                       locale.Translate('There is no orders yet') ,
-                        style: TextStyle(
+                       locale.translate('There is no orders yet') ,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),

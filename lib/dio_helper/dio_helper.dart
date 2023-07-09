@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class DioHelper {
   static late Dio dio ;
-  static Init(){
+  static init(){
     dio = Dio(
       BaseOptions(
         baseUrl: 'https://fcm.googleapis.com/fcm/',
@@ -28,7 +28,7 @@ class DioHelper {
     );
   }
 
-  static Future<Response> GetData({
+  static Future<Response> getData({
     required String url ,
     Map<String,dynamic>? query ,
     String? token ,
@@ -44,7 +44,7 @@ class DioHelper {
     );
   }
 
-  static Future<Response> DeleteData(
+  static Future<Response> deleteData(
       {
         required String url,
         Map<String,dynamic>? query ,
@@ -60,7 +60,7 @@ class DioHelper {
     return await dio.delete(url);
   }
 
-  static Future<Response> PostData ({
+  static Future<Response> postData ({
     required String url,
     Map<String,dynamic>? query ,
     dynamic data ,
@@ -81,7 +81,7 @@ class DioHelper {
     );
   }
 
-  static Future<Response> PutData({
+  static Future<Response> putData({
     required String url,
     required dynamic data ,
     required String token ,

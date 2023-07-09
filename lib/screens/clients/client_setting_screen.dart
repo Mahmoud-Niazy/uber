@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_final/app_localization.dart';
@@ -8,6 +9,8 @@ import '../../components/components.dart';
 import '../../uber_cubit/uber_states.dart';
 
 class ClientSettingScreen extends StatelessWidget {
+  const ClientSettingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UberCubit, UberStates>(
@@ -25,7 +28,8 @@ class ClientSettingScreen extends StatelessWidget {
                   child: Card(
                     elevation: 15,
                     child: Container(
-                      padding: EdgeInsets.symmetric(
+                      color: const Color(0xffe3f2fd),
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 30,
                       ),
@@ -33,43 +37,52 @@ class ClientSettingScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CircleAvatar(
+                            backgroundColor: Colors.white,
                             radius: 50,
-                            backgroundImage: NetworkImage(cubit.client!.image),
+                            child: Container(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: cubit.client!.image,
+                              ),
+                            ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Text(
                             cubit.client!.name,
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                   fontSize: 25,
                                 ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Text(
                             cubit.client!.phone,
-                            style: Theme.of(context).textTheme.caption!.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                   fontSize: 15,
                                 ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Text(
                             cubit.client!.email,
-                            style: Theme.of(context).textTheme.caption!.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                   fontSize: 15,
                                 ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 50,
                           ),
                           BuildButton(
-                            label: locale.Translate('Sign out'),
+                            label: locale.translate('Sign out'),
                             onPressed: (){
-                              CasheHelper.RemoveData(key: 'uId').then((value) {
+                              CasheHelper.removeData(key: 'uId').then((value) {
                                 cubit.driver=null;
                                 cubit.client=null;
                                 navigateAndFinish(screen: LoginScreen(), context: context);
@@ -83,7 +96,7 @@ class ClientSettingScreen extends StatelessWidget {
                 ),
               ),
         )
-            : Center(child: CircularProgressIndicator());
+            : const Center(child: CircularProgressIndicator());
       },
     );
   }

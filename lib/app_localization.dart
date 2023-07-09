@@ -15,7 +15,7 @@ class AppLocalizations {
   }
 
   late Map<String,String> jsonStrings ;
-  Future LoadLangJson() async{
+  Future loadLangJson() async{
     String strings = await rootBundle.loadString('assets/lang/${locale!.languageCode}.json');
     Map<String,dynamic> jsons = json.decode(strings);
     jsonStrings= jsons.map((key, value){
@@ -23,7 +23,7 @@ class AppLocalizations {
     } );
   }
 
-  String Translate(String key) => jsonStrings[key]?? key ;
+  String translate(String key) => jsonStrings[key]?? key ;
 }
 
 
@@ -38,7 +38,7 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
     AppLocalizations appLocalizations = AppLocalizations(
       locale: locale
     );
-    await appLocalizations.LoadLangJson();
+    await appLocalizations.loadLangJson();
     return appLocalizations ;
   }
 

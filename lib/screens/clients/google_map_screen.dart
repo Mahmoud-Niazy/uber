@@ -7,6 +7,8 @@ import '../../uber_cubit/uber_cubit.dart';
 import '../../uber_cubit/uber_states.dart';
 
 class GoogleMapScreen extends StatelessWidget {
+  const GoogleMapScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UberCubit, UberStates>(
@@ -18,7 +20,7 @@ class GoogleMapScreen extends StatelessWidget {
           appBar: AppBar(
             actions: [
               BuildTextButton(
-                label: locale.Translate('Confirm'),
+                label: locale.translate('Confirm'),
                 onPressed: cubit.i != 0 ?
                     () {
                   cubit.confirmFrom();
@@ -38,7 +40,7 @@ class GoogleMapScreen extends StatelessWidget {
               zoom: 30,
             ),
             onTap: (LatLng position) {
-              cubit.AddMark(position);
+              cubit.addMark(position);
               if(cubit.isFrom){
                 cubit.positionFrom = position;
               }

@@ -9,11 +9,11 @@ import '../../data_models/order_data_model.dart';
 import '../../uber_cubit/uber_states.dart';
 
 class MakeOfferScreen extends StatelessWidget {
-  var priceController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
-  OrderDataModel order;
+  final priceController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final OrderDataModel order;
 
-  MakeOfferScreen(this.order);
+  MakeOfferScreen(this.order, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class MakeOfferScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is MakeOfferSuccessfullyState) {
           Fluttertoast.showToast(
-            msg: AppLocalizations.of(context)!.Translate('Your offer sent successfully'),
+            msg: AppLocalizations.of(context)!.translate('Your offer sent successfully'),
             backgroundColor: Colors.green,
           ).then((value) {
             priceController.text = '';
@@ -34,7 +34,7 @@ class MakeOfferScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              locale.Translate('Apply'),
+              locale.translate('Apply'),
             ),
           ),
           body: Center(
@@ -55,34 +55,35 @@ class MakeOfferScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                locale.Translate('Enter Your price'),
-                                style: TextStyle(
+                                locale.translate('Enter Your price'),
+                                style: const TextStyle(
                                   fontSize: 20,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               BuildTextFormField(
-                                label: locale.Translate('Price'),
+                                label: locale.translate('Price'),
                                 pIcon: Icons.monetization_on_outlined,
                                 controller: priceController,
                                 type: TextInputType.number,
                                 validation: (value) {
                                   if (value!.isEmpty) {
-                                    return locale.Translate('Enter your price please');
+                                    return locale.translate('Enter your price please');
                                   }
+                                  return null;
                                 },
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                               state is MakeOfferLoadingState
-                                  ? Center(child: CircularProgressIndicator())
+                                  ? const Center(child: CircularProgressIndicator())
                                   : BuildButton(
                                       onPressed: () {
                                         if (formKey.currentState!.validate()) {
-                                          cubit.MakeOffer(
+                                          cubit.makeOffer(
                                             orderId: order.orderId!,
                                             price: priceController.text,
                                             clientFcmToken: order.fcmToken!,
@@ -90,7 +91,7 @@ class MakeOfferScreen extends StatelessWidget {
                                           );
                                         }
                                       },
-                                      label: locale.Translate('Confirm'),
+                                      label: locale.translate('Confirm'),
                                     ),
                             ],
                           ),

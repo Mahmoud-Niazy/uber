@@ -3,11 +3,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CasheHelper {
   static late SharedPreferences sharedPreferences ;
 
-  static Init()async{
+  static init()async{
     sharedPreferences =await  SharedPreferences.getInstance();
   }
 
-  static Future<bool>  SaveData({
+  static Future<bool>  saveData({
     required String key,
     required dynamic value ,
 })async{
@@ -23,13 +23,13 @@ class CasheHelper {
    return await  sharedPreferences.setDouble(key, value);
   }
 
-  static GetData({
+  static getData({
     required String key ,
 }){
    return sharedPreferences.get(key);
   }
 
-  static Future<bool> RemoveData({
+  static Future<bool> removeData({
     required String key ,
 })async{
    return await sharedPreferences.remove(key);

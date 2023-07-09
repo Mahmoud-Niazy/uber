@@ -11,49 +11,48 @@ import 'package:uber_final/uber_cubit/uber_cubit.dart';
 import '../../uber_cubit/uber_states.dart';
 
 class AllOffersScreen extends StatelessWidget {
-  String orderId;
-  double rate = 3.5;
+  final String orderId;
+   double rate = 3.5;
 
-  AllOffersScreen({required this.orderId});
+   AllOffersScreen({super.key, required this.orderId});
 
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      UberCubit.get(context).GetAllOffers(orderId: this.orderId);
+      UberCubit.get(context).getAllOffers(orderId: orderId);
 
       return BlocConsumer<UberCubit, UberStates>(
         listener: (context, state) {
           if (state is RateDriverSuccessfullyState) {
             Fluttertoast.showToast(
               msg:
-                  AppLocalizations.of(context)!.Translate('Rated Successfully'),
+                  AppLocalizations.of(context)!.translate('Rated Successfully'),
               backgroundColor: Colors.green,
             );
           }
           if (state is DeleteOrderFromClientSuccessfullyState) {
-            navigate(screen: LayoutForClient(), context: context);
+            navigate(screen: const LayoutForClient(), context: context);
           }
-          print(state);
         },
         builder: (context, state) {
           var cubit = UberCubit.get(context);
           var locale = AppLocalizations.of(context)!;
           List<OrderDataModel> order =
               UberCubit.get(context).orders.where((element) {
-            return element.orderId == this.orderId;
+            return element.orderId == orderId;
           }).toList();
           return Scaffold(
             appBar: AppBar(),
             body: order[0] != null
                 ? order[0].agreement == false
-                    ? cubit.offers.length > 0
+                    ? cubit.offers.isNotEmpty
                         ? ListView.separated(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) => BuildOfferItem(
                               offer: cubit.offers[index],
                               order: order[0],
                             ),
-                            separatorBuilder: (context, index) => SizedBox(
+                            separatorBuilder: (context, index) => const SizedBox(
                               height: 0,
                             ),
                             itemCount: cubit.offers.length,
@@ -67,8 +66,8 @@ class AllOffersScreen extends StatelessWidget {
                                   width: MediaQuery.of(context).size.width,
                                 ),
                                 Text(
-                                  locale.Translate('There is no offers yet'),
-                                  style: TextStyle(
+                                  locale.translate('There is no offers yet'),
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -78,24 +77,24 @@ class AllOffersScreen extends StatelessWidget {
                           )
                     : Center(
                         child: Card(
-                          margin: EdgeInsets.all(20),
+                          margin: const EdgeInsets.all(20),
                           elevation: 10,
                           child: Container(
                             padding: EdgeInsets.all(
                                 MediaQuery.of(context).size.width * .05),
                             child: SingleChildScrollView(
-                              physics: BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    '${locale.Translate('There is an agreement with')} : ',
-                                    style: TextStyle(
+                                    '${locale.translate('There is an agreement with')} : ',
+                                    style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 30,
                                   ),
                                   Center(
@@ -107,17 +106,17 @@ class AllOffersScreen extends StatelessWidget {
                                             order[0].driverImage!,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 15,
                                         ),
                                         Text(
                                           order[0].driverName!,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 15,
                                         ),
                                         Row(
@@ -125,22 +124,22 @@ class AllOffersScreen extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              '${locale.Translate('Price')} :   ',
-                                              style: TextStyle(
+                                              '${locale.translate('Price')} :   ',
+                                              style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               order[0].price! + '\$',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 15,
                                         ),
                                         Row(
@@ -148,31 +147,31 @@ class AllOffersScreen extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              '${locale.Translate('Phone')} :   ',
-                                              style: TextStyle(
+                                              '${locale.translate('Phone')} :   ',
+                                              style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               order[0].driverPhone!,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 50,
                                         ),
                                         Text(
-                                          locale.Translate('Rate the driver'),
-                                          style: TextStyle(
+                                          locale.translate('Rate the driver'),
+                                          style: const TextStyle(
                                             fontSize: 20,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 15,
                                         ),
                                         Rate(
@@ -186,16 +185,16 @@ class AllOffersScreen extends StatelessWidget {
                                             rate = value;
                                           },
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 30,
                                         ),
                                         state is RateDriverLoadingState
-                                            ? Center(
+                                            ? const Center(
                                                 child:
                                                     CircularProgressIndicator())
                                             : BuildButton(
                                                 onPressed: () {
-                                                  cubit.RateDriver(
+                                                  cubit.rateDriver(
                                                     driverId:
                                                         order[0].driverId!,
                                                     clientId:
@@ -207,14 +206,14 @@ class AllOffersScreen extends StatelessWidget {
                                                         cubit.client!.name,
                                                   );
                                                 },
-                                                label: locale.Translate(
+                                                label: locale.translate(
                                                     'Confirm rate'),
                                               ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 15,
                                         ),
                                         BuildButton(
-                                          label: locale.Translate('Chat'),
+                                          label: locale.translate('Chat'),
                                           onPressed: () {
                                             navigate(
                                               screen: ChatScreen(order[0]),
@@ -222,7 +221,7 @@ class AllOffersScreen extends StatelessWidget {
                                             );
                                           },
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         // BuildTextButton(
@@ -310,7 +309,7 @@ class AllOffersScreen extends StatelessWidget {
                           ),
                         ),
                       )
-                : Center(
+                : const Center(
                     child: CircularProgressIndicator(),
                   ),
           );

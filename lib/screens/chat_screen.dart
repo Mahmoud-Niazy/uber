@@ -8,17 +8,17 @@ import '../uber_cubit/uber_cubit.dart';
 import '../uber_cubit/uber_states.dart';
 
 class ChatScreen extends StatelessWidget {
-  TextEditingController messegeController = TextEditingController();
-  OrderDataModel? order;
-  var formKey = GlobalKey<FormState>();
-  var _scrollController = ScrollController();
+  final TextEditingController messegeController = TextEditingController();
+   OrderDataModel? order;
+  final formKey = GlobalKey<FormState>();
+  final _scrollController = ScrollController();
 
-  ChatScreen(this.order);
+  ChatScreen(this.order, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      UberCubit.get(context).GetAllMesseges(
+      UberCubit.get(context).getAllMesseges(
         clientId: order!.clientId,
         driverId: order!.driverId,
         // driverSend: CasheHelper.GetData(key: 'uId'),
@@ -38,15 +38,15 @@ class ChatScreen extends StatelessWidget {
                   appBar: AppBar(
                     title: Row(
                       children: [
-                        Text((CasheHelper.GetData(key: 'isDriver')
+                        Text((CasheHelper.getData(key: 'isDriver')
                             ? order!.clientName!
                             : order!.driverName)!),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         CircleAvatar(
                           backgroundImage: NetworkImage(
-                              (CasheHelper.GetData(key: 'isDriver')
+                              (CasheHelper.getData(key: 'isDriver')
                                   ? order!.clientImage!
                                   : order!.driverImage)!),
                           radius: 20,
@@ -54,7 +54,7 @@ class ChatScreen extends StatelessWidget {
                       ],
                     ),
                     leading: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                       ),
                       onPressed: () {
@@ -69,32 +69,32 @@ class ChatScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
-                          cubit.allMesseges.length > 0
+                          cubit.allMesseges.isNotEmpty
                               ? Expanded(
                                   child: ListView.separated(
                                     controller: _scrollController,
-                                    physics: BouncingScrollPhysics(),
+                                    physics: const BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       if (cubit.allMesseges[index].senderId ==
-                                          CasheHelper.GetData(key: 'uId')) {
-                                        return BuildMyMessege(
+                                          CasheHelper.getData(key: 'uId')) {
+                                        return buildMyMessege(
                                           text: cubit.allMesseges[index].text!,
                                         );
                                       } else {
-                                        return BuildMessege(
+                                        return buildMessege(
                                           text: cubit.allMesseges[index].text!,
                                         );
                                       }
                                       // CasheHelper.GetData(key: "isDriver")? element.recieverId == order!.clientId : element.recieverId == order!.driverId
                                     },
                                     separatorBuilder: (context, index) =>
-                                        SizedBox(
+                                        const SizedBox(
                                       height: 0,
                                     ),
                                     itemCount: cubit.allMesseges.length,
                                   ),
                                 )
-                              : Spacer(),
+                              : const Spacer(),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 15,
@@ -102,7 +102,7 @@ class ChatScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Container(
+                                  child: SizedBox(
                                     height: 50,
                                     child: TextFormField(
                                       controller: messegeController,
@@ -110,11 +110,12 @@ class ChatScreen extends StatelessWidget {
                                         if (value!.isEmpty) {
                                           return 'Messege is empty';
                                         }
+                                        return null;
                                       },
                                       decoration: InputDecoration(
                                         label: Text(
                                           AppLocalizations.of(context)!
-                                              .Translate('Write your messege'),
+                                              .translate('Write your messege'),
                                         ),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(20),
@@ -123,13 +124,13 @@ class ChatScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 15,
                                 ),
                                 InkWell(
                                   onTap: () {
                                     if (formKey.currentState!.validate()) {
-                                      UberCubit.get(context).SendMessege(
+                                      UberCubit.get(context).sendMessege(
                                         // title: 'New Messege for you',
                                         // body: messegeController.text,
                                         // FcmTo:
@@ -137,14 +138,14 @@ class ChatScreen extends StatelessWidget {
                                         //         ? order!.fcmToken
                                         //         : order!.driverFcmToken)!,
                                         text: messegeController.text,
-                                        senderId: CasheHelper.GetData(key: 'uId'),
+                                        senderId: CasheHelper.getData(key: 'uId'),
                                         recieverId:
-                                            (CasheHelper.GetData(key: 'isDriver')
+                                            (CasheHelper.getData(key: 'isDriver')
                                                 ? order!.clientId
                                                 : order!.driverId)!,
                                       );
-                                      cubit.SendNotification(
-                                        to: (CasheHelper.GetData(key: 'isDriver')
+                                      cubit.sendNotification(
+                                        to: (CasheHelper.getData(key: 'isDriver')
                                             ? order!.fcmToken
                                             : order!.driverFcmToken)!,
                                         title: 'New Messege for you',
@@ -159,7 +160,7 @@ class ChatScreen extends StatelessWidget {
                                       );
                                     }
                                   },
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.send,
                                     color: Colors.blue,
                                   ),
@@ -171,13 +172,13 @@ class ChatScreen extends StatelessWidget {
                       ),
                     ),
                   ))
-              : Center(child: CircularProgressIndicator());
+              : const Center(child: CircularProgressIndicator());
         },
       );
     });
   }
 
-  BuildMyMessege({
+  buildMyMessege({
     required String text,
   }) {
     return Align(
@@ -192,14 +193,14 @@ class ChatScreen extends StatelessWidget {
             color: Colors.blue.shade300,
             borderRadius: BorderRadius.circular(10),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(text),
         ),
       ),
     );
   }
 
-  BuildMessege({
+  buildMessege({
     required String text,
   }) {
     return Align(
@@ -214,7 +215,7 @@ class ChatScreen extends StatelessWidget {
             color: Colors.grey.shade300,
             borderRadius: BorderRadius.circular(10),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(text),
         ),
       ),

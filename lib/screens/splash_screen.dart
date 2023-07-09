@@ -9,6 +9,8 @@ import '../layout/layout_for_drivers.dart';
 import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -18,17 +20,18 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
+    super.initState();
     startTimer();
   }
 
   startTimer(){
     Timer timer = Timer(
-      Duration(seconds: 5),
+      const Duration(seconds: 5),
           () {
-        CasheHelper.GetData(key: 'uId') != null
-            ? CasheHelper.GetData(key: 'isDriver')
-            ? navigateAndFinish(screen: LayoutForDrivers(), context: context)
-            : navigateAndFinish(screen: LayoutForClient(), context: context)
+        CasheHelper.getData(key: 'uId') != null
+            ? CasheHelper.getData(key: 'isDriver')
+            ? navigateAndFinish(screen: const LayoutForDrivers(), context: context)
+            : navigateAndFinish(screen: const LayoutForClient(), context: context)
             :navigateAndFinish(screen: LoginScreen(), context: context) ;
 
       },

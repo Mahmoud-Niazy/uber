@@ -20,7 +20,7 @@ class LoginCubit extends Cubit<LoginStates> {
 
   changeTypeOfUser() async {
     isDriver = !isDriver;
-    await CasheHelper.SaveData(key: 'isDriver', value: isDriver);
+    await CasheHelper.saveData(key: 'isDriver', value: isDriver);
     emit(ChangeTypeOfUserState());
   }
 
@@ -33,11 +33,10 @@ class LoginCubit extends Cubit<LoginStates> {
       email: email.toString().trim(),
       password: password,
     ).then((user) async {
-      await CasheHelper.SaveData(key: 'uId', value: user.user!.uid);
+      await CasheHelper.saveData(key: 'uId', value: user.user!.uid);
       emit(UserLoginSuccessfullyState(user.user!.uid));
     })
         .catchError((error) {
-          print(error);
       emit(UserLoginErrorState());
     });
   }

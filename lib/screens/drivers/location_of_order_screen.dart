@@ -8,15 +8,15 @@ import '../../uber_cubit/uber_cubit.dart';
 import '../../uber_cubit/uber_states.dart';
 
 class LocationOfOrderScreen extends StatelessWidget {
-  OrderDataModel? order ;
-  LocationOfOrderScreen({
+  final OrderDataModel? order ;
+  const LocationOfOrderScreen({super.key,
     required this.order,
 });
   @override
   Widget build(BuildContext context) {
     return Builder(
         builder: (context){
-          UberCubit.get(context).AddMarkeratClientLocations(
+          UberCubit.get(context).addMarkeratClientLocations(
             lngTo: order!.lngTo,
             latTo: order!.latTo,
             latFrom: order!.latFrom,
@@ -24,7 +24,7 @@ class LocationOfOrderScreen extends StatelessWidget {
           );
           StreamSubscription<Position>? ps;
           ps = Geolocator.getPositionStream().listen((Position? position) {
-            UberCubit.get(context).AddMarkeratDriverLocation(
+            UberCubit.get(context).addMarkeratDriverLocation(
               lngTo: order!.lngTo,
               latTo: order!.latTo,
               latFrom: order!.latFrom,
@@ -32,8 +32,7 @@ class LocationOfOrderScreen extends StatelessWidget {
               driverLat: position!.latitude,
               driverLng: position.longitude,
             );
-            UberCubit.get(context).LocationOfDriverInPloygon(position);
-            print(position.longitude);
+            UberCubit.get(context).getLocationOfDriverInPloygon(position);
           });
 
       return BlocConsumer<UberCubit,UberStates>(

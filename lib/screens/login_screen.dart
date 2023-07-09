@@ -13,9 +13,11 @@ import '../layout/layout_for_client.dart';
 import '../login_cubit/login_states.dart';
 
 class LoginScreen extends StatelessWidget {
-  var formKey = GlobalKey<FormState>();
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,23 +26,23 @@ class LoginScreen extends StatelessWidget {
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
           if (state is UserLoginSuccessfullyState) {
-            CasheHelper.SaveData(
+            CasheHelper.saveData(
                 key: 'isDriver', value: LoginCubit.get(context).isDriver)
                 .then((value) {
-              UberCubit.get(context).GetUserData(
+              UberCubit.get(context).getUserData(
                 userId: state.userId,
               );
-              if(CasheHelper.GetData(key: 'isDriver') ){
+              if(CasheHelper.getData(key: 'isDriver') ){
                 FirebaseMessaging.instance.subscribeToTopic('drivers');
-                UberCubit.get(context).GetAcceptedOrders();
+                UberCubit.get(context).getAcceptedOrders();
                 navigateAndFinish(
-                    screen: LayoutForDrivers(), context: context);
+                    screen: const LayoutForDrivers(), context: context);
               }
-              if(!CasheHelper.GetData(key: 'isDriver') ){
+              if(!CasheHelper.getData(key: 'isDriver') ){
                 FirebaseMessaging.instance.subscribeToTopic('clients');
-                UberCubit.get(context).GetClientOrders();
+                UberCubit.get(context).getClientOrders();
                 navigateAndFinish(
-                    screen: LayoutForClient(), context: context);
+                    screen: const LayoutForClient(), context: context);
               }
 
             });
@@ -51,7 +53,6 @@ class LoginScreen extends StatelessWidget {
               backgroundColor: Colors.red,
             );
           }
-          print(state);
         },
         builder: (context, state) {
           var cubit = LoginCubit.get(context);
@@ -60,7 +61,7 @@ class LoginScreen extends StatelessWidget {
             child: Scaffold(
               body: Center(
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Form(
@@ -79,20 +80,21 @@ class LoginScreen extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * .04,
                           ),
                           BuildTextFormField(
-                            label: locale.Translate('Email'),
+                            label: locale.translate('Email'),
                             controller: emailController,
                             pIcon: Icons.email_outlined,
                             validation: (value) {
                               if (value!.isEmpty) {
-                                return locale.Translate('Email can\'t be empty');
+                                return locale.translate('Email can\'t be empty');
                               }
+                              return null;
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           BuildTextFormField(
-                            label: locale.Translate('Password'),
+                            label: locale.translate('Password'),
                             controller: passwordController,
                             pIcon: Icons.lock_outline,
                             sIcon: cubit.isPassword
@@ -104,8 +106,9 @@ class LoginScreen extends StatelessWidget {
                             },
                             validation: (value) {
                               if (value!.isEmpty) {
-                                return locale.Translate('Password can\'t be empty');
+                                return locale.translate('Password can\'t be empty');
                               }
+                              return null;
                             },
                           ),
                           SizedBox(
@@ -119,20 +122,14 @@ class LoginScreen extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    if(!cubit.isDriver)
-                                    cubit.changeTypeOfUser();
+                                    if(!cubit.isDriver) {
+                                      cubit.changeTypeOfUser();
+                                    }
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       vertical: 10,
                                       horizontal: 20,
-                                    ),
-                                    child: Text(
-                                      locale.Translate('Driver'),
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                      ),
                                     ),
                                     decoration: BoxDecoration(
                                         color: cubit.isDriver
@@ -142,25 +139,26 @@ class LoginScreen extends StatelessWidget {
                                         border: Border.all(
                                           color: Colors.black,
                                         )),
-                                  ),
-                                ),
-                                Spacer(),
-                                InkWell(
-                                  onTap: () {
-                                    if(cubit.isDriver)
-                                      cubit.changeTypeOfUser();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 10,
-                                      horizontal: 20,
-                                    ),
                                     child: Text(
-                                      locale.Translate('Client'),
-                                      style: TextStyle(
+                                      locale.translate('Driver'),
+                                      style: const TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
                                       ),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                                InkWell(
+                                  onTap: () {
+                                    if(cubit.isDriver) {
+                                      cubit.changeTypeOfUser();
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 20,
                                     ),
                                     decoration: BoxDecoration(
                                         color: cubit.isDriver
@@ -170,6 +168,13 @@ class LoginScreen extends StatelessWidget {
                                         border: Border.all(
                                           color: Colors.black,
                                         )),
+                                    child: Text(
+                                      locale.translate('Client'),
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -179,7 +184,7 @@ class LoginScreen extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * .04,
                           ),
                           state is UserLoginLoadingState
-                              ? Center(child: CircularProgressIndicator())
+                              ? const Center(child: CircularProgressIndicator())
                               : BuildButton(
                                   onPressed: () {
                                     if (formKey.currentState!.validate()) {
@@ -189,7 +194,7 @@ class LoginScreen extends StatelessWidget {
                                       );
                                     }
                                   },
-                                  label: locale.Translate('Login'),
+                                  label: locale.translate('Login'),
                                 ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * .02,
@@ -197,12 +202,12 @@ class LoginScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(locale.Translate('Don\'t have an account ?')),
-                              SizedBox(
+                              Text(locale.translate('Don\'t have an account ?')),
+                              const SizedBox(
                                 width: 5,
                               ),
                               BuildTextButton(
-                                label: locale.Translate('Register now'),
+                                label: locale.translate('Register now'),
                                 onPressed: () {
                                   navigate(
                                     screen: RegisterScreen(),

@@ -27,19 +27,18 @@ void main() async {
     ],
   );
   await Firebase.initializeApp();
-  await CasheHelper.Init();
-  DioHelper.Init();
-  int i = 0;
+  await CasheHelper.init();
+  DioHelper.init();
+  int notificationId = 0;
   FirebaseMessaging.onMessage.listen((event) {
     AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: i++,
+        id: notificationId++,
         channelKey: 'Firebase',
         title: event.notification!.title,
         body: event.notification!.body,
       ),
     );
-    print('Notification');
   });
   // FirebaseMessaging.onBackgroundMessage((message) {
   //   return AwesomeNotifications().createNotification(
@@ -67,14 +66,14 @@ void main() async {
   //   sound: true,
   // );
 
-  print(CasheHelper.GetData(key: 'uId'));
 
-  runApp(MyApp());
+  runApp(const MyApp());
 
-  print(DateTime.now());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -84,17 +83,17 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => UberCubit()
-            ..GetUserData(
-              userId: CasheHelper.GetData(key: 'uId'),
+            ..getUserData(
+              userId: CasheHelper.getData(key: 'uId'),
             )
-            ..GetUserLocation()
-            ..GetClientOrders()
-            ..GetAllOrders()
-            ..GetAcceptedOrders(),
+            ..getUserLocation()
+            ..getClientOrders()
+            ..getAllOrders()
+            ..getAcceptedOrders(),
         ),
       ],
       child: MaterialApp(
-         supportedLocales: [
+         supportedLocales: const [
            Locale('en'),
            Locale('ar'),
          ],
@@ -114,7 +113,8 @@ class MyApp extends StatelessWidget {
            }
            return supportedLocales.first;
         },
-        home: SplashScreen(),
+        home: const SplashScreen(),
+        debugShowCheckedModeBanner: false,
         // CasheHelper.GetData(key: 'uId') != null
         //     ? CasheHelper.GetData(key: 'isDriver')
         //         ? LayoutForDrivers()
@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
         //     : LoginScreen(),
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(
+          appBarTheme: const AppBarTheme(
             color: Colors.white,
             elevation: 0,
             iconTheme: IconThemeData(
@@ -134,8 +134,8 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          textTheme: TextTheme(
-            bodyText1: TextStyle(
+          textTheme: const TextTheme(
+            bodyLarge: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
             ),

@@ -27,7 +27,7 @@ class MessegeDataModel {
 
   }
 
-  ToMap(){
+  toMap(){
     return {
       'time' : time ,
       'driverId' : recieverId ,

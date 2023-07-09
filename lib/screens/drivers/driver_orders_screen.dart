@@ -7,6 +7,8 @@ import '../../uber_cubit/uber_cubit.dart';
 import '../../uber_cubit/uber_states.dart';
 
 class DriverOrderScreen extends StatelessWidget {
+  const DriverOrderScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UberCubit,UberStates>(
@@ -14,13 +16,13 @@ class DriverOrderScreen extends StatelessWidget {
       builder: (context,state){
         var cubit = UberCubit.get(context);
         var locale = AppLocalizations.of(context);
-        return cubit.allOrders.length >0 ?
+        return cubit.allOrders.isNotEmpty ?
           ListView.separated(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           itemBuilder:(context,index)=> BuildDriverOrderItem(
           order: cubit.allOrders[index],
           ),
-          separatorBuilder: (context,index)=> SizedBox(
+          separatorBuilder: (context,index)=> const SizedBox(
             height: 0,
           ),
           itemCount: cubit.allOrders.length,
@@ -35,8 +37,8 @@ class DriverOrderScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
               ),
               Text(
-                locale!.Translate('There is no orders yet') ,
-                style: TextStyle(
+                locale!.translate('There is no orders yet') ,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),

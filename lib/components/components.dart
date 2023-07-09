@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rate/rate.dart';
@@ -14,19 +15,19 @@ import 'package:uber_final/screens/drivers/make_offer_screen.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
 
 class BuildTextFormField extends StatelessWidget {
-  String label;
+  final String label;
 
-  IconData pIcon;
-  IconData? sIcon;
-  bool? isPassword;
-  TextInputType? type;
-  void Function()? onPressedOnPIcon;
-  void Function()? onPressedOnSIcon;
-  String? Function(String?)? validation;
-  TextEditingController controller;
-  Color? pIconColor;
+  final IconData pIcon;
+  final IconData? sIcon;
+  final bool? isPassword;
+  final TextInputType? type;
+  final void Function()? onPressedOnPIcon;
+  final void Function()? onPressedOnSIcon;
+  final String? Function(String?)? validation;
+  final TextEditingController controller;
+  final Color? pIconColor;
 
-  BuildTextFormField({
+  const BuildTextFormField({super.key,
     required this.label,
     required this.pIcon,
     this.sIcon,
@@ -70,14 +71,14 @@ class BuildTextFormField extends StatelessWidget {
 }
 
 class BuildButton extends StatelessWidget {
-  void Function()? onPressed;
-  double height;
+  final void Function()? onPressed;
+  final double height;
 
-  double width;
-  String label;
-  Color color;
+  final double width;
+  final String label;
+  final Color color;
 
-  BuildButton({
+  const BuildButton({super.key,
     required this.onPressed,
     this.height = 55,
     this.width = double.infinity,
@@ -98,7 +99,7 @@ class BuildButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),
@@ -108,11 +109,11 @@ class BuildButton extends StatelessWidget {
 }
 
 class BuildTextButton extends StatelessWidget {
-  String label;
+  final String label;
 
-  void Function()? onPressed;
+  final void Function()? onPressed;
 
-  BuildTextButton({
+  const BuildTextButton({super.key,
     required this.label,
     required this.onPressed,
   });
@@ -120,10 +121,10 @@ class BuildTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      onPressed: onPressed,
       child: Text(
         label,
       ),
-      onPressed: onPressed,
     );
   }
 }
@@ -132,9 +133,7 @@ navigate({
   required Widget screen,
   required BuildContext context,
 }) {
-  Navigator.of(context).push(
-    PageTransition(screen)
-  );
+  Navigator.of(context).push(PageTransition(screen));
 }
 
 navigateAndFinish({
@@ -144,7 +143,7 @@ navigateAndFinish({
   Navigator.of(context).pushAndRemoveUntil(
     PageTransition(screen),
     // MaterialPageRoute(builder: (context) => screen),
-        (route) => false,
+    (route) => false,
   );
 }
 
@@ -156,375 +155,256 @@ navigatePop({
 
 class PageTransition extends PageRouteBuilder {
   late Widget page;
-  PageTransition(this.page) : super(
-      pageBuilder: (context, animation1, animation2) {
-        return page;
-      },
-      transitionsBuilder: (context, animation1, animation2, child) {
-    return SlideTransition(
-      position : animation1.drive(Tween<Offset>(
-        begin: Offset(1,0),
-        end: Offset(0,0),
-      )),
-      child: child,
-    );
-  }
 
-  );
+  PageTransition(this.page)
+      : super(pageBuilder: (context, animation1, animation2) {
+          return page;
+        }, transitionsBuilder: (context, animation1, animation2, child) {
+          return SlideTransition(
+            position: animation1.drive(Tween<Offset>(
+              begin: const Offset(-1, 0),
+              end: const Offset(0, 0),
+            )),
+            child: child,
+          );
+        });
 }
 
 class BuildClientOrderItem extends StatelessWidget {
-  OrderDataModel order;
+  final OrderDataModel order;
 
-  BuildClientOrderItem({
+  const BuildClientOrderItem({super.key,
     required this.order,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(20),
       onTap: () {
         navigate(
             screen: AllOffersScreen(
-              orderId: this.order.orderId!,
+              orderId: order.orderId!,
             ),
             context: context);
       },
-      child: Card(
-        elevation: 15,
-        child: Container(
-          padding: EdgeInsets.all(MediaQuery
-              .of(context)
-              .size
-              .width * .05),
-          // decoration: BoxDecoration(
-          //     border: Border.all(
-          //   color: Colors.black,
-          // )),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(
-                  order.clientImage!,
-                ),
-              ),
-              // Container(
-              //   decoration: BoxDecoration(
-              //       shape: BoxShape.circle,
-              //       border: Border.all(color: Colors.black, width: 2)),
-              //   child: CircleAvatar(
-              //     radius: 40,
-              //     child: Text(
-              //       '${order.time}',
-              //     ),
-              //     backgroundColor: Colors.white,
-              //   ),
-              // ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                          ),
-                          Text(
-                              " ${AppLocalizations.of(context)!.Translate(
-                                  'From')} : ${order.from}"),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                          ),
-                          Text(
-                              " ${AppLocalizations.of(context)!.Translate(
-                                  'To')} : ${order.to}"),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.date_range_outlined,
-                          ),
-                          Text(
-                              " ${AppLocalizations.of(context)!.Translate(
-                                  'Date')} : ${order.date}"),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.watch_later_outlined,
-                          ),
-                          Text(
-                              " ${AppLocalizations.of(context)!.Translate(
-                                  'Time')} : ${order.time}"),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.phone_android,
-                          ),
-                          Text(
-                              " ${AppLocalizations.of(context)!.Translate(
-                                  'Phone')} : ${order.clientPhone}"),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      if(order.agreement == true)
-                        BuildTextButton(
-                          label: AppLocalizations.of(context)!.Translate(
-                              'Delete the agreement'),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  AlertDialog(
-                                    content: Text(
-                                      AppLocalizations.of(context)!.Translate(
-                                          'Are you sure ?'),
-                                    ),
-                                    actions: [
-                                      BuildTextButton(
-                                        label: AppLocalizations.of(context)!
-                                            .Translate(
-                                            'Confirm'),
-                                        onPressed: () {
-                                          UberCubit.get(context)
-                                              .DeleteOrderFromClient(
-                                            context: context,
-                                            driverId: order
-                                                .driverId!,
-                                            acceptedOrderId: order
-                                                .acceptedOrderId!,
-                                            to: order
-                                                .driverFcmToken!,
-                                            clientName: order
-                                                .clientName!,
-                                            clientId: order
-                                                .clientId!,
-                                            orderId:
-                                            order.orderId!,
-                                          );
-                                          Fluttertoast.showToast(
-                                            msg: AppLocalizations.of(context)!
-                                                .Translate(
-                                                'Deleted successfully'),
-                                            backgroundColor:
-                                            Colors.green,
-                                          ).then((value) {
-                                            navigatePop(
-                                                context: context);
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                            );
-                            //   if (DateTime.parse(order
-                            //       .dateToDeleteTheAgreement)
-                            //       .difference(DateTime.parse(
-                            //       DateTime.now()
-                            //           .toString()))
-                            //       .inDays ==
-                            //       0) {
-                            //     Fluttertoast.showToast(
-                            //       msg: AppLocalizations.of(context)!.Translate(
-                            //           'can\'t be deleted'),
-                            //       backgroundColor: Colors.red,
-                            //     );
-                            //   } else {
-                            //     showDialog(
-                            //       context: context,
-                            //       builder: (context) =>
-                            //           AlertDialog(
-                            //             content: Text(
-                            //               AppLocalizations.of(context)!.Translate(
-                            //                   'Are you sure ?'),
-                            //             ),
-                            //             actions: [
-                            //               BuildTextButton(
-                            //                 label: AppLocalizations.of(context)!.Translate(
-                            //                     'Confirm'),
-                            //                 onPressed: () {
-                            //                   UberCubit.get(context)
-                            //                       .DeleteOrderFromClient(
-                            //                     context: context,
-                            //                     driverId: order
-                            //                         .driverId!,
-                            //                     acceptedOrderId: order
-                            //                         .acceptedOrderId!,
-                            //                     to: order
-                            //                         .driverFcmToken!,
-                            //                     clientName: order
-                            //                         .clientName!,
-                            //                     clientId: order
-                            //                         .clientId!,
-                            //                     orderId:
-                            //                     order.orderId!,
-                            //                   );
-                            //                   Fluttertoast.showToast(
-                            //                     msg: AppLocalizations.of(context)!.Translate(
-                            //                         'Deleted successfully'),
-                            //                     backgroundColor:
-                            //                     Colors.green,
-                            //                   ).then((value) {
-                            //                     navigatePop(
-                            //                         context: context);
-                            //                   });
-                            //                 },
-                            //               ),
-                            //             ],
-                            //           ),
-                            //     );
-                            //   }
-                          },
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class BuildDriverOrderItem extends StatelessWidget {
-  OrderDataModel order;
-
-  BuildDriverOrderItem({
-    required this.order,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        navigate(screen: MakeOfferScreen(this.order), context: context);
-        print(this.order.time);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
         child: Card(
-          elevation: 15,
+          elevation: 8,
           child: Container(
-            padding: EdgeInsets.all(MediaQuery
-                .of(context)
-                .size
-                .width * .05),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
+            decoration: const BoxDecoration(
+              color: Color(0xffe3f2fd),
+            ),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
             child: Row(
               children: [
                 CircleAvatar(
+                  backgroundColor: Colors.white,
                   radius: 40,
-                  backgroundImage: NetworkImage(
-                    order.clientImage!,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: CachedNetworkImage(
+                      imageUrl: order.clientImage!,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
-                SizedBox(
-                  width: 15,
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      order.clientName!,
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyText1!
-                          .copyWith(
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
+                // CircleAvatar(
+                //   radius: 40,
+                //   backgroundImage: NetworkImage(
+                //     order.clientImage!,
+                //   ),
+                // ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //       shape: BoxShape.circle,
+                //       border: Border.all(color: Colors.black, width: 2)),
+                //   child: CircleAvatar(
+                //     radius: 40,
+                //     child: Text(
+                //       '${order.time}',
+                //     ),
+                //     backgroundColor: Colors.white,
+                //   ),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Expanded(
+                    child: Column(
                       children: [
-                        Icon(
-                          Icons.location_on_outlined,
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.black45,
+                            ),
+                            Text(
+                                " ${AppLocalizations.of(context)!.translate('From')} : ${order.from}"),
+                          ],
                         ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate(
-                                'From')} : ${order.from} "),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.black45,
+                            ),
+                            Text(
+                                " ${AppLocalizations.of(context)!.translate('To')} : ${order.to}"),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.date_range_outlined,
+                              color: Colors.black45,
+                            ),
+                            Text(
+                                " ${AppLocalizations.of(context)!.translate('Date')} : ${order.date}"),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.watch_later_outlined,
+                              color: Colors.black45,
+                            ),
+                            Text(
+                                " ${AppLocalizations.of(context)!.translate('Time')} : ${order.time}"),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.phone_android,
+                              color: Colors.black45,
+                            ),
+                            Text(
+                                " ${AppLocalizations.of(context)!.translate('Phone')} : ${order.clientPhone}"),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        if (order.agreement == true)
+                          BuildTextButton(
+                            label: AppLocalizations.of(context)!
+                                .translate('Delete the agreement'),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('Are you sure ?'),
+                                  ),
+                                  actions: [
+                                    BuildTextButton(
+                                      label: AppLocalizations.of(context)!
+                                          .translate('Confirm'),
+                                      onPressed: () {
+                                        UberCubit.get(context)
+                                            .deleteOrderFromClient(
+                                          context: context,
+                                          driverId: order.driverId!,
+                                          acceptedOrderId:
+                                              order.acceptedOrderId!,
+                                          to: order.driverFcmToken!,
+                                          clientName: order.clientName!,
+                                          clientId: order.clientId!,
+                                          orderId: order.orderId!,
+                                        );
+                                        Fluttertoast.showToast(
+                                          msg: AppLocalizations.of(context)!
+                                              .translate(
+                                                  'Deleted successfully'),
+                                          backgroundColor: Colors.green,
+                                        ).then((value) {
+                                          navigatePop(context: context);
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                              //   if (DateTime.parse(order
+                              //       .dateToDeleteTheAgreement)
+                              //       .difference(DateTime.parse(
+                              //       DateTime.now()
+                              //           .toString()))
+                              //       .inDays ==
+                              //       0) {
+                              //     Fluttertoast.showToast(
+                              //       msg: AppLocalizations.of(context)!.Translate(
+                              //           'can\'t be deleted'),
+                              //       backgroundColor: Colors.red,
+                              //     );
+                              //   } else {
+                              //     showDialog(
+                              //       context: context,
+                              //       builder: (context) =>
+                              //           AlertDialog(
+                              //             content: Text(
+                              //               AppLocalizations.of(context)!.Translate(
+                              //                   'Are you sure ?'),
+                              //             ),
+                              //             actions: [
+                              //               BuildTextButton(
+                              //                 label: AppLocalizations.of(context)!.Translate(
+                              //                     'Confirm'),
+                              //                 onPressed: () {
+                              //                   UberCubit.get(context)
+                              //                       .DeleteOrderFromClient(
+                              //                     context: context,
+                              //                     driverId: order
+                              //                         .driverId!,
+                              //                     acceptedOrderId: order
+                              //                         .acceptedOrderId!,
+                              //                     to: order
+                              //                         .driverFcmToken!,
+                              //                     clientName: order
+                              //                         .clientName!,
+                              //                     clientId: order
+                              //                         .clientId!,
+                              //                     orderId:
+                              //                     order.orderId!,
+                              //                   );
+                              //                   Fluttertoast.showToast(
+                              //                     msg: AppLocalizations.of(context)!.Translate(
+                              //                         'Deleted successfully'),
+                              //                     backgroundColor:
+                              //                     Colors.green,
+                              //                   ).then((value) {
+                              //                     navigatePop(
+                              //                         context: context);
+                              //                   });
+                              //                 },
+                              //               ),
+                              //             ],
+                              //           ),
+                              //     );
+                              //   }
+                            },
+                          ),
                       ],
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                        ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate(
-                                'To')} : ${order.to} "),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.date_range_outlined,
-                        ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate(
-                                'Date')} : ${order.date} "),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.watch_later_outlined,
-                        ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate(
-                                'Time')} : ${order.time} "),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.phone_android,
-                        ),
-                        Text(
-                            " ${AppLocalizations.of(context)!.Translate(
-                                'Phone')} : ${order.clientPhone} "),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -535,10 +415,139 @@ class BuildDriverOrderItem extends StatelessWidget {
   }
 }
 
-class BuildDriverAcceptedOrderItem extends StatelessWidget {
-  OrderDataModel order;
+class BuildDriverOrderItem extends StatelessWidget {
+  final OrderDataModel order;
 
-  BuildDriverAcceptedOrderItem({
+  const BuildDriverOrderItem({super.key,
+    required this.order,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        navigate(screen: MakeOfferScreen(order), context: context);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Card(
+            elevation: 8,
+            child: Container(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              decoration: const BoxDecoration(
+                color: Color(0xffe3f2fd),
+              ),
+              padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 40,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: CachedNetworkImage(
+                        imageUrl: order.clientImage!,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        order.clientName!,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontSize: 20,
+                            ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.black45,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.translate('From')} : ${order.from} "),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.black45,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.translate('To')} : ${order.to} "),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.date_range_outlined,
+                            color: Colors.black45,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.translate('Date')} : ${order.date} "),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.watch_later_outlined,
+                            color: Colors.black45,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.translate('Time')} : ${order.time} "),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.phone_android,
+                            color: Colors.black45,
+                          ),
+                          Text(
+                              " ${AppLocalizations.of(context)!.translate('Phone')} : ${order.clientPhone} "),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BuildDriverAcceptedOrderItem extends StatelessWidget {
+  final OrderDataModel order;
+
+  const BuildDriverAcceptedOrderItem({super.key,
     required this.order,
   });
 
@@ -550,179 +559,178 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
         // navigate(screen: MakeOfferScreen(this.order), context: context);
         // print(this.order.time);
       },
-      child: Card(
-        elevation: 15,
-        child: Container(
-          padding: EdgeInsets.all(MediaQuery
-              .of(context)
-              .size
-              .width * .05),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(
-                  order.clientImage!,
-                ),
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    order.clientName!,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(
-                      fontSize: 20,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Card(
+          elevation: 8,
+          child: Container(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            decoration: const BoxDecoration(
+              color: Color(0xffe3f2fd),
+            ),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width * .05),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.white,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: CachedNetworkImage(
+                      imageUrl: order.clientImage!,
                     ),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      Text(
-                          " ${AppLocalizations.of(context)!.Translate(
-                              'From')} : ${order.from} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      Text(
-                          " ${AppLocalizations.of(context)!.Translate(
-                              'To')} : ${order.to} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.date_range_outlined,
-                      ),
-                      Text(
-                          " ${AppLocalizations.of(context)!.Translate(
-                              'Date')} : ${order.date} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.watch_later_outlined,
-                      ),
-                      Text(
-                          " ${AppLocalizations.of(context)!.Translate(
-                              'Time')} : ${order.time} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.phone_android,
-                      ),
-                      Text(
-                          " ${AppLocalizations.of(context)!.Translate(
-                              'Phone')} : ${order.clientPhone} "),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  BuildTextButton(
-                    onPressed: () {
-                      navigate(screen: ChatScreen(order), context: context);
-                    },
-                    label: AppLocalizations.of(context)!.Translate('Chat'),
-                  ),
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      order.clientName!,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontSize: 20,
+                          ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                        ),
+                        Text(
+                            " ${AppLocalizations.of(context)!.translate('From')} : ${order.from} "),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                        ),
+                        Text(
+                            " ${AppLocalizations.of(context)!.translate('To')} : ${order.to} "),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.date_range_outlined,
+                        ),
+                        Text(
+                            " ${AppLocalizations.of(context)!.translate('Date')} : ${order.date} "),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.watch_later_outlined,
+                        ),
+                        Text(
+                            " ${AppLocalizations.of(context)!.translate('Time')} : ${order.time} "),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.phone_android,
+                        ),
+                        Text(
+                            " ${AppLocalizations.of(context)!.translate('Phone')} : ${order.clientPhone} "),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    BuildTextButton(
+                      onPressed: () {
+                        navigate(screen: ChatScreen(order), context: context);
+                      },
+                      label: AppLocalizations.of(context)!.translate('Chat'),
+                    ),
 
-                  BuildTextButton(
-                    label: AppLocalizations.of(context)!
-                        .Translate('Delete the agreement'),
-                    onPressed: () {
-                      if (DateTime
-                          .parse(order.dateToDeleteTheAgreement)
-                          .difference(
-                          DateTime.parse(DateTime.now().toString()))
-                          .inDays ==
-                          0) {
-                        Fluttertoast.showToast(
-                          msg: AppLocalizations.of(context)!
-                              .Translate('can\'t be deleted'),
-                          backgroundColor: Colors.red,
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) =>
-                              AlertDialog(
-                                content: Text(AppLocalizations.of(context)!
-                                    .Translate('Are you sure ?')),
-                                actions: [
-                                  BuildTextButton(
-                                    label: AppLocalizations.of(context)!
-                                        .Translate('Confirm'),
-                                    onPressed: () {
-                                      UberCubit.get(context)
-                                          .DeleteOrderFromDriver(
-                                        driverId: CasheHelper.GetData(
-                                            key: 'uId'),
-                                        acceptedOrderId: order.acceptedOrderId!,
-                                        to: order.fcmToken!,
-                                        driverName: order.driverName!,
-                                        clientId: order.clientId!,
-                                        orderId: order.orderId!,
-                                        context: context,
-                                      );
-                                      Fluttertoast.showToast(
-                                        msg: AppLocalizations.of(context)!
-                                            .Translate('Deleted successfully'),
-                                        backgroundColor: Colors.green,
-                                      ).then((value) {
-                                        navigatePop(context: context);
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                        );
-                      }
-                    },
-                  ),
-                  // BuildButton(
-                  //   onPressed: (){
-                  //     if(DateTime.now().difference(order.dateToDeleteTheAgreement).inDays ==0){
-                  //       print('Can\'t delete the agree ');
-                  //     }
-                  //     else{
-                  //       print('deleted');
-                  //     }
-                  //   },
-                  //   label: 'Delete the agreement',
-                  // ),
-                ],
-              ),
-            ],
+                    BuildTextButton(
+                      label: AppLocalizations.of(context)!
+                          .translate('Delete the agreement'),
+                      onPressed: () {
+                        if (DateTime.parse(order.dateToDeleteTheAgreement)
+                                .difference(
+                                    DateTime.parse(DateTime.now().toString()))
+                                .inDays ==
+                            0) {
+                          Fluttertoast.showToast(
+                            msg: AppLocalizations.of(context)!
+                                .translate('can\'t be deleted'),
+                            backgroundColor: Colors.red,
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: Text(AppLocalizations.of(context)!
+                                  .translate('Are you sure ?')),
+                              actions: [
+                                BuildTextButton(
+                                  label: AppLocalizations.of(context)!
+                                      .translate('Confirm'),
+                                  onPressed: () {
+                                    UberCubit.get(context)
+                                        .deleteOrderFromDriver(
+                                      driverId: CasheHelper.getData(key: 'uId'),
+                                      acceptedOrderId: order.acceptedOrderId!,
+                                      to: order.fcmToken!,
+                                      driverName: order.driverName!,
+                                      clientId: order.clientId!,
+                                      orderId: order.orderId!,
+                                      context: context,
+                                    );
+                                    Fluttertoast.showToast(
+                                      msg: AppLocalizations.of(context)!
+                                          .translate('Deleted successfully'),
+                                      backgroundColor: Colors.green,
+                                    ).then((value) {
+                                      navigatePop(context: context);
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    // BuildButton(
+                    //   onPressed: (){
+                    //     if(DateTime.now().difference(order.dateToDeleteTheAgreement).inDays ==0){
+                    //       print('Can\'t delete the agree ');
+                    //     }
+                    //     else{
+                    //       print('deleted');
+                    //     }
+                    //   },
+                    //   label: 'Delete the agreement',
+                    // ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -731,11 +739,11 @@ class BuildDriverAcceptedOrderItem extends StatelessWidget {
 }
 
 class BuildOfferItem extends StatelessWidget {
-  OfferDataModel offer;
+  final OfferDataModel offer;
 
-  OrderDataModel order;
+  final OrderDataModel order;
 
-  BuildOfferItem({
+  const BuildOfferItem({super.key,
     required this.offer,
     required this.order,
   });
@@ -747,7 +755,7 @@ class BuildOfferItem extends StatelessWidget {
       child: Card(
         elevation: 15,
         child: Container(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Row(
             children: [
               CircleAvatar(
@@ -756,7 +764,7 @@ class BuildOfferItem extends StatelessWidget {
                   offer.driverImage!,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Column(
@@ -764,30 +772,22 @@ class BuildOfferItem extends StatelessWidget {
                 children: [
                   Text(
                     offer.driverName!,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(
-                      fontSize: 20,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 20,
+                        ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Row(
                     children: [
                       Text(
                         '${offer.price} \$',
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(
-                          fontSize: 17,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontSize: 17,
+                            ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       InkWell(
@@ -816,15 +816,15 @@ class BuildOfferItem extends StatelessWidget {
                           //
                           // });
 
-                          UberCubit.get(context).AcceptOffer(
+                          UberCubit.get(context).acceptOffer(
                             order: order,
                             offer: offer,
                             context: context,
                             dateToDeleteTheAgreement:
-                            order.dateToDeleteTheAgreement,
+                                order.dateToDeleteTheAgreement,
                           );
                         },
-                        child: CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 20,
                           backgroundColor: Colors.green,
                           child: Icon(
@@ -833,12 +833,12 @@ class BuildOfferItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 30,
                       ),
                       InkWell(
                         onTap: () {
-                          UberCubit.get(context).RejectOffer(
+                          UberCubit.get(context).rejectOffer(
                             orderId: order.orderId!,
                             offerId: offer.offerId!,
                             to: offer.driverFcmToken!,
@@ -846,7 +846,7 @@ class BuildOfferItem extends StatelessWidget {
                             context: context,
                           );
                         },
-                        child: CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 20,
                           backgroundColor: Colors.red,
                           child: Icon(
@@ -857,7 +857,7 @@ class BuildOfferItem extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   BuildTextButton(
@@ -869,7 +869,7 @@ class BuildOfferItem extends StatelessWidget {
                           context: context);
                     },
                     label: AppLocalizations.of(context)!
-                        .Translate('Show Driver Rates'),
+                        .translate('Show Driver Rates'),
                   ),
                 ],
               ),
@@ -882,9 +882,9 @@ class BuildOfferItem extends StatelessWidget {
 }
 
 class BuildClientRateItem extends StatelessWidget {
-  RateDataModel rate;
+  final RateDataModel rate;
 
-  BuildClientRateItem({required this.rate});
+  const BuildClientRateItem({super.key, required this.rate});
 
   @override
   Widget build(BuildContext context) {
@@ -893,7 +893,7 @@ class BuildClientRateItem extends StatelessWidget {
       child: Card(
         elevation: 15,
         child: Container(
-          padding: EdgeInsets.all(25),
+          padding: const EdgeInsets.all(25),
           child: Row(
             children: [
               CircleAvatar(
@@ -902,7 +902,7 @@ class BuildClientRateItem extends StatelessWidget {
                   rate.clientImage!,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Column(
@@ -910,12 +910,12 @@ class BuildClientRateItem extends StatelessWidget {
                 children: [
                   Text(
                     rate.clientName!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Rate(

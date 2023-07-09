@@ -21,12 +21,12 @@ class RegisterCubit extends Cubit<RegisterStates> {
     emit(ChangePasswordVisibilityState());
   }
 
-  PhoneAuth({
+  phoneAuth({
     required String phoneNumber,
   }) async {
     emit(PhoneAuthLoadingState());
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '+2${phoneNumber}',
+      phoneNumber: '+2$phoneNumber',
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,
       codeSent: codeSent,
@@ -41,7 +41,6 @@ class RegisterCubit extends Cubit<RegisterStates> {
 
   verificationFailed(FirebaseAuthException e) {
     emit(PhoneAuthErrorState());
-    print(e);
   }
 
   String? verificationId;
@@ -55,9 +54,9 @@ class RegisterCubit extends Cubit<RegisterStates> {
     emit(PhoneAuthErrorState());
   }
 
-  CheckCode({required String smsCode}) {
+  checkCode({required String smsCode}) {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: this.verificationId!,
+      verificationId: verificationId!,
       smsCode: smsCode,
     );
     FirebaseAuth.instance.signInWithCredential(credential).then((value) {
@@ -83,7 +82,6 @@ class RegisterCubit extends Cubit<RegisterStates> {
       emit(GetProfileImageSuccessfullyState());
     } else {
       emit(GetProfileImageErrorState());
-      print('No item Selected');
     }
   }
 
