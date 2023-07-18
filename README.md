@@ -35,6 +35,25 @@ Uber Applocation :
 
 ![1689695632987](https://github.com/Mahmoud-Niazy/uber/assets/116367418/77da3f34-fb11-4c40-ab89-9a85c3e28534)
 
+The driver send an offer 
+
+![Screenshot_20230718_181609](https://github.com/Mahmoud-Niazy/uber/assets/116367418/1b1cc54d-7611-425d-b440-12b96b0ee8c3)
+
+The client will recieve it 
+
+![1689697208828](https://github.com/Mahmoud-Niazy/uber/assets/116367418/ea1c15e6-441b-45ae-8249-d340e20b5fd1)
+
+Client can look at the previous rates of the driver
+
+![1689697208804](https://github.com/Mahmoud-Niazy/uber/assets/116367418/c9221d77-cb9d-43f1-9f03-8e00ed06e647)
+
+![1689697208781](https://github.com/Mahmoud-Niazy/uber/assets/116367418/c41c3aa4-d3ba-4698-9cf2-c04eb5a07915)
+
+This map will help the driver 
+
+![1689697208758](https://github.com/Mahmoud-Niazy/uber/assets/116367418/a3ce9513-05ca-4517-be50-1d47afd3e2fc)
+
+
 
 
 
