@@ -7,8 +7,8 @@ Uber Applocation :
 - If the client reject the offer the driver will recieve a notification contains a rejection message and the driver can send offers again.
 - If the client accept the offer the driver will recieve a notification contains an acception message and they can start chating and the driver will get a map contain 3 markers one on his location and one on the place where the client will move from and one on the place where the client will move to.
 - the marker on the driver location will move Automatically with the driver (Live Location).
-- Client can delete the agreement anytime he want
-- Driver can delete the agreement if the remaining time is more than 24 hours
+- Client can delete the agreement anytime he want.
+- Driver can delete the agreement if the remaining time is more than 24 hours.
 
 
 ![1689695071838](https://github.com/Mahmoud-Niazy/uber/assets/116367418/d9980622-db0b-461f-be36-81d1856890d8) 
