@@ -57,6 +57,8 @@ class CheckCodeScreen extends StatelessWidget {
                     obscureText: false,
                     animationType: AnimationType.fade,
                     pinTheme: PinTheme(
+                      inactiveFillColor: Colors.white,
+                      inactiveColor: Colors.blue,
                       shape: PinCodeFieldShape.box,
                       borderRadius: BorderRadius.circular(5),
                       fieldHeight: 50,

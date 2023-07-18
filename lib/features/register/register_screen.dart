@@ -149,6 +149,7 @@ class RegisterScreen extends StatelessWidget {
                           height: 100,
                           width: 200,
                           decoration: BoxDecoration(
+                            shape: BoxShape.circle,
                             image: DecorationImage(
                               image: FileImage(cubit.profileImage!),
                             ),

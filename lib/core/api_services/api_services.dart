@@ -70,7 +70,7 @@ class DioHelper {
 
     dio.options.headers= {
       'Content-Type' : 'application/json' ,
-      'Authorization': 'key=AAAAWbrUMew:APA91bGdoONCURVyrG3Ivt_80uAPDvpnjr8XrDkW77qb9rJOBEsE2ldsUnccXVZgYaALADoYmQTz0BoBqdqma5Db1d1cQQQohLGu2fxBip2eF3w4mR63yO75lf2FQergtr0-5ZY03bEY',
+      'Authorization': 'key=',
 
     };
 
