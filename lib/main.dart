@@ -4,12 +4,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:uber_final/app_localization.dart';
-import 'package:uber_final/cashe_helper/cashe_helper.dart';
-import 'package:uber_final/dio_helper/dio_helper.dart';
+import 'package:uber_final/core/app_localization.dart';
 import 'package:uber_final/register_cubit/register_cubit.dart';
-import 'package:uber_final/screens/splash_screen.dart';
 import 'package:uber_final/uber_cubit/uber_cubit.dart';
+
+import 'core/api_services/api_services.dart';
+import 'core/cashe_helper/cashe_helper.dart';
+import 'features/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

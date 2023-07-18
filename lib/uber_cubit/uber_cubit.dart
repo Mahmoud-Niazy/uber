@@ -7,22 +7,23 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:uber_final/app_localization.dart';
-import 'package:uber_final/data_models/client_data_model.dart';
-import 'package:uber_final/data_models/driver_data_model.dart';
-import 'package:uber_final/data_models/messege_data_model.dart';
-import 'package:uber_final/data_models/offer_data_model.dart';
-import 'package:uber_final/data_models/order_data_model.dart';
-import 'package:uber_final/data_models/rate_data_model.dart';
-import 'package:uber_final/screens/clients/client_orders_screen.dart';
-import 'package:uber_final/screens/clients/client_setting_screen.dart';
-import 'package:uber_final/screens/clients/make_order_screen.dart';
-import 'package:uber_final/screens/drivers/accepted_orders_screen.dart';
-import 'package:uber_final/screens/drivers/driver_orders_screen.dart';
-import 'package:uber_final/screens/drivers/driver_setting_screen.dart';
+import 'package:uber_final/core/app_localization.dart';
+import 'package:uber_final/features/clients/data/models/client_data_model.dart';
+import 'package:uber_final/features/drivers/data/models/driver_data_model.dart';
+import 'package:uber_final/features/chat/data/models/messege_data_model.dart';
 import 'package:uber_final/uber_cubit/uber_states.dart';
-import '../cashe_helper/cashe_helper.dart';
-import '../dio_helper/dio_helper.dart';
+import '../core/api_services/api_services.dart';
+import '../core/cashe_helper/cashe_helper.dart';
+import '../core/data_models/offer_data_model.dart';
+import '../core/data_models/order_data_model.dart';
+import '../core/data_models/rate_data_model.dart';
+import '../features/clients/presentation/client_orders_screen.dart';
+import '../features/clients/presentation/client_setting_screen.dart';
+import '../features/clients/presentation/make_order_screen.dart';
+import '../features/drivers/presentation/accepted_orders_screen.dart';
+import '../features/drivers/presentation/driver_orders_screen.dart';
+import '../features/drivers/presentation/driver_setting_screen.dart';
+
 
 class UberCubit extends Cubit<UberStates> {
   UberCubit() : super(UberInitialState());
@@ -420,9 +421,11 @@ class UberCubit extends Cubit<UberStates> {
             .update(offer.toMap());
         emit(MakeOfferSuccessfullyState());
       }).catchError((error) {
+        print(error);
         emit(MakeOfferErrorState());
       });
     }).catchError((error) {
+      print(error);
       emit(SendNotificationToClientErrorState());
     });
   }

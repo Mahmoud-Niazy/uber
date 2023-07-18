@@ -5,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uber_final/data_models/client_data_model.dart';
+import 'package:uber_final/features/clients/data/models/client_data_model.dart';
 import 'package:uber_final/register_cubit/register_states.dart';
-import '../data_models/driver_data_model.dart';
+import '../features/drivers/data/models/driver_data_model.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
   RegisterCubit() : super(RegisterInitialState());
