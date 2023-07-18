@@ -9,9 +9,7 @@ Uber Applocation :
 - the marker on the driver location will move Automatically with the driver (Live Location).
 
 
-![1689695071838](https://github.com/Mahmoud-Niazy/uber/assets/116367418/d9980622-db0b-461f-be36-81d1856890d8)
-
-![1689695071813](https://github.com/Mahmoud-Niazy/uber/assets/116367418/817fe72e-19f0-4591-a31e-48c0fc949530)
+![1689695071838](https://github.com/Mahmoud-Niazy/uber/assets/116367418/d9980622-db0b-461f-be36-81d1856890d8)  ![1689695071813](https://github.com/Mahmoud-Niazy/uber/assets/116367418/817fe72e-19f0-4591-a31e-48c0fc949530)
 
 ![1689695071787](https://github.com/Mahmoud-Niazy/uber/assets/116367418/50fec0b7-aa38-4681-87da-bfea5faa67b5)
 
